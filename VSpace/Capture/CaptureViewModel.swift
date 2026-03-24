@@ -9,7 +9,6 @@
 
 import Foundation
 import _RealityKit_SwiftUI
-import RxSwift
 import RxRelay
 
 @available(iOS 17.0, *)
@@ -34,75 +33,68 @@ final class CaptureViewModel {
 
     // MARK: - Session
 
-    private(set) var session: ObjectCaptureSession?
+    private(set) var session: ObjectCaptureSession
 
     // MARK: - Private
 
-    private let captureDirectory: URL
-    private let imagesDirectory: URL
-    private let checkpointDirectory: URL
-    let outputURL: URL
+    private let directoryManager: CaptureDirectoryManaging
 
     // MARK: - Init
 
-    init() {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let captureID = UUID().uuidString
-        captureDirectory    = docs.appendingPathComponent("Captures/\(captureID)")
-        imagesDirectory     = captureDirectory.appendingPathComponent("Images")
-        checkpointDirectory = captureDirectory.appendingPathComponent("Checkpoints")
-        outputURL           = captureDirectory.appendingPathComponent("preview.usdz")
-        createDirectories()
+    init(directoryManager: CaptureDirectoryManaging = CaptureDirectoryManager()) {
+        self.directoryManager = directoryManager
+        try? directoryManager.setup()
+        session = ObjectCaptureSession()
+        startSession(session)
     }
 
     // MARK: - Public
 
-    func createSession() -> ObjectCaptureSession {
-        let captureSession = ObjectCaptureSession()
-        self.session = captureSession
-
-        var config = ObjectCaptureSession.Configuration()
-        config.checkpointDirectory = checkpointDirectory
-        config.isOverCaptureEnabled = true
-
-        captureSession.start(imagesDirectory: imagesDirectory, configuration: config)
-
-        // session.stateUpdates AsyncSequence로 상태 관찰
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            for await state in captureSession.stateUpdates {
-                self.handleSessionState(state, session: captureSession)
-            }
-        }
-
-        return captureSession
-    }
-    
     func startDetecting() {
-        let _ = session?.startDetecting()
+        let _ = session.startDetecting()
     }
-    
+
     func startCapturing() {
-        session?.startCapturing()
+        session.startCapturing()
     }
 
     func cancelCapture() {
-        print("cancelled")
-        session?.cancel()
-        cleanupDirectories()
+        session.cancel()
+        directoryManager.cleanup()
         appState.accept(.cancelled)
     }
 
+    /// 기존 checkpoint + imagesDirectory를 재사용해 새 세션으로 캡쳐를 재개합니다.
+    /// .finishing 후 USDZ 생성 실패 시 호출
+    func resumeCapture() {
+        session = ObjectCaptureSession()
+        appState.accept(.loading)
+        startSession(session)
+    }
+
     func finishCapture() {
-        session?.finish()
+        session.finish()
         appState.accept(.finishing)
     }
 
     // MARK: - Private
 
-    private func handleSessionState(_ state: ObjectCaptureSession.CaptureState,
-                                    session: ObjectCaptureSession) {
-        switch session.state {
+    private func startSession(_ captureSession: ObjectCaptureSession) {
+        var config = ObjectCaptureSession.Configuration()
+        config.checkpointDirectory = directoryManager.checkpointDirectory
+        config.isOverCaptureEnabled = true
+        captureSession.start(imagesDirectory: directoryManager.imagesDirectory, configuration: config)
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            for await state in captureSession.stateUpdates {
+                self.handleSessionState(state)
+            }
+        }
+    }
+
+    private func handleSessionState(_ state: ObjectCaptureSession.CaptureState) {
+        switch state {
         case .initializing:
             appState.accept(.loading)
         case .ready:
@@ -112,32 +104,25 @@ final class CaptureViewModel {
         case .capturing:
             appState.accept(.capturing)
         case .finishing:
-            appState.accept(.finishing)
-            Task {
-                await generateUSDZ()
+            guard case .cancelled = appState.value else {
+                appState.accept(.finishing)
+                Task { await generateUSDZ() }
+                return
             }
         case .failed(let error):
-            appState.accept(.failed(error))
-        @unknown default:
+            guard case .cancelled = appState.value else {
+                appState.accept(.failed(error))
+                return
+            }
+        default:
             break
         }
     }
 
-    private func createDirectories() {
-        [imagesDirectory, checkpointDirectory].forEach {
-            try? FileManager.default.createDirectory(at: $0, withIntermediateDirectories: true)
-        }
-    }
-
-    private func cleanupDirectories() {
-        try? FileManager.default.removeItem(at: captureDirectory)
-    }
-    
     private func generateUSDZ() async {
         do {
-            let photogrammetrySession = try PhotogrammetrySession(input: imagesDirectory)
-            
-            let request = PhotogrammetrySession.Request.modelFile(url: outputURL, detail: .reduced)
+            let photogrammetrySession = try PhotogrammetrySession(input: directoryManager.imagesDirectory)
+            let request = PhotogrammetrySession.Request.modelFile(url: directoryManager.outputURL, detail: .reduced)
             
             try photogrammetrySession.process(requests: [request])
             

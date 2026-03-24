@@ -3,51 +3,12 @@
 //  VSpace
 //
 //  ObjectCapture 세션 화면
-//  오버레이 렌더링: ObjectCaptureView(session:cameraFeedOverlay:) 파라미터 사용
-//  → ZStack 방식 대신 API 제공 오버레이 레이어에 직접 삽입하여 가시성 보장
 //
 
 import UIKit
-import RealityKit
 import SwiftUI
 import RxSwift
 import SnapKit
-
-// MARK: - SwiftUI: CaptureViewWrapper
-
-@available(iOS 17.0, *)
-private struct CaptureView: View {
-    let session: ObjectCaptureSession
-    
-    let onReady: () -> Void
-    let onDetecting: () -> Void
-    let onFinish: () -> Void
-
-    var body: some View {
-        ZStack {
-            if session.userCompletedScanPass {
-                Button("Finish") {
-                    onFinish()
-                }
-            } else {
-                ObjectCaptureView(session: session)
-                
-                if case .ready = session.state {
-                    Button("Continue") {
-                        onReady()
-                    }
-                } else if case .detecting = session.state {
-                    Button("Start Capture") {
-                        onDetecting()
-                    }
-                }
-            }
-        }
-        .onChange(of: session.state) {
-            print($0)
-        }
-    }
-}
 
 // MARK: - CaptureViewController
 
@@ -85,9 +46,8 @@ final class CaptureViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let session = viewModel.createSession()
         setupNavigationBar()
-        setupCaptureView(session: session)
+        setupCaptureView()
         setupLoadingOverlay()
         bindViewModel()
     }
@@ -118,13 +78,8 @@ final class CaptureViewController: BaseViewController {
         navigationItem.rightBarButtonItem = doneButton
     }
 
-    private func setupCaptureView(session: ObjectCaptureSession) {
-        let cv = CaptureView(
-            session: session,
-            onReady: viewModel.startDetecting,
-            onDetecting: viewModel.startCapturing,
-            onFinish: viewModel.finishCapture
-        )
+    private func setupCaptureView() {
+        let cv = CaptureView(viewModel: viewModel)
 
         let hostingController = UIHostingController(rootView: cv)
         hostingController.view.backgroundColor = .clear
@@ -190,10 +145,12 @@ final class CaptureViewController: BaseViewController {
             navigationController?.pushViewController(viewer, animated: true)
 
         case .cancelled:
+            print("cancelled")
             navigationController?.popViewController(animated: true)
 
         case .failed(let error):
 //            hideLoadingOverlay()
+            print("failed")
             showAlert(
                 title: "오류",
                 message: "3D 모델 생성에 실패했습니다.\n\(error.localizedDescription)",
