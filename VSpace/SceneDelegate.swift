@@ -15,8 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = ViewController()
+        let nav = UINavigationController(rootViewController: ViewController())
+        nav.navigationBar.tintColor = .vsPrimary
+        window?.rootViewController = nav
         window?.makeKeyAndVisible()
+        print(#function)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
