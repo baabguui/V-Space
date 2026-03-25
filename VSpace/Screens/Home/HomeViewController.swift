@@ -14,10 +14,10 @@ import RealityKit
 final class HomeViewController: BaseViewController {
 
     // MARK: - Properties
-    
-    weak var coordinator: HomeCoordinator?
+
+    private weak var coordinator: HomeCoordinator?
     private let viewModel: HomeViewModel
-    
+
     // MARK: - UI
     
     private lazy var collectionView: UICollectionView = {
@@ -39,13 +39,15 @@ final class HomeViewController: BaseViewController {
 
     // MARK: - Init
     
-    init(viewModel: HomeViewModel) {
+    init(coordinator: HomeCoordinator, viewModel: HomeViewModel) {
+        self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) is not available")
     }
     
     // MARK: - Lifecycle

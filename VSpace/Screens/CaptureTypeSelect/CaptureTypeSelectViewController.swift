@@ -10,20 +10,22 @@ import RxCocoa
 final class CaptureTypeSelectViewController: BaseViewController {
     
     // MARK: - Properties
-    
-    weak var coordinator: HomeCoordinator?
+
+    private weak var coordinator: HomeCoordinator?
     private let viewModel: CaptureTypeSelectViewModel
     private let contentView = CaptureTypeSelectView()
-    
+
     // MARK: - Init
-    
-    init(viewModel: CaptureTypeSelectViewModel = CaptureTypeSelectViewModel()) {
+
+    init(coordinator: HomeCoordinator, viewModel: CaptureTypeSelectViewModel = CaptureTypeSelectViewModel()) {
+        self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) is not available")
     }
     
     // MARK: - Lifecycle

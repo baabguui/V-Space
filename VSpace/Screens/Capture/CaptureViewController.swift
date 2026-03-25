@@ -17,8 +17,21 @@ final class CaptureViewController: BaseViewController {
 
     // MARK: - Properties
 
+    private weak var coordinator: HomeCoordinator?
     private let viewModel = CaptureViewModel()
     private var captureHostingController: UIHostingController<CaptureView>?
+
+    // MARK: - Init
+
+    init(coordinator: HomeCoordinator) {
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is not available")
+    }
 
     // MARK: - Lifecycle
 
@@ -102,15 +115,15 @@ final class CaptureViewController: BaseViewController {
             navigationItem.rightBarButtonItem?.isEnabled = false
             navigationItem.leftBarButtonItem?.isEnabled = false
         case .completed(let url):
-            pushModelViewer(modelURL: url)
-        case .saved, .cancelled:
-            if let nav = navigationController,
-               let index = nav.viewControllers.firstIndex(of: self),
-               index > 0 {
-                nav.popToViewController(nav.viewControllers[index - 1], animated: true)
-            } else {
-                navigationController?.popToRootViewController(animated: true)
-            }
+            coordinator?.showModelViewer(
+                modelURL: url,
+                onSave: { [weak self] in self?.viewModel.saveModel() },
+                onResume: { [weak self] in self?.viewModel.resumeCapturing() }
+            )
+        case .saved:
+            coordinator?.showSaveResult()
+        case .cancelled:
+            coordinator?.popCaptureSession()
         case .failed(let error):
             showAlert(
                 title: NSLocalizedString("capture.alert.error.title", comment: ""),
@@ -122,18 +135,6 @@ final class CaptureViewController: BaseViewController {
                 }
             )
         }
-    }
-
-    // MARK: - Navigation
-
-    private func pushModelViewer(modelURL: URL) {
-        let viewer = ModelViewerViewController(modelURL: modelURL) {
-            [weak self] in
-            self?.viewModel.saveModel()
-        } onResume: { [weak self] in
-            self?.viewModel.resumeCapturing()
-        }
-        navigationController?.pushViewController(viewer, animated: true)
     }
 
     // MARK: - Actions
