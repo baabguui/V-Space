@@ -15,6 +15,7 @@ final class HomeViewController: BaseViewController {
 
     // MARK: - Properties
     
+    weak var coordinator: HomeCoordinator?
     private let viewModel: HomeViewModel
     
     // MARK: - UI
@@ -104,8 +105,7 @@ final class HomeViewController: BaseViewController {
 
     private func startCapture() {
         if #available(iOS 17.0, *) {
-            let captureVC = CaptureViewController()
-            navigationController?.pushViewController(captureVC, animated: true)
+            coordinator?.showCaptureTypeSelect()
         } else {
             showAlert(
                 title: NSLocalizedString("alert.unsupported.title", comment: ""),
@@ -114,4 +114,5 @@ final class HomeViewController: BaseViewController {
             )
         }
     }
+
 }

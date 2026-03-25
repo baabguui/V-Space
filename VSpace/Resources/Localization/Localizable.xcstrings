@@ -1,6 +1,134 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "capture.type.object.info1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takes 3 to 10 minutes"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3분 ~ 10분 소요"
+          }
+        }
+      }
+    },
+    "capture.type.object.info2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Small objects that can be shot 360 degrees"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "360도 촬영 가능한 작은 물건"
+          }
+        }
+      }
+    },
+    "capture.type.object.info3" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep every side of the object\nTakes up more storage\nCan be replaced with a gallery photo later"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대상의 모든 면을 간직할 수 있어요\n용량을 더 많이 차지해요\n이후 갤러리 사진으로 교체할 수 있어요"
+          }
+        }
+      }
+    },
+    "capture.type.object.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D Object Capture"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입체로 남기기"
+          }
+        }
+      }
+    },
+    "capture.type.plane.info1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Large furniture, objects integrated with surroundings"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "큰 가구, 주변 환경과 결합된 물건"
+          }
+        }
+      }
+    },
+    "capture.type.plane.info2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep a representative image\nShoot directly or import from gallery\nCan be replaced with a gallery photo later"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대표 이미지를 간직할 수 있어요\n직접 촬영하거나, 갤러리에서 가져올 수 있어요\n이후 갤러리 사진으로 교체할 수 있어요"
+          }
+        }
+      }
+    },
+    "capture.type.plane.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planar Capture"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "평면으로 남기기"
+          }
+        }
+      }
+    },
+    "capture.type.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Capture Type"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 방식 선택"
+          }
+        }
+      }
+    },
     "alert.default.cancel" : {
       "localizations" : {
         "en" : {
