@@ -7,12 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C1107782F7429A6007D8DC0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1107772F7429A6007D8DC0 /* RealmSwift */; };
+		8C1107B92F742A57007D8DC0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 8C1107772F7429A6007D8DC0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8C3893162F716AC200EF6622 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C3893152F716AC200EF6622 /* SnapKit */; };
 		8C3893192F716B6800EF6622 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 8C3893182F716B6800EF6622 /* RxCocoa */; };
 		8C38931B2F716B6800EF6622 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 8C38931A2F716B6800EF6622 /* RxRelay */; };
 		8C38931D2F716B6800EF6622 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8C38931C2F716B6800EF6622 /* RxSwift */; };
 		8C38942D2F717B7E00EF6622 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8C38942C2F717B7E00EF6622 /* .gitignore */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8C1107BA2F742A57007D8DC0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8C1107B92F742A57007D8DC0 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8C3892C82F71657400EF6622 /* VSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +64,7 @@
 				8C38931B2F716B6800EF6622 /* RxRelay in Frameworks */,
 				8C3893192F716B6800EF6622 /* RxCocoa in Frameworks */,
 				8C38931D2F716B6800EF6622 /* RxSwift in Frameworks */,
+				8C1107782F7429A6007D8DC0 /* RealmSwift in Frameworks */,
 				8C3893162F716AC200EF6622 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,6 +99,7 @@
 				8C3892C42F71657400EF6622 /* Sources */,
 				8C3892C52F71657400EF6622 /* Frameworks */,
 				8C3892C62F71657400EF6622 /* Resources */,
+				8C1107BA2F742A57007D8DC0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -96,6 +114,7 @@
 				8C3893182F716B6800EF6622 /* RxCocoa */,
 				8C38931A2F716B6800EF6622 /* RxRelay */,
 				8C38931C2F716B6800EF6622 /* RxSwift */,
+				8C1107772F7429A6007D8DC0 /* RealmSwift */,
 			);
 			productName = VSpace;
 			productReference = 8C3892C82F71657400EF6622 /* VSpace.app */;
@@ -129,6 +148,7 @@
 			packageReferences = (
 				8C3893142F716AC200EF6622 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				8C3893172F716B6800EF6622 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				8C1107762F7429A6007D8DC0 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8C3892C92F71657400EF6622 /* Products */;
@@ -381,6 +401,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8C1107762F7429A6007D8DC0 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = versionRange;
+				maximumVersion = 21.0.0;
+				minimumVersion = 20.0.0;
+			};
+		};
 		8C3893142F716AC200EF6622 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -400,6 +429,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8C1107772F7429A6007D8DC0 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C1107762F7429A6007D8DC0 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		8C3893152F716AC200EF6622 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8C3893142F716AC200EF6622 /* XCRemoteSwiftPackageReference "SnapKit" */;

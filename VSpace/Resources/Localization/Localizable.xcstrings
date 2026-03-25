@@ -1,142 +1,374 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
-    "home.button.capture" : {
+    "alert.default.cancel" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Capture in 3D" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "입체로 남기기" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
       }
     },
     "alert.default.confirm" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "확인" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        }
       }
     },
-    "alert.default.cancel" : {
+    "alert.unsupported.message" : {
+      "comment" : "iOS 17 이상 필요",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "취소" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D capture requires iOS 17 or later."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 캡쳐 기능은 iOS 17 이상에서 사용할 수 있습니다."
+          }
+        }
       }
     },
     "alert.unsupported.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unsupported" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "지원 불가" } }
-      }
-    },
-    "alert.unsupported.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "3D capture requires iOS 17 or later." } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "3D 캡쳐 기능은 iOS 17 이상에서 사용할 수 있습니다." } }
-      }
-    },
-    "capture.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "3D Capture" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "3D 캡쳐" } }
-      }
-    },
-    "capture.nav.cancel" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "취소" } }
-      }
-    },
-    "capture.nav.done" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료" } }
-      }
-    },
-    "capture.button.detect" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Detect Object" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "대상 감지하기" } }
-      }
-    },
-    "capture.button.scan" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start Scanning" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "스캔 시작하기" } }
-      }
-    },
-    "capture.alert.error.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "오류" } }
-      }
-    },
-    "capture.alert.error.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Failed to generate 3D model.\n%@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "3D 모델 생성에 실패했습니다.\n%@" } }
-      }
-    },
-    "capture.alert.error.retry" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Retry" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "재시도" } }
-      }
-    },
-    "capture.alert.cancel.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel Capture" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "캡쳐 취소" } }
-      }
-    },
-    "capture.alert.cancel.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "All captured data will be deleted.\nAre you sure you want to cancel?" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "현재까지 캡쳐된 사항은 모두 삭제됩니다.\n정말 취소하시겠습니까?" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsupported"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지원 불가"
+          }
+        }
       }
     },
     "capture.alert.cancel.confirm" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "삭제" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        }
       }
     },
     "capture.alert.cancel.dismiss" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "계속하기" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하기"
+          }
+        }
       }
     },
-    "capture.alert.done.title" : {
+    "capture.alert.cancel.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Generate 3D Model" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "3D 모델 생성" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All captured data will be deleted.\nAre you sure you want to cancel?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재까지 캡쳐된 사항은 모두 삭제됩니다.\n정말 취소하시겠습니까?"
+          }
+        }
       }
     },
-    "capture.alert.done.message" : {
+    "capture.alert.cancel.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "A 3D model will be generated from your captures.\nDo you want to continue?" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "현재까지 캡쳐된 사항으로 3D 모델을 생성합니다.\n계속하시겠습니까?" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel Capture"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "캡쳐 취소"
+          }
+        }
       }
     },
     "capture.alert.done.confirm" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        }
       }
     },
-    "viewer.button.save" : {
+    "capture.alert.done.message" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "저장하기" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A 3D model will be generated from your captures.\nDo you want to continue?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재까지 캡쳐된 사항으로 3D 모델을 생성합니다.\n계속하시겠습니까?"
+          }
+        }
       }
     },
-    "viewer.button.rescan" : {
+    "capture.alert.done.title" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Scan Again" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다시 스캔하기" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate 3D Model"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 모델 생성"
+          }
+        }
+      }
+    },
+    "capture.alert.error.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to generate 3D model.\n%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 모델 생성에 실패했습니다.\n%@"
+          }
+        }
+      }
+    },
+    "capture.alert.error.retry" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재시도"
+          }
+        }
+      }
+    },
+    "capture.alert.error.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오류"
+          }
+        }
+      }
+    },
+    "capture.button.detect" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detect Object"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대상 감지하기"
+          }
+        }
+      }
+    },
+    "capture.button.scan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Scanning"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스캔 시작하기"
+          }
+        }
+      }
+    },
+    "capture.nav.cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
+      }
+    },
+    "capture.nav.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        }
+      }
+    },
+    "capture.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D Capture"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 캡쳐"
+          }
+        }
       }
     },
     "error.file.verification" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "File save verification failed: %@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "파일 저장 확인 실패: %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File save verification failed: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 저장 확인 실패: %@"
+          }
+        }
+      }
+    },
+    "home.button.capture" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture in 3D"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입체로 남기기"
+          }
+        }
+      }
+    },
+    "viewer.button.rescan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan Again"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 스캔하기"
+          }
+        }
+      }
+    },
+    "viewer.button.save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장하기"
+          }
+        }
       }
     }
   },
