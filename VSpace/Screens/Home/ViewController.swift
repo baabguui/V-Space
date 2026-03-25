@@ -14,7 +14,7 @@ final class ViewController: BaseViewController {
 
     // MARK: - UI
 
-    private let captureButton = VLongButton(title: "입체로 남기기")
+    private let captureButton = VLongButton(title: NSLocalizedString("home.button.capture", comment: ""))
 
     // MARK: - Lifecycle
 
@@ -50,8 +50,8 @@ final class ViewController: BaseViewController {
             navigationController?.pushViewController(captureVC, animated: true)
         } else {
             showAlert(
-                title: "지원 불가",
-                message: "3D 캡쳐 기능은 iOS 17 이상에서 사용할 수 있습니다.",
+                title: NSLocalizedString("alert.unsupported.title", comment: ""),
+                message: NSLocalizedString("alert.unsupported.message", comment: ""),
                 cancelTitle: nil
             )
         }

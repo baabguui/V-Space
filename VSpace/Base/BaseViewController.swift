@@ -28,9 +28,9 @@ class BaseViewController: UIViewController {
     func showAlert(
         title: String,
         message: String,
-        confirmTitle: String = "확인",
+        confirmTitle: String = NSLocalizedString("alert.default.confirm", comment: ""),
         confirmStyle: UIAlertAction.Style = .default,
-        cancelTitle: String? = "취소",
+        cancelTitle: String? = NSLocalizedString("alert.default.cancel", comment: ""),
         onConfirm: (() -> Void)? = nil,
         onCancel: (() -> Void)? = nil
     ) {

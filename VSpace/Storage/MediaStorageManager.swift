@@ -59,7 +59,7 @@ enum MediaStorageError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .verificationFailed(let url):
-            return "파일 저장 확인 실패: \(url.lastPathComponent)"
+            return String(format: NSLocalizedString("error.file.verification", comment: ""), url.lastPathComponent)
         }
     }
 }

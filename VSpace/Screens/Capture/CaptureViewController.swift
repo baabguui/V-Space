@@ -32,10 +32,10 @@ final class CaptureViewController: BaseViewController {
     // MARK: - Setup
 
     private func setupNavigationBar() {
-        title = "3D 캡쳐"
+        title = NSLocalizedString("capture.title", comment: "")
 
         let cancelButton = UIBarButtonItem(
-            title: "취소",
+            title: NSLocalizedString("capture.nav.cancel", comment: ""),
             style: .plain,
             target: self,
             action: #selector(cancelTapped)
@@ -43,7 +43,7 @@ final class CaptureViewController: BaseViewController {
         cancelButton.tintColor = .vsDanger
 
         let doneButton = UIBarButtonItem(
-            title: "완료",
+            title: NSLocalizedString("capture.nav.done", comment: ""),
             style: .done,
             target: self,
             action: #selector(doneTapped)
@@ -113,10 +113,10 @@ final class CaptureViewController: BaseViewController {
             }
         case .failed(let error):
             showAlert(
-                title: "오류",
-                message: "3D 모델 생성에 실패했습니다.\n\(error.localizedDescription)",
-                confirmTitle: "재시도",
-                cancelTitle: "취소",
+                title: NSLocalizedString("capture.alert.error.title", comment: ""),
+                message: String(format: NSLocalizedString("capture.alert.error.message", comment: ""), error.localizedDescription),
+                confirmTitle: NSLocalizedString("capture.alert.error.retry", comment: ""),
+                cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
                 onConfirm: { [weak self] in
                     self?.viewModel.retryUSDZ()
                 }
@@ -140,11 +140,11 @@ final class CaptureViewController: BaseViewController {
 
     @objc private func cancelTapped() {
         showAlert(
-            title: "캡쳐 취소",
-            message: "현재까지 캡쳐된 사항은 모두 삭제됩니다.\n정말 취소하시겠습니까?",
-            confirmTitle: "삭제",
+            title: NSLocalizedString("capture.alert.cancel.title", comment: ""),
+            message: NSLocalizedString("capture.alert.cancel.message", comment: ""),
+            confirmTitle: NSLocalizedString("capture.alert.cancel.confirm", comment: ""),
             confirmStyle: .destructive,
-            cancelTitle: "계속하기",
+            cancelTitle: NSLocalizedString("capture.alert.cancel.dismiss", comment: ""),
             onConfirm: { [weak self] in
                 self?.viewModel.cancelCapture()
             }
@@ -153,11 +153,11 @@ final class CaptureViewController: BaseViewController {
 
     @objc private func doneTapped() {
         showAlert(
-            title: "3D 모델 생성",
-            message: "현재까지 캡쳐된 사항으로 3D 모델을 생성합니다.\n계속하시겠습니까?",
-            confirmTitle: "완료",
+            title: NSLocalizedString("capture.alert.done.title", comment: ""),
+            message: NSLocalizedString("capture.alert.done.message", comment: ""),
+            confirmTitle: NSLocalizedString("capture.alert.done.confirm", comment: ""),
             confirmStyle: .default,
-            cancelTitle: "취소",
+            cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
             onConfirm: { [weak self] in
                 self?.viewModel.finishCapture()
             }

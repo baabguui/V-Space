@@ -22,10 +22,10 @@ final class ModelViewerViewController: BaseViewController {
         return pc
     }()
     
-    private let saveButton = VLongButton(title: "저장하기", style: .accent)
+    private let saveButton = VLongButton(title: NSLocalizedString("viewer.button.save", comment: ""), style: .accent)
     private let resumeButton: UIButton = {
         let btn = UIButton()
-        btn.setTitle("다시 스캔하기", for: .normal)
+        btn.setTitle(NSLocalizedString("viewer.button.rescan", comment: ""), for: .normal)
         btn.setTitleColor(.vsWhite, for: .normal)
         btn.titleLabel?.font = .vsBody
         btn.backgroundColor = .clear

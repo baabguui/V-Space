@@ -23,7 +23,7 @@
 		8C3892DA2F71657500EF6622 /* Exceptions for "VSpace" folder in "VSpace" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = 8C3892C72F71657400EF6622 /* VSpace */;
 		};
@@ -122,6 +122,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 8C3892BF2F71657400EF6622;
 			minimizedProjectReferenceProxies = 1;
@@ -170,7 +171,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N8UAK95HX5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VSpace/Info.plist;
+				INFOPLIST_FILE = VSpace/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "V-Space";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -207,7 +208,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N8UAK95HX5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VSpace/Info.plist;
+				INFOPLIST_FILE = VSpace/App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "V-Space";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

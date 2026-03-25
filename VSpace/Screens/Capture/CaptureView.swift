@@ -47,12 +47,12 @@ struct CaptureView: View {
             ObjectCaptureView(session: session)
 
             if case .ready = session.state {
-                VLongButtonView(title: "대상 감지하기", action: onStartDetecting)
+                VLongButtonView(title: NSLocalizedString("capture.button.detect", comment: ""), action: onStartDetecting)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)
             } else if case .detecting = session.state {
-                VLongButtonView(title: "스캔 시작하기", action: onStartCapturing)
+                VLongButtonView(title: NSLocalizedString("capture.button.scan", comment: ""), action: onStartCapturing)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)
