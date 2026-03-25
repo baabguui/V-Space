@@ -9,6 +9,8 @@
 import UIKit
 import QuickLook
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class ModelViewerViewController: BaseViewController {
 
@@ -20,12 +22,26 @@ final class ModelViewerViewController: BaseViewController {
         return pc
     }()
     
+    private let saveButton = VLongButton(title: "저장하기", style: .accent)
+    private let resumeButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("다시 스캔하기", for: .normal)
+        btn.setTitleColor(.vsWhite, for: .normal)
+        btn.titleLabel?.font = .vsBody
+        btn.backgroundColor = .clear
+        return btn
+    }()
+    
     private let modelURL: URL
+    private let onSave: () -> Void
+    private let onResume: () -> Void
 
     // MARK: - Init
 
-    init(modelURL: URL) {
+    init(modelURL: URL, onSave: @escaping () -> Void, onResume: @escaping () -> Void) {
         self.modelURL = modelURL
+        self.onSave = onSave
+        self.onResume = onResume
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -39,14 +55,50 @@ final class ModelViewerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        bind()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    private func bind() {
+        saveButton.rx.tap.bind(with: self) { owner, _ in
+            owner.onSave()
+        }
+        .disposed(by: disposeBag)
+        
+        resumeButton.rx.tap.bind(with: self) { owner, _ in
+            owner.onResume()
+            owner.navigationController?.popViewController(animated: true)
+        }
+        .disposed(by: disposeBag)
     }
     
     private func configureView() {
         self.addChild(previewController)
         view.addSubview(previewController.view)
+        view.addSubview(saveButton)
+        view.addSubview(resumeButton)
         
         previewController.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        saveButton.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview().inset(20)
+        }
+        
+        resumeButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(saveButton.snp.bottom).offset(14)
+            make.bottom.equalToSuperview().inset(40)
         }
         
         previewController.didMove(toParent: self)

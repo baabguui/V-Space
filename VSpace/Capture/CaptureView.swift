@@ -38,19 +38,21 @@ private struct VLongButtonView: UIViewRepresentable {
 
 @available(iOS 17.0, *)
 struct CaptureView: View {
-    let viewModel: CaptureViewModel
+    let session: ObjectCaptureSession
+    let onStartDetecting: () -> Void
+    let onStartCapturing: () -> Void
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            ObjectCaptureView(session: viewModel.session)
-            
-            if case .ready = viewModel.session.state {
-                VLongButtonView(title: "대상 감지하기", action: viewModel.startDetecting)
+            ObjectCaptureView(session: session)
+
+            if case .ready = session.state {
+                VLongButtonView(title: "대상 감지하기", action: onStartDetecting)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)
-            } else if case .detecting = viewModel.session.state {
-                VLongButtonView(title: "스캔 시작하기", action: viewModel.startCapturing)
+            } else if case .detecting = session.state {
+                VLongButtonView(title: "스캔 시작하기", action: onStartCapturing)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)

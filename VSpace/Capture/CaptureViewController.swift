@@ -18,29 +18,7 @@ final class CaptureViewController: BaseViewController {
     // MARK: - Properties
 
     private let viewModel = CaptureViewModel()
-
-    // MARK: - UI
-
-    private lazy var loadingOverlay: UIView = {
-        let overlay = UIView()
-        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        overlay.isHidden = true
-        return overlay
-    }()
-
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .vsWhite
-        return indicator
-    }()
-
-    private lazy var progressLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .vsWhite
-        label.font = .vsBody
-        label.textAlignment = .center
-        return label
-    }()
+    private var captureHostingController: UIHostingController<CaptureView>?
 
     // MARK: - Lifecycle
 
@@ -48,7 +26,6 @@ final class CaptureViewController: BaseViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupCaptureView()
-        setupLoadingOverlay()
         bindViewModel()
     }
 
@@ -78,10 +55,16 @@ final class CaptureViewController: BaseViewController {
         navigationItem.rightBarButtonItem = doneButton
     }
 
-    private func setupCaptureView() {
-        let cv = CaptureView(viewModel: viewModel)
+    private func makeCaptureView() -> CaptureView {
+        CaptureView(
+            session: viewModel.session,
+            onStartDetecting: viewModel.startDetecting,
+            onStartCapturing: viewModel.startCapturing
+        )
+    }
 
-        let hostingController = UIHostingController(rootView: cv)
+    private func setupCaptureView() {
+        let hostingController = UIHostingController(rootView: makeCaptureView())
         hostingController.view.backgroundColor = .clear
 
         addChild(hostingController)
@@ -89,29 +72,9 @@ final class CaptureViewController: BaseViewController {
         hostingController.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
         hostingController.didMove(toParent: self)
-    }
 
-    private func setupLoadingOverlay() {
-        view.addSubview(loadingOverlay)
-        loadingOverlay.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-
-        loadingOverlay.addSubview(activityIndicator)
-        loadingOverlay.addSubview(progressLabel)
-
-        activityIndicator.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-20)
-        }
-
-        progressLabel.snp.makeConstraints { make in
-            make.top.equalTo(activityIndicator.snp.bottom).offset(16)
-            make.centerX.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(20)
-        }
+        captureHostingController = hostingController
     }
 
     // MARK: - Binding
@@ -127,55 +90,50 @@ final class CaptureViewController: BaseViewController {
 
     private func handleState(_ state: CaptureViewModel.AppState) {
         switch state {
-        case .loading:
-//            showLoadingOverlay(message: "캡쳐 세션 준비중...")
+        case .loading, .ready:
             navigationItem.rightBarButtonItem?.isEnabled = false
-//        case .ready:
-//            hideLoadingOverlay()
-        case .capturing:
-//            hideLoadingOverlay()
+            if view.window != nil {
+                captureHostingController?.rootView = makeCaptureView()
+            }
+        case .detecting, .capturing:
             navigationItem.rightBarButtonItem?.isEnabled = true
-
-//        case .finishing:
-//            showLoadingOverlay(message: "3D 모델 생성 중...")
-
+            navigationItem.leftBarButtonItem?.isEnabled = true
+        case .finishing:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+            navigationItem.leftBarButtonItem?.isEnabled = false
         case .completed(let url):
-//            hideLoadingOverlay()
-            let viewer = ModelViewerViewController(modelURL: url)
-            navigationController?.pushViewController(viewer, animated: true)
-
-        case .cancelled:
-            print("cancelled")
-            navigationController?.popViewController(animated: true)
-
+            pushModelViewer(modelURL: url)
+        case .saved, .cancelled:
+            if let nav = navigationController,
+               let index = nav.viewControllers.firstIndex(of: self),
+               index > 0 {
+                nav.popToViewController(nav.viewControllers[index - 1], animated: true)
+            } else {
+                navigationController?.popToRootViewController(animated: true)
+            }
         case .failed(let error):
-//            hideLoadingOverlay()
-            print("failed")
             showAlert(
                 title: "오류",
                 message: "3D 모델 생성에 실패했습니다.\n\(error.localizedDescription)",
-                cancelTitle: nil
+                confirmTitle: "재시도",
+                cancelTitle: "취소",
+                onConfirm: { [weak self] in
+                    self?.viewModel.retryUSDZ()
+                }
             )
-        default:
-            break
         }
     }
 
-    // MARK: - Loading Overlay
+    // MARK: - Navigation
 
-    private func showLoadingOverlay(message: String) {
-        progressLabel.text = message
-        loadingOverlay.isHidden = false
-        activityIndicator.startAnimating()
-        navigationItem.leftBarButtonItem?.isEnabled = false
-        navigationItem.rightBarButtonItem?.isEnabled = false
-    }
-
-    private func hideLoadingOverlay() {
-        progressLabel.text = ""
-        loadingOverlay.isHidden = true
-        activityIndicator.stopAnimating()
-        navigationItem.leftBarButtonItem?.isEnabled = true
+    private func pushModelViewer(modelURL: URL) {
+        let viewer = ModelViewerViewController(modelURL: modelURL) {
+            [weak self] in
+            self?.viewModel.saveModel()
+        } onResume: { [weak self] in
+            self?.viewModel.resumeCapturing()
+        }
+        navigationController?.pushViewController(viewer, animated: true)
     }
 
     // MARK: - Actions

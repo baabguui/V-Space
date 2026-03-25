@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         nav.navigationBar.tintColor = .vsPrimary
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
-        print(#function)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -1,15 +1,15 @@
 //
-//  CaptureDirectoryManager.swift
+//  CaptureStorageManager.swift
 //  VSpace
 //
-//  캡쳐 세션에 필요한 디렉토리 경로 관리 및 FileManager 작업 담당
+//  캡쳐 세션에 필요한 임시 디렉토리 경로 관리 및 FileManager 작업 담당
 //
 
 import Foundation
 
 // MARK: - Protocol
 
-protocol CaptureDirectoryManaging {
+protocol CaptureStorageManaging {
     var imagesDirectory: URL { get }
     var checkpointDirectory: URL { get }
     var outputURL: URL { get }
@@ -17,9 +17,9 @@ protocol CaptureDirectoryManaging {
     func cleanup()
 }
 
-// MARK: - CaptureDirectoryManager
+// MARK: - CaptureStorageManager
 
-final class CaptureDirectoryManager: CaptureDirectoryManaging {
+final class CaptureStorageManager: CaptureStorageManaging {
 
     private let captureDirectory: URL
     let imagesDirectory: URL
@@ -28,8 +28,13 @@ final class CaptureDirectoryManager: CaptureDirectoryManaging {
 
     init() {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let capturesRoot = docs.appendingPathComponent("Captures")
+
+        // 이전 세션 잔여 파일 일괄 삭제 (강제 종료 등 비정상 종료 대비)
+        try? FileManager.default.removeItem(at: capturesRoot)
+
         let id = UUID().uuidString
-        captureDirectory    = docs.appendingPathComponent("Captures/\(id)")
+        captureDirectory    = capturesRoot.appendingPathComponent(id)
         imagesDirectory     = captureDirectory.appendingPathComponent("Images")
         checkpointDirectory = captureDirectory.appendingPathComponent("Checkpoints")
         outputURL           = captureDirectory.appendingPathComponent("preview.usdz")

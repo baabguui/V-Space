@@ -9,12 +9,17 @@
 import UIKit
 
 final class VLongButton: UIButton {
-
+    
+    enum Style {
+        case black
+        case accent
+    }
+    
     // MARK: - Init
 
-    init(title: String) {
+    init(title: String, style: Style = .black) {
         super.init(frame: .zero)
-        setup(title: title)
+        setup(title: title, style: style)
     }
 
     @available(*, unavailable)
@@ -24,10 +29,18 @@ final class VLongButton: UIButton {
 
     // MARK: - Setup
 
-    private func setup(title: String) {
+    private func setup(title: String, style: Style) {
         var config = Configuration.filled()
-        config.baseBackgroundColor = .vsPrimary
-        config.baseForegroundColor = .vsWhite
+        
+        switch style {
+        case .black:
+            config.baseBackgroundColor = .vsPrimary
+            config.baseForegroundColor = .vsWhite
+        case .accent:
+            config.baseBackgroundColor = .accent
+            config.baseForegroundColor = .vsPrimary
+        }
+        
         config.attributedTitle = AttributedString(
             title,
             attributes: AttributeContainer([

@@ -25,6 +25,7 @@ final class CaptureViewModel {
         case completed(URL)
         case failed(Error)
         case cancelled
+        case saved
     }
 
     // MARK: - Output (RxSwift)
@@ -37,12 +38,17 @@ final class CaptureViewModel {
 
     // MARK: - Private
 
-    private let directoryManager: CaptureDirectoryManaging
+    private let directoryManager: CaptureStorageManaging
+    private let mediaStorage: MediaStorageManaging
 
     // MARK: - Init
 
-    init(directoryManager: CaptureDirectoryManaging = CaptureDirectoryManager()) {
+    init(
+        directoryManager: CaptureStorageManaging = CaptureStorageManager(),
+        mediaStorage: MediaStorageManaging = MediaStorageManager.shared
+    ) {
         self.directoryManager = directoryManager
+        self.mediaStorage = mediaStorage
         try? directoryManager.setup()
         session = ObjectCaptureSession()
         startSession(session)
@@ -64,20 +70,37 @@ final class CaptureViewModel {
         appState.accept(.cancelled)
     }
 
-    /// 기존 checkpoint + imagesDirectory를 재사용해 새 세션으로 캡쳐를 재개합니다.
-    /// .finishing 후 USDZ 생성 실패 시 호출
-    func resumeCapture() {
-        session = ObjectCaptureSession()
-        appState.accept(.loading)
-        startSession(session)
+    /// 완료 버튼: session.finish() 없이 현재 이미지로 USDZ 생성 시작
+    /// 세션은 .capturing 상태를 유지하므로 뷰어에서 돌아와 추가 스캔 가능
+    func finishCapture() { startGenerating() }
+
+    /// USDZ 생성 실패 후 재시도
+    func retryUSDZ() { startGenerating() }
+
+    /// 뷰어에서 돌아와 캡쳐 계속하기 (세션은 살아있음)
+    func resumeCapturing() {
+        appState.accept(.capturing)
     }
 
-    func finishCapture() {
-        session.finish()
-        appState.accept(.finishing)
+    /// 저장 확정 시 세션 취소 후 파일 복사
+    /// finish() 대신 cancel()을 사용해 세션의 내부 파일 접근을 막음
+    func saveModel() {
+        session.cancel()
+        do {
+            try mediaStorage.saveModel(from: directoryManager.outputURL)
+            directoryManager.cleanup()
+            appState.accept(.saved)
+        } catch {
+            appState.accept(.failed(error))
+        }
     }
 
     // MARK: - Private
+
+    private func startGenerating() {
+        appState.accept(.finishing)
+        Task { await generateUSDZ() }
+    }
 
     private func startSession(_ captureSession: ObjectCaptureSession) {
         var config = ObjectCaptureSession.Configuration()
@@ -104,15 +127,19 @@ final class CaptureViewModel {
         case .capturing:
             appState.accept(.capturing)
         case .finishing:
-            guard case .cancelled = appState.value else {
+            switch appState.value {
+            case .cancelled, .completed, .saved:
+                break  // 취소됐거나 이미 완료(저장 시 finish 호출)된 경우 무시
+            default:
                 appState.accept(.finishing)
                 Task { await generateUSDZ() }
-                return
             }
         case .failed(let error):
-            guard case .cancelled = appState.value else {
+            switch appState.value {
+            case .cancelled, .completed, .saved:
+                break  // 저장/취소 이후 세션에서 올라오는 에러 무시
+            default:
                 appState.accept(.failed(error))
-                return
             }
         default:
             break
@@ -120,6 +147,7 @@ final class CaptureViewModel {
     }
 
     private func generateUSDZ() async {
+        try? FileManager.default.removeItem(at: directoryManager.outputURL)
         do {
             let photogrammetrySession = try PhotogrammetrySession(input: directoryManager.imagesDirectory)
             let request = PhotogrammetrySession.Request.modelFile(url: directoryManager.outputURL, detail: .reduced)
