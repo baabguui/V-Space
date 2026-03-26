@@ -64,8 +64,7 @@ final class CaptureTypeSelectViewController: BaseViewController {
             
         output.navigateToPlaneCapture
             .subscribe(onNext: { [weak self] in
-                print("Plane Capture selected")
-                // TODO: - 평면 캡쳐(RoomCapture 등) 로직 연결 예정
+                self?.coordinator?.showPlaneCapture()
             })
             .disposed(by: disposeBag)
     }

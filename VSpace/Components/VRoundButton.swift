@@ -19,22 +19,25 @@ final class VRoundButton: UIButton {
     }
     
     enum Size {
-        case large
+        case small
         case normal
+        case large
         
         var size: CGFloat {
             switch self {
-            case .large:
-                100
-            case .normal:
+            case .small:
                 80
+            case .normal:
+                100
+            case .large:
+                140
             }
         }
     }
 
     // MARK: - Init
 
-    init(style: Style = .black, size: Size = .normal, iconName: String) {
+    init(style: Style = .black, size: Size = .small, iconName: String) {
         super.init(frame: .zero)
         setup(style: style, size: size, iconName: iconName)
     }

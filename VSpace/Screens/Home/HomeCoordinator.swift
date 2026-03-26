@@ -19,6 +19,11 @@ final class HomeCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
 
+    func showPlaneCapture() {
+        let vc = PlaneCaptureViewController(coordinator: self)
+        navigationController.pushViewController(vc, animated: true)
+    }
+
     func showCaptureSession() {
         if #available(iOS 17.0, *) {
             let captureVC = CaptureViewController(coordinator: self)
