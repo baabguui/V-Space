@@ -120,8 +120,8 @@ final class CaptureViewController: BaseViewController {
                 onSave: { [weak self] in self?.viewModel.saveModel() },
                 onResume: { [weak self] in self?.viewModel.resumeCapturing() }
             )
-        case .saved:
-            coordinator?.showSaveResult()
+        case .saved(let keepsakeId):
+            coordinator?.showNameInput(keepsakeId: keepsakeId)
         case .cancelled:
             coordinator?.popCaptureSession()
         case .failed(let error):

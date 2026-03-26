@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class VMultilineTextField: UIView {
     private let maxLength: Int
@@ -46,6 +48,17 @@ final class VMultilineTextField: UIView {
         l.textColor = .vsPrimary
         return l
     }()
+
+    // MARK: - Public
+
+    var rxText: Observable<String> { textView.rx.text.orEmpty.asObservable() }
+    var text: String { textView.text ?? "" }
+
+    func setText(_ text: String) {
+        textView.text = text
+        placeholderLabel.isHidden = !text.isEmpty
+        updateCounter()
+    }
 
     // MARK: - Init
 

@@ -94,8 +94,11 @@ final class HomeViewController: BaseViewController {
             .subscribe(onNext: { [weak self] item in
                 switch item {
                 case .keepsake(let keepsake):
-                    print("Selected Keepsake: \(keepsake.name)")
-                    // TODO: - Detail 이동
+                    if keepsake.status == .inProgress {
+                        self?.coordinator?.resumeKeepsakeForm(keepsake: keepsake)
+                    } else {
+                        // TODO: - Detail 이동
+                    }
                 case .add:
                     self?.startCapture()
                 }

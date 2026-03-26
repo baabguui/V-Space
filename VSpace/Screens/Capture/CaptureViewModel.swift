@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import RealmSwift
 import _RealityKit_SwiftUI
 import RxRelay
 
@@ -25,7 +26,7 @@ final class CaptureViewModel {
         case completed(URL)
         case failed(Error)
         case cancelled
-        case saved
+        case saved(keepsakeId: ObjectId)
     }
 
     // MARK: - Output (RxSwift)
@@ -40,15 +41,18 @@ final class CaptureViewModel {
 
     private let directoryManager: CaptureStorageManaging
     private let mediaStorage: MediaStorageManaging
+    private let db: KeepsakeDatabaseManaging
 
     // MARK: - Init
 
     init(
         directoryManager: CaptureStorageManaging = CaptureStorageManager(),
-        mediaStorage: MediaStorageManaging = MediaStorageManager.shared
+        mediaStorage: MediaStorageManaging = MediaStorageManager.shared,
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
     ) {
         self.directoryManager = directoryManager
         self.mediaStorage = mediaStorage
+        self.db = db
         try? directoryManager.setup()
         session = ObjectCaptureSession()
         startSession(session)
@@ -82,14 +86,22 @@ final class CaptureViewModel {
         appState.accept(.capturing)
     }
 
-    /// 저장 확정 시 세션 취소 후 파일 복사
+    /// 저장 확정 시 세션 취소 후 파일 복사 + Keepsake 초기 레코드 생성
     /// finish() 대신 cancel()을 사용해 세션의 내부 파일 접근을 막음
     func saveModel() {
         session.cancel()
         do {
-            try mediaStorage.saveModel(from: directoryManager.outputURL)
+            let dest = try mediaStorage.saveModel(from: directoryManager.outputURL)
             directoryManager.cleanup()
-            appState.accept(.saved)
+            let keepsake = Keepsake()
+            keepsake.resourceFileName = dest.lastPathComponent
+            keepsake.thumbnailFileName = ""
+            keepsake.recordType = .threeD
+            keepsake.disposalDate = Date()
+            keepsake.status = .inProgress
+            keepsake.progressStep = 1
+            try db.saveKeepsake(keepsake)
+            appState.accept(.saved(keepsakeId: keepsake.id))
         } catch {
             appState.accept(.failed(error))
         }
@@ -128,7 +140,7 @@ final class CaptureViewModel {
             appState.accept(.capturing)
         case .finishing:
             switch appState.value {
-            case .cancelled, .completed, .saved:
+            case .cancelled, .completed, .saved(_):
                 break  // 취소됐거나 이미 완료(저장 시 finish 호출)된 경우 무시
             default:
                 appState.accept(.finishing)
@@ -136,7 +148,7 @@ final class CaptureViewModel {
             }
         case .failed(let error):
             switch appState.value {
-            case .cancelled, .completed, .saved:
+            case .cancelled, .completed, .saved(_):
                 break  // 저장/취소 이후 세션에서 올라오는 에러 무시
             default:
                 appState.accept(.failed(error))

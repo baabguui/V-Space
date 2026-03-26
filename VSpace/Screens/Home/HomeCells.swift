@@ -58,6 +58,11 @@ final class KeepsakeCell: UICollectionViewCell {
     
     func configure(with keepsake: Keepsake) {
         // TODO: thumbnailFileName 활용하여 이미지 로드
+        if keepsake.status == .inProgress {
+            containerView.layer.borderColor = UIColor.vsSecondary.cgColor
+        } else {
+            containerView.layer.borderColor = UIColor.vsStroke.cgColor
+        }
     }
 }
 

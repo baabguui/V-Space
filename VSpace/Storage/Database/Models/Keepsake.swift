@@ -37,7 +37,7 @@ final class Keepsake: Object {
     // 날짜
     @Persisted var acquiredDate: Date?
     @Persisted var disposalDate: Date
-    @Persisted var ritualDate: Date
+    @Persisted var ritualDate: Date?
     @Persisted var createdAt: Date = Date()
     @Persisted var updatedAt: Date = Date()
 

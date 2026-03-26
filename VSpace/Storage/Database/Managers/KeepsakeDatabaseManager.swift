@@ -4,6 +4,7 @@ import RealmSwift
 protocol KeepsakeDatabaseManaging {
     func saveKeepsake(_ keepsake: Keepsake) throws
     func fetchKeepsakes() -> Results<Keepsake>
+    func fetchKeepsake(id: ObjectId) -> Keepsake?
     func updateKeepsake(_ keepsake: Keepsake, action: @escaping (Keepsake) -> Void) throws
     func deleteKeepsake(_ keepsake: Keepsake) throws
 }
@@ -28,6 +29,10 @@ final class KeepsakeDatabaseManager: KeepsakeDatabaseManaging {
     
     func fetchKeepsakes() -> Results<Keepsake> {
         return realm.objects(Keepsake.self).sorted(byKeyPath: "createdAt", ascending: false)
+    }
+
+    func fetchKeepsake(id: ObjectId) -> Keepsake? {
+        return realm.object(ofType: Keepsake.self, forPrimaryKey: id)
     }
     
     func updateKeepsake(_ keepsake: Keepsake, action: @escaping (Keepsake) -> Void) throws {

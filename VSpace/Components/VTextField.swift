@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class VTextField: UIView {
     private let maxLength: Int
@@ -34,6 +36,16 @@ final class VTextField: UIView {
         l.textColor = .vsPrimary
         return l
     }()
+
+    // MARK: - Public
+
+    var rxText: Observable<String> { textField.rx.text.orEmpty.asObservable() }
+    var text: String { textField.text ?? "" }
+
+    func setText(_ text: String) {
+        textField.text = text
+        updateCounter()
+    }
 
     // MARK: - Init
 
