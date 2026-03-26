@@ -23,11 +23,17 @@ final class PlaneCaptureCoordinator: Coordinator, PlaneCaptureCoordinating {
         let pickerVC = ImagePickerViewController()
         let nav = UINavigationController(rootViewController: pickerVC)
         nav.modalPresentationStyle = .fullScreen
+        var cropBag = DisposeBag()
 
         pickerVC.imageSelected
-            .take(1)
-            .subscribe(onNext: { [weak self, weak nav] originalImage in
-                guard let self, let nav else { return }
+            .subscribe(onNext: { [weak nav] originalImage in
+                guard let nav else { return }
+                cropBag = DisposeBag()
+
+                if nav.viewControllers.count > 1 {
+                    nav.popViewController(animated: false)
+                }
+
                 let cropVC = CircularCropViewController(image: originalImage)
                 cropVC.cropConfirmed
                     .take(1)
@@ -35,7 +41,7 @@ final class PlaneCaptureCoordinator: Coordinator, PlaneCaptureCoordinating {
                         completion(originalImage, croppedImage)
                         nav?.dismiss(animated: true)
                     })
-                    .disposed(by: self.disposeBag)
+                    .disposed(by: cropBag)
                 nav.pushViewController(cropVC, animated: true)
             })
             .disposed(by: disposeBag)
