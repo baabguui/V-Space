@@ -13,14 +13,14 @@ final class DateInputViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: KeepsakeFormCoordinating?
     private let viewModel: DateInputViewModel
     private let config: DateInputConfig
     private lazy var contentView = DateInputView(config: config)
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator, viewModel: DateInputViewModel, config: DateInputConfig) {
+    init(coordinator: KeepsakeFormCoordinating, viewModel: DateInputViewModel, config: DateInputConfig) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         self.config = config

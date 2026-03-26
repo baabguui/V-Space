@@ -17,13 +17,13 @@ final class CaptureViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: ObjectCaptureCoordinating?
     private let viewModel = CaptureViewModel()
     private var captureHostingController: UIHostingController<CaptureView>?
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator) {
+    init(coordinator: ObjectCaptureCoordinating) {
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
@@ -121,9 +121,9 @@ final class CaptureViewController: BaseViewController {
                 onResume: { [weak self] in self?.viewModel.resumeCapturing() }
             )
         case .saved(let keepsakeId):
-            coordinator?.showNameInput(keepsakeId: keepsakeId)
+            coordinator?.finishCapture(keepsakeId: keepsakeId)
         case .cancelled:
-            coordinator?.popCaptureSession()
+            coordinator?.cancelCapture()
         case .failed(let error):
             showAlert(
                 title: NSLocalizedString("capture.alert.error.title", comment: ""),

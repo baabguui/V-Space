@@ -14,7 +14,7 @@ final class TextInputViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: KeepsakeFormCoordinating?
     private let viewModel: TextInputViewModel
     private let config: TextInputConfig
     private lazy var contentView = TextInputView(config: config)
@@ -22,7 +22,7 @@ final class TextInputViewController: BaseViewController {
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator, viewModel: TextInputViewModel, config: TextInputConfig) {
+    init(coordinator: KeepsakeFormCoordinating, viewModel: TextInputViewModel, config: TextInputConfig) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         self.config = config
@@ -107,7 +107,7 @@ final class TextInputViewController: BaseViewController {
                 switch self.config {
                 case .ability:    self.coordinator?.showMemoryNote(keepsakeId: keepsakeId)
                 case .memoryNote: self.coordinator?.showLastWords(keepsakeId: keepsakeId)
-                case .lastWords:  self.coordinator?.finishKeepsakeForm()
+                case .lastWords:  self.coordinator?.finishForm()
                 }
             })
             .disposed(by: disposeBag)
@@ -118,7 +118,7 @@ final class TextInputViewController: BaseViewController {
                 switch self.config {
                 case .ability:    self.coordinator?.showMemoryNote(keepsakeId: keepsakeId)
                 case .memoryNote: self.coordinator?.showLastWords(keepsakeId: keepsakeId)
-                case .lastWords:  self.coordinator?.finishKeepsakeForm()
+                case .lastWords:  self.coordinator?.finishForm()
                 }
             })
             .disposed(by: disposeBag)

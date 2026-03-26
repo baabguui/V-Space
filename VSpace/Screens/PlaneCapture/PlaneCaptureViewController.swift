@@ -12,7 +12,7 @@ final class PlaneCaptureViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: PlaneCaptureCoordinating?
     private let viewModel: PlaneCaptureViewModel
     private let contentView = PlaneCaptureView()
     private let selectedImageRelay = PublishRelay<UIImage>()
@@ -20,7 +20,7 @@ final class PlaneCaptureViewController: BaseViewController {
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator, viewModel: PlaneCaptureViewModel = PlaneCaptureViewModel()) {
+    init(coordinator: PlaneCaptureCoordinating, viewModel: PlaneCaptureViewModel = PlaneCaptureViewModel()) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -69,7 +69,11 @@ final class PlaneCaptureViewController: BaseViewController {
 
         output.openImagePicker
             .subscribe(onNext: { [weak self] in
-                self?.presentImagePicker()
+                guard let self else { return }
+                self.coordinator?.showImagePicker(from: self) { [weak self] original, cropped in
+                    self?.selectedImageRelay.accept(original)
+                    self?.croppedImageRelay.accept(cropped)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -89,7 +93,7 @@ final class PlaneCaptureViewController: BaseViewController {
 
         output.navigateNext
             .subscribe(onNext: { [weak self] keepsakeId in
-                self?.coordinator?.showNameInput(keepsakeId: keepsakeId)
+                self?.coordinator?.finishCapture(keepsakeId: keepsakeId)
             })
             .disposed(by: disposeBag)
 
@@ -102,34 +106,5 @@ final class PlaneCaptureViewController: BaseViewController {
                 )
             })
             .disposed(by: disposeBag)
-    }
-
-    // MARK: - Navigation
-
-    private func presentImagePicker() {
-        let pickerVC = ImagePickerViewController()
-        let nav = UINavigationController(rootViewController: pickerVC)
-        nav.modalPresentationStyle = .fullScreen
-
-        pickerVC.imageSelected
-            .take(1)
-            .subscribe(onNext: { [weak self, weak nav] originalImage in
-                guard let self, let nav else { return }
-                let cropVC = CircularCropViewController(image: originalImage)
-
-                cropVC.cropConfirmed
-                    .take(1)
-                    .subscribe(onNext: { [weak self, weak nav] croppedImage in
-                        self?.selectedImageRelay.accept(originalImage)
-                        self?.croppedImageRelay.accept(croppedImage)
-                        nav?.dismiss(animated: true)
-                    })
-                    .disposed(by: self.disposeBag)
-
-                nav.pushViewController(cropVC, animated: true)
-            })
-            .disposed(by: disposeBag)
-
-        present(nav, animated: true)
     }
 }

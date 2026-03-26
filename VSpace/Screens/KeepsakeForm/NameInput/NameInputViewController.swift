@@ -11,13 +11,13 @@ final class NameInputViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: KeepsakeFormCoordinating?
     private let viewModel: NameInputViewModel
     private let contentView = NameInputView()
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator, viewModel: NameInputViewModel) {
+    init(coordinator: KeepsakeFormCoordinating, viewModel: NameInputViewModel) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

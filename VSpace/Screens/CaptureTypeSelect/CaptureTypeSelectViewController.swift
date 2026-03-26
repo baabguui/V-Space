@@ -11,13 +11,13 @@ final class CaptureTypeSelectViewController: BaseViewController {
     
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: HomeCoordinating?
     private let viewModel: CaptureTypeSelectViewModel
     private let contentView = CaptureTypeSelectView()
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinator, viewModel: CaptureTypeSelectViewModel = CaptureTypeSelectViewModel()) {
+    init(coordinator: HomeCoordinating, viewModel: CaptureTypeSelectViewModel = CaptureTypeSelectViewModel()) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -58,7 +58,7 @@ final class CaptureTypeSelectViewController: BaseViewController {
         
         output.navigateToObjectCapture
             .subscribe(onNext: { [weak self] in
-                self?.coordinator?.showCaptureSession()
+                self?.coordinator?.showObjectCapture()
             })
             .disposed(by: disposeBag)
             
