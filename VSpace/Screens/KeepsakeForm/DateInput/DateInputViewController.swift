@@ -40,7 +40,7 @@ final class DateInputViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.datePicker.date = viewModel.initialDate
+        contentView.setInitialDate(viewModel.initialDate)
         bindViewModel()
     }
 
@@ -48,7 +48,7 @@ final class DateInputViewController: BaseViewController {
 
     private func bindViewModel() {
         let input = DateInputViewModel.Input(
-            date:    contentView.datePicker.rx.date.asObservable(),
+            date:    contentView.selectedDateRelay.asObservable(),
             nextTap: contentView.nextButton.rx.tap.asObservable()
         )
         let output = viewModel.transform(input: input)

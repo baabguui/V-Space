@@ -97,7 +97,7 @@ final class CaptureViewModel {
             keepsake.resourceFileName = dest.lastPathComponent
             keepsake.thumbnailFileName = ""
             keepsake.recordType = .threeD
-            keepsake.disposalDate = Date()
+            keepsake.disposalDate = .distantFuture
             keepsake.status = .inProgress
             keepsake.progressStep = 1
             try db.saveKeepsake(keepsake)

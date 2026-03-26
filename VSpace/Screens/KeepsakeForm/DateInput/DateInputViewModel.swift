@@ -10,7 +10,7 @@ import RxSwift
 final class DateInputViewModel {
 
     struct Input {
-        let date:    Observable<Date>
+        let date:    Observable<Date?>
         let nextTap: Observable<Void>
     }
 
@@ -22,11 +22,13 @@ final class DateInputViewModel {
     private let config: DateInputConfig
     private let db: KeepsakeDatabaseManaging
 
-    var initialDate: Date {
-        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return Date() }
+    var initialDate: Date? {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return nil }
         switch config {
-        case .acquiredDate: return keepsake.acquiredDate ?? Date()
-        case .disposalDate: return keepsake.disposalDate
+        case .acquiredDate:
+            return keepsake.acquiredDate
+        case .disposalDate:
+            return keepsake.disposalDate == .distantFuture ? nil : keepsake.disposalDate
         }
     }
 
@@ -50,7 +52,7 @@ final class DateInputViewModel {
         return Output(navigateNext: navigateNext)
     }
 
-    private func save(date: Date) -> ObjectId? {
+    private func save(date: Date?) -> ObjectId? {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return nil }
         try? db.updateKeepsake(keepsake) { k in
             switch self.config {
@@ -58,7 +60,7 @@ final class DateInputViewModel {
                 k.acquiredDate = date
                 k.progressStep = 3
             case .disposalDate:
-                k.disposalDate = date
+                k.disposalDate = date ?? .distantFuture
                 k.progressStep = 4
             }
         }
