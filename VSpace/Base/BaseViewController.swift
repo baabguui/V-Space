@@ -13,6 +13,11 @@ class BaseViewController: UIViewController {
     // MARK: - Properties
 
     let disposeBag = DisposeBag()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .vsWhite
+    }
 
     // MARK: - Alert Helper
 
