@@ -7,6 +7,7 @@
 //  상태 관찰: session.stateUpdates (AsyncSequence) — onChange 불필요
 //
 
+import UIKit
 import Foundation
 import RealmSwift
 import _RealityKit_SwiftUI
@@ -88,14 +89,18 @@ final class CaptureViewModel {
 
     /// 저장 확정 시 세션 취소 후 파일 복사 + Keepsake 초기 레코드 생성
     /// finish() 대신 cancel()을 사용해 세션의 내부 파일 접근을 막음
-    func saveModel() {
+    func saveModel(thumbnail: UIImage) {
         session.cancel()
         do {
+            print("init")
             let dest = try mediaStorage.saveModel(from: directoryManager.outputURL)
+            print("save usdz")
+            let thumbFileName = try mediaStorage.saveThumbnail(thumbnail)
+            print("save thumbnail")
             directoryManager.cleanup()
             let keepsake = Keepsake()
             keepsake.resourceFileName = dest.lastPathComponent
-            keepsake.thumbnailFileName = ""
+            keepsake.thumbnailFileName = thumbFileName
             keepsake.recordType = .threeD
             keepsake.disposalDate = .distantFuture
             keepsake.status = .inProgress
@@ -103,6 +108,7 @@ final class CaptureViewModel {
             try db.saveKeepsake(keepsake)
             appState.accept(.saved(keepsakeId: keepsake.id))
         } catch {
+            print(error)
             appState.accept(.failed(error))
         }
     }

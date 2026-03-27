@@ -117,7 +117,7 @@ final class CaptureViewController: BaseViewController {
         case .completed(let url):
             coordinator?.showModelViewer(
                 modelURL: url,
-                onSave: { [weak self] in self?.viewModel.saveModel() },
+                onSave: { [weak self] thumbnail in self?.viewModel.saveModel(thumbnail: thumbnail) },
                 onResume: { [weak self] in self?.viewModel.resumeCapturing() }
             )
         case .saved(let keepsakeId):

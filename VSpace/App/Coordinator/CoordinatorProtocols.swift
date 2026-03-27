@@ -20,7 +20,7 @@ protocol PlaneCaptureCoordinating: AnyObject {
 // MARK: - ObjectCaptureCoordinating
 
 protocol ObjectCaptureCoordinating: AnyObject {
-    func showModelViewer(modelURL: URL, onSave: @escaping () -> Void, onResume: @escaping () -> Void)
+    func showModelViewer(modelURL: URL, onSave: @escaping (UIImage) -> Void, onResume: @escaping () -> Void)
     func finishCapture(keepsakeId: ObjectId)
     func cancelCapture()
 }

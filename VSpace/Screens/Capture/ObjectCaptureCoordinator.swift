@@ -17,7 +17,7 @@ final class ObjectCaptureCoordinator: Coordinator, ObjectCaptureCoordinating {
         navigationController.pushViewController(vc, animated: true)
     }
 
-    func showModelViewer(modelURL: URL, onSave: @escaping () -> Void, onResume: @escaping () -> Void) {
+    func showModelViewer(modelURL: URL, onSave: @escaping (UIImage) -> Void, onResume: @escaping () -> Void) {
         let vc = ModelViewerViewController(modelURL: modelURL, onSave: onSave, onResume: onResume)
         navigationController.pushViewController(vc, animated: true)
     }
