@@ -45,7 +45,7 @@ final class HomeViewModel {
         let results = realm.objects(Keepsake.self).sorted(byKeyPath: "createdAt", ascending: false)
         
         // Realm 변경사항 구독
-        notificationToken = results.observe { [weak self] changes in
+        notificationToken = results.observe(keyPaths: [\Keepsake.status, \Keepsake.disposalDate]) { [weak self] changes in
             guard let self = self else { return }
             switch changes {
             case .initial(let keepsakes), .update(let keepsakes, _, _, _):

@@ -76,19 +76,18 @@ final class KeepsakeCell: UICollectionViewCell {
 
         thumbnailImageView.image = MediaStorageManager.shared.loadThumbnail(keepsake.thumbnailFileName)
         
+        guard keepsake.status != .done else { return }
+        thumbnailImageView.alpha = 0.6
+        
         switch keepsake.status {
-        case .done:
-            break
         case .inProgress:
             statusIconImageView.image = UIImage(systemName: "ellipsis")
-            fallthrough
         default:
             if keepsake.isAvailable {
                 statusIconImageView.image = UIImage(systemName: "exclamationmark")
             } else {
                 statusIconImageView.image = UIImage(systemName: "hourglass")
             }
-            thumbnailImageView.alpha = 0.6
         }
     }
 }

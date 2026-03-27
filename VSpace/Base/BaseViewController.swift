@@ -19,6 +19,10 @@ class BaseViewController: UIViewController {
         view.backgroundColor = .vsWhite
     }
 
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+
     // MARK: - Alert Helper
 
     /// 재사용 가능한 Alert 표시 메서드

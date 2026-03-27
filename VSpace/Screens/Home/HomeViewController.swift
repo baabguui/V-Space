@@ -32,6 +32,7 @@ final class HomeViewController: BaseViewController {
         layout.sectionInset = UIEdgeInsets(top: 20, left: sideMargin, bottom: 20, right: sideMargin)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
+        cv.showsVerticalScrollIndicator = false
         cv.register(KeepsakeCell.self, forCellWithReuseIdentifier: KeepsakeCell.identifier)
         cv.register(AddKeepsakeCell.self, forCellWithReuseIdentifier: AddKeepsakeCell.identifier)
         return cv
