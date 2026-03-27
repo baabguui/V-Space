@@ -8,6 +8,7 @@ protocol HomeCoordinating: AnyObject {
     func showPlaneCapture()
     func showObjectCapture()
     func resumeKeepsakeForm(keepsake: Keepsake)
+    func showKeepsakeStatus(keepsake: Keepsake)
 }
 
 // MARK: - PlaneCaptureCoordinating
@@ -33,5 +34,6 @@ protocol KeepsakeFormCoordinating: AnyObject {
     func showAbility(keepsakeId: ObjectId)
     func showMemoryNote(keepsakeId: ObjectId)
     func showLastWords(keepsakeId: ObjectId)
+    func showFormCompletion(keepsakeId: ObjectId)
     func finishForm()
 }

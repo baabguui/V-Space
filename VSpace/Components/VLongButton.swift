@@ -11,6 +11,7 @@ import UIKit
 final class VLongButton: UIButton {
     
     enum Style {
+        case white
         case black
         case accent
     }
@@ -33,6 +34,9 @@ final class VLongButton: UIButton {
         var config = Configuration.filled()
         
         switch style {
+        case.white:
+            config.baseBackgroundColor = .vsWhite
+            config.baseForegroundColor = .vsPrimary
         case .black:
             config.baseBackgroundColor = .vsPrimary
             config.baseForegroundColor = .vsWhite

@@ -80,6 +80,14 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
         navigationController.pushViewController(vc, animated: true)
     }
 
+    func showFormCompletion(keepsakeId: ObjectId) {
+        let vc = FormCompletionViewController(
+            coordinator: self,
+            viewModel: FormCompletionViewModel(keepsakeId: keepsakeId)
+        )
+        navigationController.pushViewController(vc, animated: true)
+    }
+
     func finishForm() {
         onFinish?()
         navigationController.popToRootViewController(animated: true)

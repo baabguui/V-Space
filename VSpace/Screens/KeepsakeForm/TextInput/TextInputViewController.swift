@@ -107,7 +107,7 @@ final class TextInputViewController: BaseViewController {
                 switch self.config {
                 case .ability:    self.coordinator?.showMemoryNote(keepsakeId: keepsakeId)
                 case .memoryNote: self.coordinator?.showLastWords(keepsakeId: keepsakeId)
-                case .lastWords:  self.coordinator?.finishForm()
+                case .lastWords:  self.coordinator?.showFormCompletion(keepsakeId: keepsakeId)
                 }
             })
             .disposed(by: disposeBag)
@@ -118,7 +118,7 @@ final class TextInputViewController: BaseViewController {
                 switch self.config {
                 case .ability:    self.coordinator?.showMemoryNote(keepsakeId: keepsakeId)
                 case .memoryNote: self.coordinator?.showLastWords(keepsakeId: keepsakeId)
-                case .lastWords:  self.coordinator?.finishForm()
+                case .lastWords:  self.coordinator?.showFormCompletion(keepsakeId: keepsakeId)
                 }
             })
             .disposed(by: disposeBag)

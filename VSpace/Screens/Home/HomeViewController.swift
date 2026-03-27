@@ -95,10 +95,13 @@ final class HomeViewController: BaseViewController {
             .subscribe(onNext: { [weak self] item in
                 switch item {
                 case .keepsake(let keepsake):
-                    if keepsake.status == .inProgress {
+                    switch keepsake.status {
+                    case .inProgress:
                         self?.coordinator?.resumeKeepsakeForm(keepsake: keepsake)
-                    } else {
-                        // TODO: - Detail 이동
+                    case .done:
+                        break // TODO: done 상태 화면
+                    default:
+                        self?.coordinator?.showKeepsakeStatus(keepsake: keepsake)
                     }
                 case .add:
                     self?.startCapture()

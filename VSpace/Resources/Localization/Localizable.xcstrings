@@ -1025,6 +1025,81 @@
           }
         }
       }
+    },
+    "form_completion.available.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "All ready!\n\nYou can start the farewell ritual." }
+        },
+        "ko" : {
+          "stringUnit" : { "state" : "translated", "value" : "준비가 끝났습니다!\n\n보내주는 의식을 진행할 수 있어요" }
+        }
+      }
+    },
+    "form_completion.unavailable.message" : {
+      "comment" : "%@ = keepsake name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Digitization complete.\n\nPlease say goodbye to %@ in the real world\nand come back." }
+        },
+        "ko" : {
+          "stringUnit" : { "state" : "translated", "value" : "디지털화 완료되었습니다\n\n현실의 %@이를 보내주고\n다시 돌아와주세요" }
+        }
+      }
+    },
+    "form_completion.start" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시작" } }
+      }
+    },
+    "form_completion.later" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Later" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다음에 하기" } }
+      }
+    },
+    "form_completion.go_home" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Go Home" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "홈으로" } }
+      }
+    },
+    "form_completion.notify" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notify Me" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림 받기" } }
+      }
+    },
+    "keepsake_status.available.message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Have you said goodbye?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "보내주셨나요?" } }
+      }
+    },
+    "keepsake_status.unavailable.message" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Have you already said goodbye?" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이미 보내주셨나요?" } }
+      }
+    },
+    "keepsake_status.confirm" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Yes (Proceed)" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "예 (진행)" } }
+      }
+    },
+    "keepsake_status.proceed_today" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Proceed with today" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "오늘 날짜로 진행" } }
+      }
+    },
+    "keepsake_status.change_date" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Change Date" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "날짜 바꾸기" } }
+      }
     }
   },
   "version" : "1.0"

@@ -46,6 +46,14 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
         startKeepsakeForm(keepsakeId: keepsake.id, startStep: keepsake.progressStep ?? 1)
     }
 
+    func showKeepsakeStatus(keepsake: Keepsake) {
+        let vc = KeepsakeStatusViewController(
+            coordinator: self,
+            viewModel: KeepsakeStatusViewModel(keepsakeId: keepsake.id)
+        )
+        navigationController.pushViewController(vc, animated: true)
+    }
+
     private func startKeepsakeForm(keepsakeId: ObjectId, startStep: Int = 1) {
         let coordinator = KeepsakeFormCoordinator(
             navigationController: navigationController,
