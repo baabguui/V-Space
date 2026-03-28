@@ -10,28 +10,34 @@ import RxSwift
 final class KeepsakeStatusViewModel {
 
     struct Input {
-        let primaryTap:   Observable<Void>  // "예 (진행)" or "오늘 날짜로 진행"
-        let secondaryTap: Observable<Void>  // "날짜 바꾸기"
+        let primaryTap:   Observable<Void>
+        let secondaryTap: Observable<Void>
     }
 
     struct Output {
-        // TODO: confirmRitual (primaryTap → done 전환)
-        // TODO: changeDate   (secondaryTap → 날짜 변경 화면)
+        let showRitual: Observable<Void>
+        // TODO: secondaryTap → KeepsakeFormCoordinator에서 처리 예정
     }
+
+    // MARK: - Properties
 
     let isAvailable: Bool
     let name: String
 
     private let db: KeepsakeDatabaseManaging
 
+    // MARK: - Init
+
     init(keepsakeId: ObjectId, db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()) {
         self.db = db
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable = keepsake?.isAvailable ?? false
-        self.name = keepsake?.name ?? ""
+        self.name        = keepsake?.name ?? ""
     }
 
+    // MARK: - Transform
+
     func transform(input: Input) -> Output {
-        return Output()
+        return Output(showRitual: input.primaryTap.asObservable())
     }
 }

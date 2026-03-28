@@ -47,11 +47,16 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
     }
 
     func showKeepsakeStatus(keepsake: Keepsake) {
-        let vc = KeepsakeStatusViewController(
-            coordinator: self,
-            viewModel: KeepsakeStatusViewModel(keepsakeId: keepsake.id)
+        let coordinator = RitualCoordinator(
+            navigationController: navigationController,
+            keepsakeId: keepsake.id
         )
-        navigationController.pushViewController(vc, animated: true)
+        coordinator.onFinish = { [weak self, weak coordinator] in
+            guard let coordinator else { return }
+            self?.removeChildCoordinator(coordinator)
+        }
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 
     private func startKeepsakeForm(keepsakeId: ObjectId, startStep: Int = 1) {

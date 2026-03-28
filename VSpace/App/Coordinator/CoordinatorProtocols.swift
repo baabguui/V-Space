@@ -26,6 +26,12 @@ protocol ObjectCaptureCoordinating: AnyObject {
     func cancelCapture()
 }
 
+// MARK: - RitualCoordinating
+
+protocol RitualCoordinating: AnyObject {
+    func showRitual()
+}
+
 // MARK: - KeepsakeFormCoordinating
 
 protocol KeepsakeFormCoordinating: AnyObject {

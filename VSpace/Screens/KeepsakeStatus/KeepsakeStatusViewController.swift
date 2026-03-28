@@ -11,13 +11,13 @@ final class KeepsakeStatusViewController: BaseViewController {
 
     // MARK: - Properties
 
-    private weak var coordinator: HomeCoordinating?
+    private weak var coordinator: RitualCoordinating?
     private let viewModel: KeepsakeStatusViewModel
     private lazy var contentView = KeepsakeActionView()
 
     // MARK: - Init
 
-    init(coordinator: HomeCoordinating, viewModel: KeepsakeStatusViewModel) {
+    init(coordinator: RitualCoordinating, viewModel: KeepsakeStatusViewModel) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -31,21 +31,20 @@ final class KeepsakeStatusViewController: BaseViewController {
     // MARK: - Lifecycle
 
     override func loadView() {
-        let isAvailable = viewModel.isAvailable
         let message: String
         let primaryTitle: String
 
-        if isAvailable {
-            message = NSLocalizedString("keepsake_status.available.message", comment: "")
+        if viewModel.isAvailable {
+            message      = NSLocalizedString("keepsake_status.available.message", comment: "")
             primaryTitle = NSLocalizedString("keepsake_status.confirm", comment: "")
         } else {
-            message = NSLocalizedString("keepsake_status.unavailable.message", comment: "")
+            message      = NSLocalizedString("keepsake_status.unavailable.message", comment: "")
             primaryTitle = NSLocalizedString("keepsake_status.proceed_today", comment: "")
         }
 
         contentView.configure(
-            message: message,
-            primaryTitle: primaryTitle,
+            message:        message,
+            primaryTitle:   primaryTitle,
             secondaryTitle: NSLocalizedString("keepsake_status.change_date", comment: "")
         )
         view = contentView
@@ -63,7 +62,12 @@ final class KeepsakeStatusViewController: BaseViewController {
             primaryTap:   contentView.primaryButton.rx.tap.asObservable(),
             secondaryTap: contentView.secondaryButton.rx.tap.asObservable()
         )
-        _ = viewModel.transform(input: input)
-        // TODO: bind output when confirmRitual / changeDate are implemented
+        let output = viewModel.transform(input: input)
+
+        output.showRitual
+            .subscribe(onNext: { [weak self] in
+                self?.coordinator?.showRitual()
+            })
+            .disposed(by: disposeBag)
     }
 }
