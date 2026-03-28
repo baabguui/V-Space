@@ -22,6 +22,23 @@ final class RitualView: UIView {
 
     let nextButton = VRoundButton(style: .black, size: .small, iconName: "chevron.right")
 
+    let lastWordsBubbleImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "lastwordsBubble"))
+        iv.contentMode = .scaleAspectFit
+        iv.alpha       = 0
+        return iv
+    }()
+
+    let lastWordsLabel: UILabel = {
+        let label = UILabel()
+        label.font          = .vsBody
+        label.textColor     = .vsPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.alpha         = 0
+        return label
+    }()
+
     private let tapGesture = UITapGestureRecognizer()
 
     // MARK: - Public Interface
@@ -55,12 +72,22 @@ final class RitualView: UIView {
         thumbnailImageView.addGestureRecognizer(tapGesture)
         addSubview(thumbnailImageView)
         addSubview(nextButton)
+        addSubview(lastWordsBubbleImageView)
+        addSubview(lastWordsLabel)   // 버블 위에 올라오도록 나중에 추가
 
         nextButton.isHidden = true
 
         thumbnailImageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(120)
+        }
+        lastWordsLabel.snp.makeConstraints {
+            $0.top.horizontalEdges.equalTo(lastWordsBubbleImageView).inset(40)
+            $0.bottom.equalTo(lastWordsBubbleImageView.snp.bottom).inset(40)
+        }
+        lastWordsBubbleImageView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(30)
+            $0.top.equalTo(thumbnailImageView.snp.bottom).offset(24)
         }
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()

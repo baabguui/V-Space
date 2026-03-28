@@ -22,11 +22,13 @@ final class RitualViewModel {
         let mournySpawn:    Observable<MournySpawn>
         let scaleDidChange: Observable<CGFloat>
         let showNextButton: Observable<Bool>
+        let enterDonePhase: Observable<Void>
     }
 
     // MARK: - Properties
 
     let thumbnailImage: UIImage?
+    let lastWords: String?
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
@@ -43,14 +45,19 @@ final class RitualViewModel {
         self.keepsakeId = keepsakeId
         self.db = db
         self.mournySelector = mournySelector
-        self.thumbnailImage = db.fetchKeepsake(id: keepsakeId)
+        let keepsake = db.fetchKeepsake(id: keepsakeId)
+        self.thumbnailImage = keepsake
             .flatMap { MediaStorageManager.shared.loadThumbnail($0.thumbnailFileName) }
+        self.lastWords = keepsake?.lastWords
     }
 
     // MARK: - Transform
 
     func transform(input: Input) -> Output {
-        let tapCount = input.imageTap
+        // nextTap 이후 imageTap 무시
+        let liveImageTap = input.imageTap.take(until: input.nextTap)
+
+        let tapCount = liveImageTap
             .scan(0) { count, _ in count + 1 }
             .share(replay: 1)
 
@@ -71,7 +78,9 @@ final class RitualViewModel {
             .map { $0 >= 1 }
             .distinctUntilChanged()
 
-        input.nextTap
+        let enterDonePhase = input.nextTap.share()
+
+        enterDonePhase
             .withLatestFrom(tapCount)
             .subscribe(onNext: { [weak self] count in
                 guard let self,
@@ -80,7 +89,12 @@ final class RitualViewModel {
             })
             .disposed(by: disposeBag)
 
-        return Output(mournySpawn: mournySpawn, scaleDidChange: scaleDidChange, showNextButton: showNextButton)
+        return Output(
+            mournySpawn:    mournySpawn,
+            scaleDidChange: scaleDidChange,
+            showNextButton: showNextButton,
+            enterDonePhase: enterDonePhase.map { () }
+        )
     }
 
     // MARK: - Scale Logic

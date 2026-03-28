@@ -21,6 +21,8 @@ final class RitualViewController: BaseViewController {
         static let entryMargin: CGFloat   = 60   // 화면 밖 시작 여백
         static let randomJitter: CGFloat  = 40   // 진입 X/Y 흔들림 범위
         static let angleJitter: CGFloat   = 0.7  // 착지 각도 흔들림 (rad)
+        static let minGridItemSize: CGFloat = 30  // 그리드 최소 아이템 크기
+        static let gridOverlap: CGFloat     = -15 // 아이템 간 겹침 (음수 = overlap)
     }
 
     // MARK: - Properties
@@ -29,8 +31,10 @@ final class RitualViewController: BaseViewController {
     private let viewModel: RitualViewModel
     private lazy var contentView = RitualView()
 
-    private var mournyViews: [UIImageView] = []
-    private var landingPoints: [CGPoint]   = []
+    private var mournyViews: [UIImageView]  = []
+    private var mournySpawns: [MournySpawn] = []
+    private var landingPoints: [CGPoint]    = []
+    private var isDone = false
 
     // MARK: - Init
 
@@ -49,6 +53,7 @@ final class RitualViewController: BaseViewController {
 
     override func loadView() {
         contentView.thumbnailImageView.image = viewModel.thumbnailImage
+        contentView.lastWordsLabel.text = viewModel.lastWords
         view = contentView
     }
 
@@ -87,6 +92,13 @@ final class RitualViewController: BaseViewController {
                 self?.contentView.nextButton.isHidden = !show
             })
             .disposed(by: disposeBag)
+
+        output.enterDonePhase
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.animateDonePhase()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Mourny Spawn
@@ -110,6 +122,7 @@ final class RitualViewController: BaseViewController {
 
         view.addSubview(imageView)
         mournyViews.append(imageView)
+        mournySpawns.append(spawn)
         landingPoints.append(landing)
 
         UIView.animate(
@@ -120,8 +133,8 @@ final class RitualViewController: BaseViewController {
             options: []
         ) {
             imageView.center = landing
-        } completion: { [weak imageView] _ in
-            guard let imageView else { return }
+        } completion: { [weak self, weak imageView] _ in
+            guard let imageView, self?.isDone == false else { return }
             UIView.transition(
                 with: imageView,
                 duration: 0.2,
@@ -143,6 +156,77 @@ final class RitualViewController: BaseViewController {
                 let isFlipped = $0.transform.a < 0
                 $0.transform = CGAffineTransform(scaleX: isFlipped ? -scale : scale, y: scale)
             }
+        }
+    }
+
+    // MARK: - Done Phase
+
+    private func animateDonePhase() {
+        isDone = true
+        contentView.thumbnailImageView.isUserInteractionEnabled = false
+        contentView.nextButton.isHidden = true
+
+        let count = mournyViews.count
+        guard count > 0 else { return }
+
+        let thumbFrame  = contentView.thumbnailImageView.frame
+        let rows        = gridRowCount(for: count)
+        let colsPerRow  = Int(ceil(Double(count) / Double(rows)))
+        let spacing     = Layout.gridOverlap
+        let availWidth  = view.bounds.width - 32
+        // 아이템 수에 따라 가로에 맞게 크기 조정
+        let itemSize    = max(Layout.minGridItemSize,
+                         min(Layout.mournySize,
+                             (availWidth - CGFloat(colsPerRow - 1) * spacing) / CGFloat(colsPerRow)))
+        let itemScale   = itemSize / Layout.mournySize
+        let positions   = gridPositions(count: count, above: thumbFrame,
+                                        colsPerRow: colsPerRow, itemSize: itemSize, spacing: spacing)
+
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0,
+            usingSpringWithDamping: 0.85,
+            initialSpringVelocity: 0
+        ) {
+            for (i, imageView) in self.mournyViews.enumerated() {
+                imageView.layer.removeAllAnimations()
+                // backMourny는 frontMourny 이미지로 표시
+                let name = self.mournySpawns[i].event.name
+                let displayName = name.hasPrefix("back") ? name.replacingOccurrences(of: "back", with: "front") : name
+                imageView.image     = UIImage(named: displayName)
+                imageView.transform = CGAffineTransform(scaleX: itemScale, y: itemScale)
+                if i < positions.count { imageView.center = positions[i] }
+            }
+            self.contentView.lastWordsBubbleImageView.alpha = 1
+            self.contentView.lastWordsLabel.alpha           = 1
+        }
+    }
+
+    /// ≤5 → 1행 / ≤10 → 2행 / ≤15 → 3행 / ≤20 → 4행 / 21+ → 5행
+    private func gridRowCount(for count: Int) -> Int {
+        if count <= 5  { return 1 }
+        if count <= 10 { return 2 }
+        if count <= 15 { return 3 }
+        if count <= 20 { return 4 }
+        return 5
+    }
+
+    private func gridPositions(count: Int, above thumbFrame: CGRect,
+                                colsPerRow: Int, itemSize: CGFloat, spacing: CGFloat) -> [CGPoint] {
+        let totalWidth  = CGFloat(colsPerRow) * itemSize + CGFloat(colsPerRow - 1) * spacing
+        let startX      = (view.bounds.width - totalWidth) / 2 + itemSize / 2
+        let gridBottom  = thumbFrame.minY - 16
+        let rows        = Int(ceil(Double(count) / Double(colsPerRow)))
+        let totalHeight = CGFloat(rows) * itemSize + CGFloat(rows - 1) * spacing
+        let gridTop     = gridBottom - totalHeight
+
+        return (0..<count).map { i in
+            let row = i / colsPerRow
+            let col = i % colsPerRow
+            return CGPoint(
+                x: startX + CGFloat(col) * (itemSize + spacing),
+                y: gridTop + CGFloat(row) * (itemSize + spacing) + itemSize / 2
+            )
         }
     }
 
