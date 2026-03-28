@@ -60,7 +60,10 @@ final class RitualViewController: BaseViewController {
     // MARK: - Binding
 
     private func bindViewModel() {
-        let input = RitualViewModel.Input(imageTap: contentView.imageTap)
+        let input = RitualViewModel.Input(
+            imageTap: contentView.imageTap,
+            nextTap:  contentView.nextButton.rx.tap.asObservable()
+        )
         let output = viewModel.transform(input: input)
 
         // 순서 중요: mournySpawn 먼저 구독해 scaleDidChange 시점에 새 뷰가 mournyViews에 포함되도록 함
@@ -75,6 +78,13 @@ final class RitualViewController: BaseViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] scale in
                 self?.animateScaleChange(to: scale)
+            })
+            .disposed(by: disposeBag)
+
+        output.showNextButton
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] show in
+                self?.contentView.nextButton.isHidden = !show
             })
             .disposed(by: disposeBag)
     }

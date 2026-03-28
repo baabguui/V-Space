@@ -49,6 +49,9 @@ final class Keepsake: Object {
     @Persisted var recordType: RecordType
     @Persisted var resourceFileName: String
     @Persisted var thumbnailFileName: String
+
+    // 의례
+    @Persisted var mournyCount: Int = 0
 }
 
 extension Keepsake {

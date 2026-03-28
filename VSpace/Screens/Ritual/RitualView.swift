@@ -20,6 +20,8 @@ final class RitualView: UIView {
         return iv
     }()
 
+    let nextButton = VRoundButton(style: .black, size: .small, iconName: "chevron.right")
+
     private let tapGesture = UITapGestureRecognizer()
 
     // MARK: - Public Interface
@@ -52,10 +54,17 @@ final class RitualView: UIView {
 
         thumbnailImageView.addGestureRecognizer(tapGesture)
         addSubview(thumbnailImageView)
+        addSubview(nextButton)
+
+        nextButton.isHidden = true
 
         thumbnailImageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(120)
+        }
+        nextButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(safeAreaLayoutGuide).inset(40)
         }
     }
 }

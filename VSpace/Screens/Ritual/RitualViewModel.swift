@@ -15,18 +15,23 @@ final class RitualViewModel {
 
     struct Input {
         let imageTap: Observable<Void>
+        let nextTap:  Observable<Void>
     }
 
     struct Output {
         let mournySpawn:    Observable<MournySpawn>
         let scaleDidChange: Observable<CGFloat>
+        let showNextButton: Observable<Bool>
     }
 
     // MARK: - Properties
 
     let thumbnailImage: UIImage?
 
+    private let keepsakeId: ObjectId
+    private let db: KeepsakeDatabaseManaging
     private let mournySelector: MournyEventSelector
+    private let disposeBag = DisposeBag()
 
     // MARK: - Init
 
@@ -35,6 +40,8 @@ final class RitualViewModel {
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
         mournySelector: @escaping MournyEventSelector = MournyEvent.random
     ) {
+        self.keepsakeId = keepsakeId
+        self.db = db
         self.mournySelector = mournySelector
         self.thumbnailImage = db.fetchKeepsake(id: keepsakeId)
             .flatMap { MediaStorageManager.shared.loadThumbnail($0.thumbnailFileName) }
@@ -60,7 +67,20 @@ final class RitualViewModel {
             .distinctUntilChanged()
             .skip(1)
 
-        return Output(mournySpawn: mournySpawn, scaleDidChange: scaleDidChange)
+        let showNextButton = tapCount
+            .map { $0 >= 1 }
+            .distinctUntilChanged()
+
+        input.nextTap
+            .withLatestFrom(tapCount)
+            .subscribe(onNext: { [weak self] count in
+                guard let self,
+                      let keepsake = self.db.fetchKeepsake(id: self.keepsakeId) else { return }
+                try? self.db.updateKeepsake(keepsake) { $0.mournyCount += count }
+            })
+            .disposed(by: disposeBag)
+
+        return Output(mournySpawn: mournySpawn, scaleDidChange: scaleDidChange, showNextButton: showNextButton)
     }
 
     // MARK: - Scale Logic
