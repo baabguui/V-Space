@@ -71,7 +71,7 @@ final class CaptureViewModel {
 
     func cancelCapture() {
         session.cancel()
-        directoryManager.cleanup()
+        // cleanup()은 여기서 호출하지 않음 — 다음 세션 초기화 시 일괄 삭제됨
         appState.accept(.cancelled)
     }
 
@@ -89,15 +89,14 @@ final class CaptureViewModel {
 
     /// 저장 확정 시 세션 취소 후 파일 복사 + Keepsake 초기 레코드 생성
     /// finish() 대신 cancel()을 사용해 세션의 내부 파일 접근을 막음
+    /// cleanup()은 여기서 호출하지 않음 — cancel() 후 C++ 내부 스레드가 Checkpoints에
+    /// 비동기로 접근 중인 상태에서 삭제하면 filesystem_error 크래시 발생.
+    /// 잔여 파일은 다음 CaptureStorageManager 초기화 시 일괄 삭제됨.
     func saveModel(thumbnail: UIImage) {
         session.cancel()
         do {
-            print("init")
             let dest = try mediaStorage.saveModel(from: directoryManager.outputURL)
-            print("save usdz")
             let thumbFileName = try mediaStorage.saveThumbnail(thumbnail)
-            print("save thumbnail")
-            directoryManager.cleanup()
             let keepsake = Keepsake()
             keepsake.resourceFileName = dest.lastPathComponent
             keepsake.thumbnailFileName = thumbFileName
@@ -108,7 +107,6 @@ final class CaptureViewModel {
             try db.saveKeepsake(keepsake)
             appState.accept(.saved(keepsakeId: keepsake.id))
         } catch {
-            print(error)
             appState.accept(.failed(error))
         }
     }
