@@ -53,6 +53,13 @@ private final class CropGuideOverlay: UIView {
 @available(iOS 17.0, *)
 final class ModelViewerViewController: BaseViewController {
 
+    // MARK: - ViewerMode
+
+    private enum ViewerMode {
+        case capture(onSave: (UIImage) -> Void, onResume: () -> Void)
+        case viewerOnly
+    }
+
     // MARK: - Properties
 
     private let arView: ARView = {
@@ -73,9 +80,7 @@ final class ModelViewerViewController: BaseViewController {
     }()
 
     private let modelURL: URL
-    private let onSave: (UIImage) -> Void
-    private let onResume: () -> Void
-
+    private let mode: ViewerMode
     private var anchorEntity: AnchorEntity?
     private var currentPinchScale: Float = 1.0
 
@@ -85,8 +90,13 @@ final class ModelViewerViewController: BaseViewController {
 
     init(modelURL: URL, onSave: @escaping (UIImage) -> Void, onResume: @escaping () -> Void) {
         self.modelURL = modelURL
-        self.onSave = onSave
-        self.onResume = onResume
+        self.mode = .capture(onSave: onSave, onResume: onResume)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    init(modelURL: URL, viewerOnly: Bool) {
+        self.modelURL = modelURL
+        self.mode = .viewerOnly
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -107,32 +117,39 @@ final class ModelViewerViewController: BaseViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        cropOverlay.diameter = cropDiameter
+        if case .capture = mode {
+            cropOverlay.diameter = cropDiameter
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        if case .capture = mode {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        if case .capture = mode {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
     }
 
     // MARK: - Setup
 
     private func configureView() {
         view.addSubview(arView)
-        view.addSubview(cropOverlay)
-        view.addSubview(saveButton)
-        view.addSubview(resumeButton)
-
         arView.environment.background = .color(.white)
-
         arView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        guard case .capture = mode else { return }
+
+        view.addSubview(cropOverlay)
+        view.addSubview(saveButton)
+        view.addSubview(resumeButton)
 
         cropOverlay.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -185,15 +202,17 @@ final class ModelViewerViewController: BaseViewController {
     }
 
     private func bind() {
+        guard case .capture(let onSave, let onResume) = mode else { return }
+
         saveButton.rx.tap
             .bind(with: self) { owner, _ in
-                owner.captureAndSave()
+                owner.captureAndSave(onSave: onSave)
             }
             .disposed(by: disposeBag)
 
         resumeButton.rx.tap
             .bind(with: self) { owner, _ in
-                owner.onResume()
+                onResume()
                 owner.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
@@ -201,7 +220,7 @@ final class ModelViewerViewController: BaseViewController {
 
     // MARK: - Capture
 
-    private func captureAndSave() {
+    private func captureAndSave(onSave: @escaping (UIImage) -> Void) {
         // 배경을 투명하게 전환 후 스냅샷 → 모델만 캡쳐
         arView.environment.background = .color(.clear)
         arView.snapshot(saveToHDR: false) { [weak self] image in
@@ -211,7 +230,7 @@ final class ModelViewerViewController: BaseViewController {
             }
             let cropped = self.cropToCircle(from: image)
             DispatchQueue.main.async {
-                self.onSave(cropped)
+                onSave(cropped)
             }
         }
     }

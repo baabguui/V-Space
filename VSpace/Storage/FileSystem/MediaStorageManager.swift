@@ -22,6 +22,8 @@ protocol MediaStorageManaging {
     @discardableResult func savePhoto(_ image: UIImage) throws -> String
     @discardableResult func saveThumbnail(_ image: UIImage) throws -> String
     func loadThumbnail(_ fileName: String) -> UIImage?
+    func loadPhoto(_ fileName: String) -> UIImage?
+    func modelURL(for fileName: String) -> URL?
 }
 
 // MARK: - MediaStorageManager
@@ -99,6 +101,20 @@ final class MediaStorageManager: MediaStorageManaging {
     func loadThumbnail(_ fileName: String) -> UIImage? {
         let url = thumbnailsDirectory.appendingPathComponent(fileName)
         return UIImage(contentsOfFile: url.path)
+    }
+
+    // MARK: - loadPhoto
+
+    func loadPhoto(_ fileName: String) -> UIImage? {
+        let url = imagesDirectory.appendingPathComponent(fileName)
+        return UIImage(contentsOfFile: url.path)
+    }
+
+    // MARK: - modelURL
+
+    func modelURL(for fileName: String) -> URL? {
+        let url = modelsDirectory.appendingPathComponent(fileName)
+        return FileManager.default.fileExists(atPath: url.path) ? url : nil
     }
 
     // MARK: - Private

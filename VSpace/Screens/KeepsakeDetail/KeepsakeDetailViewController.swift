@@ -63,6 +63,7 @@ final class KeepsakeDetailViewController: BaseViewController {
         setupNavigationBar()
         bindViewModel()
         setupPanGesture()
+        setupThumbnailTapGesture()
     }
 
     // MARK: - Setup
@@ -101,6 +102,12 @@ final class KeepsakeDetailViewController: BaseViewController {
         contentView.addGestureRecognizer(pan)
     }
 
+    private func setupThumbnailTapGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleThumbnailTap))
+        contentView.thumbnailImageView.isUserInteractionEnabled = true
+        contentView.thumbnailImageView.addGestureRecognizer(tap)
+    }
+
     // MARK: - Flip
 
     private func flip(fromLeft: Bool) {
@@ -134,6 +141,21 @@ final class KeepsakeDetailViewController: BaseViewController {
 
         // tx > 0 (오른쪽 스와이프) → fromLeft, tx < 0 (왼쪽 스와이프) → fromRight
         flip(fromLeft: tx > 0)
+    }
+
+    // MARK: - Thumbnail Tap
+
+    @objc private func handleThumbnailTap() {
+        switch viewModel.recordType {
+        case .photo:
+            guard let image = viewModel.originalImage else { return }
+            coordinator?.showPhotoViewer(image: image)
+        case .threeD:
+            guard let url = viewModel.modelURL else { return }
+            coordinator?.showModelViewer(modelURL: url)
+        case .fragment:
+            break
+        }
     }
 
     // MARK: - Helpers

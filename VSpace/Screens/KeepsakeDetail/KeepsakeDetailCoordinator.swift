@@ -66,4 +66,16 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
         }
         onFinish?()
     }
+
+    func showPhotoViewer(image: UIImage) {
+        let vc = PhotoViewerViewController(image: image)
+        navigationController.pushViewController(vc, animated: true)
+    }
+
+    func showModelViewer(modelURL: URL) {
+        if #available(iOS 17.0, *) {
+            let vc = ModelViewerViewController(modelURL: modelURL, viewerOnly: true)
+            navigationController.pushViewController(vc, animated: true)
+        }
+    }
 }

@@ -32,18 +32,38 @@ final class KeepsakeDetailViewModel {
     let mournyImageNames: [String]
     let showsCloseButton: Bool
 
+    // MARK: - Original Content
+
+    let recordType: RecordType
+    private let resourceFileName: String
+    private let storage: MediaStorageManaging
+
+    lazy var originalImage: UIImage? = {
+        guard recordType == .photo else { return nil }
+        return storage.loadPhoto(resourceFileName)
+    }()
+
+    lazy var modelURL: URL? = {
+        guard recordType == .threeD else { return nil }
+        return storage.modelURL(for: resourceFileName)
+    }()
+
     // MARK: - Init
 
     init(
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared,
         showsCloseButton: Bool
     ) {
         self.showsCloseButton = showsCloseButton
+        self.storage = storage
 
         let keepsake = db.fetchKeepsake(id: keepsakeId)
+        self.recordType = keepsake?.recordType ?? .fragment
+        self.resourceFileName = keepsake?.resourceFileName ?? ""
         self.thumbnailImage = keepsake
-            .flatMap { MediaStorageManager.shared.loadThumbnail($0.thumbnailFileName) }
+            .flatMap { storage.loadThumbnail($0.thumbnailFileName) }
         self.keepsakeName = keepsake?.name ?? ""
         self.lastWords    = keepsake?.lastWords ?? ""
         self.ability      = keepsake?.ability ?? ""

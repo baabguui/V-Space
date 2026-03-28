@@ -38,6 +38,8 @@ protocol RitualCoordinating: AnyObject {
 
 protocol KeepsakeDetailCoordinating: AnyObject {
     func finish()
+    func showPhotoViewer(image: UIImage)
+    func showModelViewer(modelURL: URL)
 }
 
 // MARK: - KeepsakeFormCoordinating
