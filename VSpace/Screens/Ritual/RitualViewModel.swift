@@ -71,13 +71,19 @@ final class RitualViewModel {
         }
 
         if let ability = keepsake.ability, !ability.isEmpty {
-            lines.append("\(ability) 을/를 해주다")
+            lines.append("\(ability) \(eulReul(ability))해주다")
         }
 
         lines.append("")   // 빈 줄
         lines.append("\(formatter.string(from: Date())) 여기에 잠들다")
 
         return lines.joined(separator: "\n")
+    }
+
+    private static func eulReul(_ word: String) -> String {
+        guard let last = word.unicodeScalars.last,
+              last.value >= 0xAC00, last.value <= 0xD7A3 else { return "을/를 " }
+        return (last.value - 0xAC00) % 28 == 0 ? "를 " : "을 "
     }
 
     // MARK: - Transform
