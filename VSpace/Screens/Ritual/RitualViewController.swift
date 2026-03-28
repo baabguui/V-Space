@@ -52,8 +52,11 @@ final class RitualViewController: BaseViewController {
     // MARK: - Lifecycle
 
     override func loadView() {
-        contentView.thumbnailImageView.image = viewModel.thumbnailImage
-        contentView.lastWordsLabel.text = viewModel.lastWords
+        contentView.thumbnailImageView.image     = viewModel.thumbnailImage
+        contentView.cardThumbnailImageView.image = viewModel.thumbnailImage
+        contentView.lastWordsLabel.text          = viewModel.lastWords
+        contentView.cardNameLabel.text           = viewModel.keepsakeName
+        contentView.cardDetailLabel.text         = viewModel.cardDetailText
         view = contentView
     }
 
@@ -97,6 +100,13 @@ final class RitualViewController: BaseViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 self?.animateDonePhase()
+            })
+            .disposed(by: disposeBag)
+
+        output.enterCardPhase
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.animateCardPhase()
             })
             .disposed(by: disposeBag)
     }
@@ -164,7 +174,6 @@ final class RitualViewController: BaseViewController {
     private func animateDonePhase() {
         isDone = true
         contentView.thumbnailImageView.isUserInteractionEnabled = false
-        contentView.nextButton.isHidden = true
 
         let count = mournyViews.count
         guard count > 0 else { return }
@@ -199,6 +208,26 @@ final class RitualViewController: BaseViewController {
             }
             self.contentView.lastWordsBubbleImageView.alpha = 1
             self.contentView.lastWordsLabel.alpha           = 1
+        }
+    }
+
+    private func animateCardPhase() {
+        // z-order: Mourny(뒤) → 카드 → 카드 내부 썸네일(최상단) → nextButton
+        contentView.bringSubviewToFront(contentView.cardContainerView)
+        contentView.bringSubviewToFront(contentView.nextButton)
+
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.lastWordsBubbleImageView.alpha = 0
+            self.contentView.lastWordsLabel.alpha           = 0
+            self.contentView.thumbnailImageView.alpha       = 0
+        }
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.2,
+            usingSpringWithDamping: 0.85,
+            initialSpringVelocity: 0
+        ) {
+            self.contentView.cardContainerView.alpha = 1
         }
     }
 

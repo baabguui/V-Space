@@ -39,6 +39,41 @@ final class RitualView: UIView {
         return label
     }()
 
+    let cardContainerView: UIView = {
+        let v = UIView()
+        v.backgroundColor    = .vsWhite
+        v.layer.cornerRadius = 20
+        v.layer.borderWidth  = 4
+        v.layer.borderColor  = UIColor.vsPrimary.cgColor
+        v.alpha              = 0
+        return v
+    }()
+
+    let cardThumbnailImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode   = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
+    }()
+
+    let cardNameLabel: UILabel = {
+        let label = UILabel()
+        label.font          = .vsTitle
+        label.textColor     = .vsPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        return label
+    }()
+
+    let cardDetailLabel: UILabel = {
+        let label = UILabel()
+        label.font          = .vsBody
+        label.textColor     = .vsPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }()
+
     private let tapGesture = UITapGestureRecognizer()
 
     // MARK: - Public Interface
@@ -61,7 +96,8 @@ final class RitualView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        thumbnailImageView.layer.cornerRadius = thumbnailImageView.bounds.width / 2
+        thumbnailImageView.layer.cornerRadius     = thumbnailImageView.bounds.width / 2
+        cardThumbnailImageView.layer.cornerRadius = cardThumbnailImageView.bounds.width / 2
     }
 
     // MARK: - Private
@@ -73,7 +109,11 @@ final class RitualView: UIView {
         addSubview(thumbnailImageView)
         addSubview(nextButton)
         addSubview(lastWordsBubbleImageView)
-        addSubview(lastWordsLabel)   // 버블 위에 올라오도록 나중에 추가
+        addSubview(lastWordsLabel)
+        addSubview(cardContainerView)
+        cardContainerView.addSubview(cardThumbnailImageView)
+        cardContainerView.addSubview(cardNameLabel)
+        cardContainerView.addSubview(cardDetailLabel)
 
         nextButton.isHidden = true
 
@@ -89,8 +129,26 @@ final class RitualView: UIView {
             $0.horizontalEdges.equalToSuperview().inset(30)
             $0.top.equalTo(thumbnailImageView.snp.bottom).offset(24)
         }
-        nextButton.snp.makeConstraints {
+        cardContainerView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(64)
+            // 썸네일 상단 기준 55pt 위 → Mourny 발이 카드 위에 걸침
+            $0.top.equalTo(thumbnailImageView.snp.top).offset(-55)
+        }
+        cardThumbnailImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(55)
             $0.centerX.equalToSuperview()
+            $0.size.equalTo(120)
+        }
+        cardNameLabel.snp.makeConstraints {
+            $0.top.equalTo(cardThumbnailImageView.snp.bottom).offset(35)
+            $0.horizontalEdges.equalToSuperview().inset(20)
+        }
+        cardDetailLabel.snp.makeConstraints {
+            $0.top.equalTo(cardNameLabel.snp.bottom).offset(35)
+            $0.horizontalEdges.bottom.equalToSuperview().inset(20)
+        }
+        nextButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalTo(safeAreaLayoutGuide).inset(40)
         }
     }
