@@ -59,6 +59,20 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
         coordinator.start()
     }
 
+    func showKeepsakeDetail(keepsake: Keepsake) {
+        let child = KeepsakeDetailCoordinator(
+            navigationController: navigationController,
+            keepsakeId: keepsake.id,
+            mode: .readOnly
+        )
+        childCoordinators.append(child)
+        child.onFinish = { [weak self, weak child] in
+            guard let child else { return }
+            self?.removeChildCoordinator(child)
+        }
+        child.start()
+    }
+
     private func startKeepsakeForm(keepsakeId: ObjectId, startStep: Int = 1) {
         let coordinator = KeepsakeFormCoordinator(
             navigationController: navigationController,

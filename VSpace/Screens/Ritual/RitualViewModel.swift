@@ -19,11 +19,12 @@ final class RitualViewModel {
     }
 
     struct Output {
-        let mournySpawn:    Observable<MournySpawn>
-        let scaleDidChange: Observable<CGFloat>
-        let showNextButton: Observable<Bool>
-        let enterDonePhase: Observable<Void>
-        let enterCardPhase: Observable<Void>
+        let mournySpawn:      Observable<MournySpawn>
+        let scaleDidChange:   Observable<CGFloat>
+        let showNextButton:   Observable<Bool>
+        let enterDonePhase:   Observable<Void>
+        let enterCardPhase:   Observable<Void>
+        let navigateToDetail: Observable<Void>
     }
 
     // MARK: - Properties
@@ -110,8 +111,9 @@ final class RitualViewModel {
             .scan(0) { c, _ in c + 1 }
             .share(replay: 1)
 
-        let enterDonePhase = nextTapCount.filter { $0 == 1 }.map { _ in () }
-        let enterCardPhase = nextTapCount.filter { $0 == 2 }.map { _ in () }
+        let enterDonePhase   = nextTapCount.filter { $0 == 1 }.map { _ in () }
+        let enterCardPhase   = nextTapCount.filter { $0 == 2 }.map { _ in () }
+        let navigateToDetail = nextTapCount.filter { $0 == 3 }.map { _ in () }
 
         // mournyCount DB 저장 — 1차 탭 시
         enterDonePhase
@@ -124,11 +126,12 @@ final class RitualViewModel {
             .disposed(by: disposeBag)
 
         return Output(
-            mournySpawn:    mournySpawn,
-            scaleDidChange: scaleDidChange,
-            showNextButton: showNextButton,
-            enterDonePhase: enterDonePhase,
-            enterCardPhase: enterCardPhase
+            mournySpawn:      mournySpawn,
+            scaleDidChange:   scaleDidChange,
+            showNextButton:   showNextButton,
+            enterDonePhase:   enterDonePhase,
+            enterCardPhase:   enterCardPhase,
+            navigateToDetail: navigateToDetail
         )
     }
 

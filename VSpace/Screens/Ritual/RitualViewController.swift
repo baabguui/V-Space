@@ -109,6 +109,13 @@ final class RitualViewController: BaseViewController {
                 self?.animateCardPhase()
             })
             .disposed(by: disposeBag)
+
+        output.navigateToDetail
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.coordinator?.showKeepsakeDetail()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Mourny Spawn

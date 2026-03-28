@@ -99,7 +99,7 @@ final class HomeViewController: BaseViewController {
                     case .inProgress:
                         self?.coordinator?.resumeKeepsakeForm(keepsake: keepsake)
                     case .done:
-                        break // TODO: done 상태 화면
+                        self?.coordinator?.showKeepsakeDetail(keepsake: keepsake)
                     default:
                         self?.coordinator?.showKeepsakeStatus(keepsake: keepsake)
                     }
