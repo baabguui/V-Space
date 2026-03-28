@@ -53,7 +53,7 @@ final class KeepsakeDetailViewModel {
         formatter.dateFormat = "yyyy.MM.dd"
         let disposalStr = keepsake.map { formatter.string(from: $0.disposalDate) } ?? ""
         if let acquired = keepsake?.acquiredDate {
-            self.dateRangeText = "\(formatter.string(from: acquired)) - \(disposalStr)"
+            self.dateRangeText = String(format: NSLocalizedString("common.dateRange.separator", comment: ""), formatter.string(from: acquired), disposalStr)
         } else {
             self.dateRangeText = disposalStr
         }
@@ -61,7 +61,7 @@ final class KeepsakeDetailViewModel {
         self.ritualDateText = formatter.string(from: ritualDate)
 
         let count = keepsake?.mournyCount ?? 0
-        self.mournyCountText = "총 \(count)명이 함께 애도했습니다"
+        self.mournyCountText = String(format: NSLocalizedString("keepsakeDetail.label.mournyCount", comment: ""), count)
 
         let pool = ["frontMournyA", "frontMournyB", "frontMournyC", "horizontalMournyA", "horizontalMournyB"]
         self.mournyImageNames = (0..<min(count, 9)).map { _ in pool.randomElement()! }

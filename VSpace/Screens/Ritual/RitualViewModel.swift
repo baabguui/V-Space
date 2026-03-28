@@ -67,15 +67,15 @@ final class RitualViewModel {
         let disposalStr  = formatter.string(from: keepsake.disposalDate)
         if let acquired  = keepsake.acquiredDate {
             let acquiredStr = formatter.string(from: acquired)
-            lines.append("\(acquiredStr) - \(disposalStr) 동안")
+            lines.append(String(format: NSLocalizedString("ritual.cardDetail.dateRange", comment: ""), acquiredStr, disposalStr))
         }
 
         if let ability = keepsake.ability, !ability.isEmpty {
-            lines.append("\(ability) \(eulReul(ability))해주다")
+            lines.append(String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability)))
         }
 
         lines.append("")   // 빈 줄
-        lines.append("\(formatter.string(from: Date())) 여기에 잠들다")
+        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), formatter.string(from: Date())))
 
         return lines.joined(separator: "\n")
     }

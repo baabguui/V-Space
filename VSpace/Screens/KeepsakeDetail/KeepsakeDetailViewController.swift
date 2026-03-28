@@ -70,7 +70,7 @@ final class KeepsakeDetailViewController: BaseViewController {
     private func setupNavigationBar() {
         if viewModel.showsCloseButton {
             navigationItem.hidesBackButton = true
-            let closeButton = UIBarButtonItem(title: "종료", style: .plain, target: nil, action: nil)
+            let closeButton = UIBarButtonItem(title: NSLocalizedString("keepsakeDetail.button.close", comment: ""), style: .plain, target: nil, action: nil)
             closeButton.setTitleTextAttributes(
                 [.font: UIFont.pretendard(.semibold, size: 22)],
                 for: .normal
