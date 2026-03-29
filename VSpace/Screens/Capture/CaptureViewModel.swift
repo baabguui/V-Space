@@ -82,6 +82,11 @@ final class CaptureViewModel {
     /// USDZ 생성 실패 후 재시도
     func retryUSDZ() { startGenerating() }
 
+    var canResumeCapturing: Bool {
+        if case .capturing = session.state { return true }
+        return false
+    }
+
     /// 뷰어에서 돌아와 캡쳐 계속하기 (세션은 살아있음)
     func resumeCapturing() {
         appState.accept(.capturing)

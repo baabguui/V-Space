@@ -66,6 +66,38 @@
         }
       }
     },
+    "camera.unavailable.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera is not available. Please check your settings."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라를 사용할 수 없습니다. 설정을 확인해주세요."
+          }
+        }
+      }
+    },
+    "camera.unavailable.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera Unavailable"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라 사용 불가"
+          }
+        }
+      }
+    },
     "capture.alert.cancel.confirm" : {
       "localizations" : {
         "en" : {
@@ -179,6 +211,7 @@
       }
     },
     "capture.alert.error.message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -195,6 +228,7 @@
       }
     },
     "capture.alert.error.retry" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -211,6 +245,7 @@
       }
     },
     "capture.alert.error.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -286,6 +321,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "완료"
+          }
+        }
+      }
+    },
+    "capture.status.failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to generate model"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모델 생성에 실패했어요"
+          }
+        }
+      }
+    },
+    "capture.status.finishing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generating 3D model..."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 모델 생성 중..."
+          }
+        }
+      }
+    },
+    "capture.status.restart" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Over"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "처음부터 다시 하기"
+          }
+        }
+      }
+    },
+    "capture.status.retry" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rescan"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 스캔하기"
           }
         }
       }
@@ -434,6 +533,39 @@
         }
       }
     },
+    "circular.crop.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위치 조정"
+          }
+        }
+      }
+    },
+    "common.dateRange.separator" : {
+      "comment" : "%1$@ = start date, %2$@ = end date",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ – %2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
     "date_input.acquired.title" : {
       "localizations" : {
         "en" : {
@@ -533,50 +665,18 @@
         }
       }
     },
-    "circular.crop.title" : {
+    "error.file.verification" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adjust"
+            "value" : "File save verification failed: %@"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "위치 조정"
-          }
-        }
-      }
-    },
-    "camera.unavailable.message" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Camera is not available. Please check your settings."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "카메라를 사용할 수 없습니다. 설정을 확인해주세요."
-          }
-        }
-      }
-    },
-    "camera.unavailable.title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Camera Unavailable"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "카메라 사용 불가"
+            "value" : "파일 저장 확인 실패: %@"
           }
         }
       }
@@ -613,18 +713,99 @@
         }
       }
     },
-    "error.file.verification" : {
+    "form_completion.available.message" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File save verification failed: %@"
+            "value" : "All ready!\n\nYou can start the farewell ritual."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "파일 저장 확인 실패: %@"
+            "value" : "준비가 끝났습니다!\n\n보내주는 의식을 진행할 수 있어요"
+          }
+        }
+      }
+    },
+    "form_completion.go_home" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go Home"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "홈으로"
+          }
+        }
+      }
+    },
+    "form_completion.later" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음에 하기"
+          }
+        }
+      }
+    },
+    "form_completion.notify" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify Me"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알림 받기"
+          }
+        }
+      }
+    },
+    "form_completion.start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시작"
+          }
+        }
+      }
+    },
+    "form_completion.unavailable.message" : {
+      "comment" : "%@ = keepsake name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digitization complete.\n\nPlease say goodbye to %@ in the real world\nand come back."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디지털화 완료되었습니다\n\n현실의 %@이를 보내주고\n다시 돌아와주세요"
           }
         }
       }
@@ -758,6 +939,119 @@
         }
       }
     },
+    "keepsake_status.available.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Have you said goodbye?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보내주셨나요?"
+          }
+        }
+      }
+    },
+    "keepsake_status.change_date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Date"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "날짜 바꾸기"
+          }
+        }
+      }
+    },
+    "keepsake_status.confirm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes (Proceed)"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예 (진행)"
+          }
+        }
+      }
+    },
+    "keepsake_status.proceed_today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proceed with today"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘 날짜로 진행"
+          }
+        }
+      }
+    },
+    "keepsake_status.unavailable.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Have you already said goodbye?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이미 보내주셨나요?"
+          }
+        }
+      }
+    },
+    "keepsakeDetail.button.close" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "종료"
+          }
+        }
+      }
+    },
+    "keepsakeDetail.label.mournyCount" : {
+      "comment" : "%d = number of mourners",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d people mourned together"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "총 %d명이 함께 애도했습니다"
+          }
+        }
+      }
+    },
     "name_input.placeholder" : {
       "localizations" : {
         "en" : {
@@ -790,6 +1084,105 @@
         }
       }
     },
+    "plane.capture.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to select a photo"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탭하여 사진을 선택하세요"
+          }
+        }
+      }
+    },
+    "plane.capture.next" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음"
+          }
+        }
+      }
+    },
+    "plane.capture.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Photo"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 선택"
+          }
+        }
+      }
+    },
+    "ritual.cardDetail.ability" : {
+      "comment" : "%1$@ = ability, %2$@ = Korean particle (을/를 + space)",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to %1$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@%2$@해주다"
+          }
+        }
+      }
+    },
+    "ritual.cardDetail.dateRange" : {
+      "comment" : "%1$@ = acquired date, %2$@ = disposal date",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %1$@ to %2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@ 동안"
+          }
+        }
+      }
+    },
+    "ritual.cardDetail.restingDate" : {
+      "comment" : "%@ = ritual date string",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laid to rest on %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 여기에 잠들다"
+          }
+        }
+      }
+    },
     "text_input.ability.placeholder" : {
       "localizations" : {
         "en" : {
@@ -818,6 +1211,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "기능을 작성해주세요"
+          }
+        }
+      }
+    },
+    "text_input.lastwords.alert.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once completed, the information cannot be modified."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료 후에는 정보를 수정할 수 없습니다."
+          }
+        }
+      }
+    },
+    "text_input.lastwords.alert.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure?"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막으로 확인해주세요"
           }
         }
       }
@@ -868,18 +1293,6 @@
             "value" : "마지막 말"
           }
         }
-      }
-    },
-    "text_input.lastwords.alert.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Are you sure?" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "마지막으로 확인해주세요" } }
-      }
-    },
-    "text_input.lastwords.alert.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Once completed, the information cannot be modified." } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "완료 후에는 정보를 수정할 수 없습니다." } }
       }
     },
     "text_input.lastwords.warning" : {
@@ -946,54 +1359,6 @@
         }
       }
     },
-    "plane.capture.hint" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tap to select a photo"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "탭하여 사진을 선택하세요"
-          }
-        }
-      }
-    },
-    "plane.capture.next" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다음"
-          }
-        }
-      }
-    },
-    "plane.capture.title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select Photo"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "사진 선택"
-          }
-        }
-      }
-    },
     "viewer.button.rescan" : {
       "localizations" : {
         "en" : {
@@ -1024,122 +1389,6 @@
             "value" : "저장하기"
           }
         }
-      }
-    },
-    "form_completion.available.message" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "All ready!\n\nYou can start the farewell ritual." }
-        },
-        "ko" : {
-          "stringUnit" : { "state" : "translated", "value" : "준비가 끝났습니다!\n\n보내주는 의식을 진행할 수 있어요" }
-        }
-      }
-    },
-    "form_completion.unavailable.message" : {
-      "comment" : "%@ = keepsake name",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : { "state" : "translated", "value" : "Digitization complete.\n\nPlease say goodbye to %@ in the real world\nand come back." }
-        },
-        "ko" : {
-          "stringUnit" : { "state" : "translated", "value" : "디지털화 완료되었습니다\n\n현실의 %@이를 보내주고\n다시 돌아와주세요" }
-        }
-      }
-    },
-    "form_completion.start" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시작" } }
-      }
-    },
-    "form_completion.later" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Later" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "다음에 하기" } }
-      }
-    },
-    "form_completion.go_home" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Go Home" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "홈으로" } }
-      }
-    },
-    "form_completion.notify" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notify Me" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "알림 받기" } }
-      }
-    },
-    "keepsake_status.available.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Have you said goodbye?" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "보내주셨나요?" } }
-      }
-    },
-    "keepsake_status.unavailable.message" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Have you already said goodbye?" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이미 보내주셨나요?" } }
-      }
-    },
-    "keepsake_status.confirm" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Yes (Proceed)" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "예 (진행)" } }
-      }
-    },
-    "keepsake_status.proceed_today" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Proceed with today" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "오늘 날짜로 진행" } }
-      }
-    },
-    "keepsake_status.change_date" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Change Date" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "날짜 바꾸기" } }
-      }
-    },
-    "common.dateRange.separator" : {
-      "comment" : "%1$@ = start date, %2$@ = end date",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ – %2$@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ - %2$@" } }
-      }
-    },
-    "ritual.cardDetail.dateRange" : {
-      "comment" : "%1$@ = acquired date, %2$@ = disposal date",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "From %1$@ to %2$@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ - %2$@ 동안" } }
-      }
-    },
-    "ritual.cardDetail.ability" : {
-      "comment" : "%1$@ = ability, %2$@ = Korean particle (을/를 + space)",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Used to %1$@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%1$@%2$@해주다" } }
-      }
-    },
-    "ritual.cardDetail.restingDate" : {
-      "comment" : "%@ = ritual date string",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Laid to rest on %@" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 여기에 잠들다" } }
-      }
-    },
-    "keepsakeDetail.label.mournyCount" : {
-      "comment" : "%d = number of mourners",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%d people mourned together" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "총 %d명이 함께 애도했습니다" } }
-      }
-    },
-    "keepsakeDetail.button.close" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "종료" } }
       }
     }
   },

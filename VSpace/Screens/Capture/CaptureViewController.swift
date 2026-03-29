@@ -20,6 +20,7 @@ final class CaptureViewController: BaseViewController {
     private weak var coordinator: ObjectCaptureCoordinating?
     private let viewModel = CaptureViewModel()
     private var captureHostingController: UIHostingController<CaptureView>?
+    private lazy var statusView = CaptureStatusView()
 
     // MARK: - Init
 
@@ -104,17 +105,21 @@ final class CaptureViewController: BaseViewController {
     private func handleState(_ state: CaptureViewModel.AppState) {
         switch state {
         case .loading, .ready:
+            hideStatusView()
             navigationItem.rightBarButtonItem?.isEnabled = false
             if view.window != nil {
                 captureHostingController?.rootView = makeCaptureView()
             }
         case .detecting, .capturing:
+            hideStatusView()
             navigationItem.rightBarButtonItem?.isEnabled = true
             navigationItem.leftBarButtonItem?.isEnabled = true
         case .finishing:
             navigationItem.rightBarButtonItem?.isEnabled = false
             navigationItem.leftBarButtonItem?.isEnabled = false
+            showStatusView(state: .finishing)
         case .completed(let url):
+            hideStatusView()
             coordinator?.showModelViewer(
                 modelURL: url,
                 onSave: { [weak self] thumbnail in self?.viewModel.saveModel(thumbnail: thumbnail) },
@@ -124,17 +129,29 @@ final class CaptureViewController: BaseViewController {
             coordinator?.finishCapture(keepsakeId: keepsakeId)
         case .cancelled:
             coordinator?.cancelCapture()
-        case .failed(let error):
-            showAlert(
-                title: NSLocalizedString("capture.alert.error.title", comment: ""),
-                message: String(format: NSLocalizedString("capture.alert.error.message", comment: ""), error.localizedDescription),
-                confirmTitle: NSLocalizedString("capture.alert.error.retry", comment: ""),
-                cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
-                onConfirm: { [weak self] in
-                    self?.viewModel.retryUSDZ()
-                }
-            )
+        case .failed:
+            showStatusView(state: .failed(canRetry: viewModel.canResumeCapturing))
         }
+    }
+
+    // MARK: - Status View
+
+    private func showStatusView(state: CaptureStatusView.State) {
+        if statusView.superview == nil {
+            view.addSubview(statusView)
+            statusView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            statusView.onRetry = { [weak self] in self?.viewModel.resumeCapturing() }
+            statusView.onRestart = { [weak self] in self?.viewModel.cancelCapture() }
+        }
+        view.bringSubviewToFront(statusView)
+        statusView.isHidden = false
+        statusView.setState(state)
+    }
+
+    private func hideStatusView() {
+        statusView.isHidden = true
     }
 
     // MARK: - Actions
