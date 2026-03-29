@@ -71,5 +71,22 @@ final class FormCompletionViewController: BaseViewController {
                 self?.coordinator?.finishForm()
             })
             .disposed(by: disposeBag)
+
+        if !viewModel.isAvailable {
+            contentView.secondaryButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    self?.scheduleNotification()
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+
+    private func scheduleNotification() {
+        NotificationScheduler.shared.requestAuthorization { [weak self] granted in
+            if granted {
+                self?.viewModel.scheduleNotification()
+            }
+            self?.contentView.secondaryButton.isEnabled = false
+        }
     }
 }

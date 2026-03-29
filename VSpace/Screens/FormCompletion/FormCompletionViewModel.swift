@@ -17,15 +17,16 @@ final class FormCompletionViewModel {
     struct Output {
         let goHome: Observable<Void>
         // TODO: startRitual (isAvailable=true → primaryTap)
-        // TODO: requestNotification (isAvailable=false → secondaryTap)
     }
 
     let isAvailable: Bool
     let name: String
 
+    private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
 
     init(keepsakeId: ObjectId, db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()) {
+        self.keepsakeId = keepsakeId
         self.db = db
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable = keepsake?.isAvailable ?? false
@@ -40,5 +41,14 @@ final class FormCompletionViewModel {
             : input.primaryTap
 
         return Output(goHome: goHome)
+    }
+
+    func scheduleNotification() {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
+        NotificationScheduler.shared.scheduleDisposalNotification(
+            keepsakeId: keepsakeId,
+            name: name,
+            disposalDate: keepsake.disposalDate
+        )
     }
 }

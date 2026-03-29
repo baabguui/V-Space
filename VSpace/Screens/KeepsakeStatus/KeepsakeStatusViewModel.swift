@@ -3,7 +3,7 @@
 //  VSpace
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import RxSwift
 
@@ -15,8 +15,8 @@ final class KeepsakeStatusViewModel {
     }
 
     struct Output {
-        let showRitual: Observable<Void>
-        // TODO: secondaryTap → KeepsakeFormCoordinator에서 처리 예정
+        let showRitual:           Observable<Void>
+        let showDisposalDateEdit: Observable<Void>
     }
 
     // MARK: - Properties
@@ -24,12 +24,20 @@ final class KeepsakeStatusViewModel {
     let isAvailable: Bool
     let name: String
 
+    private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
+    private let storage: MediaStorageManaging
 
     // MARK: - Init
 
-    init(keepsakeId: ObjectId, db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()) {
+    init(
+        keepsakeId: ObjectId,
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
+    ) {
+        self.keepsakeId = keepsakeId
         self.db = db
+        self.storage = storage
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable = keepsake?.isAvailable ?? false
         self.name        = keepsake?.name ?? ""
@@ -38,6 +46,34 @@ final class KeepsakeStatusViewModel {
     // MARK: - Transform
 
     func transform(input: Input) -> Output {
-        return Output(showRitual: input.primaryTap.asObservable())
+        let showRitual = input.primaryTap
+            .do(onNext: { [weak self] in
+                guard let self, !self.isAvailable else { return }
+                self.updateDisposalDateToToday()
+            })
+            .asObservable()
+
+        let showDisposalDateEdit = input.secondaryTap.asObservable()
+
+        return Output(showRitual: showRitual, showDisposalDateEdit: showDisposalDateEdit)
+    }
+
+    // MARK: - Actions
+
+    func deleteKeepsake() {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
+        storage.deleteKeepsakeFiles(
+            resourceFileName: keepsake.resourceFileName,
+            thumbnailFileName: keepsake.thumbnailFileName,
+            recordType: keepsake.recordType
+        )
+        try? db.deleteKeepsake(keepsake)
+    }
+
+    // MARK: - Private
+
+    private func updateDisposalDateToToday() {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
+        try? db.updateKeepsake(keepsake) { $0.disposalDate = Date() }
     }
 }

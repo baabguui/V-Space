@@ -16,14 +16,21 @@ final class DateInputViewController: BaseViewController {
     private weak var coordinator: KeepsakeFormCoordinating?
     private let viewModel: DateInputViewModel
     private let config: DateInputConfig
+    private let showsMoreButton: Bool
     private lazy var contentView = DateInputView(config: config)
 
     // MARK: - Init
 
-    init(coordinator: KeepsakeFormCoordinating, viewModel: DateInputViewModel, config: DateInputConfig) {
+    init(
+        coordinator: KeepsakeFormCoordinating,
+        viewModel: DateInputViewModel,
+        config: DateInputConfig,
+        showsMoreButton: Bool = true
+    ) {
         self.coordinator = coordinator
         self.viewModel = viewModel
         self.config = config
+        self.showsMoreButton = showsMoreButton
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -42,7 +49,7 @@ final class DateInputViewController: BaseViewController {
         super.viewDidLoad()
         contentView.setInitialDate(viewModel.initialDate)
         contentView.setThumbnail(viewModel.thumbnailImage)
-        setupMoreButton()
+        if showsMoreButton { setupMoreButton() }
         bindViewModel()
     }
 

@@ -32,6 +32,15 @@ final class KeepsakeActionView: UIView {
     let primaryButton = VLongButton(title: "", style: .black)
     let secondaryButton: VLongButton
 
+    let deleteButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle(NSLocalizedString("form.menu.delete", comment: ""), for: .normal)
+        btn.setTitleColor(.vsSecondary, for: .normal)
+        btn.titleLabel?.font = .vsSmall
+        btn.isHidden = true
+        return btn
+    }()
+
     private let buttonStack: UIStackView = {
         let sv = UIStackView()
         sv.axis = .horizontal
@@ -52,6 +61,14 @@ final class KeepsakeActionView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     // MARK: - Configure
+
+    func showDeleteButton() {
+        deleteButton.isHidden = false
+        buttonStack.snp.remakeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(24)
+            $0.bottom.equalTo(deleteButton.snp.top).offset(-16)
+        }
+    }
 
     func configure(message: String, primaryTitle: String, secondaryTitle: String) {
         messageLabel.text = message
@@ -82,6 +99,7 @@ final class KeepsakeActionView: UIView {
 
         addSubview(circleView)
         addSubview(messageLabel)
+        addSubview(deleteButton)
         addSubview(buttonStack)
 
         circleView.snp.makeConstraints {
@@ -93,6 +111,11 @@ final class KeepsakeActionView: UIView {
         messageLabel.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(24)
             $0.top.equalTo(circleView.snp.bottom).offset(60)
+        }
+
+        deleteButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(safeAreaLayoutGuide).inset(24)
         }
 
         buttonStack.snp.makeConstraints {

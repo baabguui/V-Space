@@ -52,6 +52,7 @@ final class KeepsakeStatusViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        contentView.showDeleteButton()
         bindViewModel()
     }
 
@@ -69,5 +70,33 @@ final class KeepsakeStatusViewController: BaseViewController {
                 self?.coordinator?.showRitual()
             })
             .disposed(by: disposeBag)
+
+        output.showDisposalDateEdit
+            .subscribe(onNext: { [weak self] in
+                self?.coordinator?.showDisposalDateEdit()
+            })
+            .disposed(by: disposeBag)
+
+        contentView.deleteButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.showDeleteAlert()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    // MARK: - Alert
+
+    private func showDeleteAlert() {
+        showAlert(
+            title: NSLocalizedString("form.menu.delete.alert.title", comment: ""),
+            message: NSLocalizedString("form.menu.delete.alert.message", comment: ""),
+            confirmTitle: NSLocalizedString("form.menu.delete", comment: ""),
+            confirmStyle: .destructive,
+            cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
+            onConfirm: { [weak self] in
+                self?.viewModel.deleteKeepsake()
+                self?.coordinator?.finishRitual()
+            }
+        )
     }
 }

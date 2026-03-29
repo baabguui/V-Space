@@ -32,6 +32,8 @@ protocol ObjectCaptureCoordinating: AnyObject {
 protocol RitualCoordinating: AnyObject {
     func showRitual()
     func showKeepsakeDetail()
+    func showDisposalDateEdit()
+    func finishRitual()
 }
 
 // MARK: - KeepsakeDetailCoordinating

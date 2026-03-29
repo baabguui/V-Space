@@ -66,4 +66,22 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
         }
         child.start()
     }
+
+    func showDisposalDateEdit() {
+        let child = DisposalDateEditCoordinator(
+            navigationController: navigationController,
+            keepsakeId: keepsakeId
+        )
+        child.onFinish = { [weak self, weak child] in
+            guard let child else { return }
+            self?.removeChildCoordinator(child)
+        }
+        childCoordinators.append(child)
+        child.start()
+    }
+
+    func finishRitual() {
+        onFinish?()
+        navigationController.popToRootViewController(animated: true)
+    }
 }

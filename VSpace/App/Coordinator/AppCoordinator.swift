@@ -1,9 +1,11 @@
 import UIKit
+import RealmSwift
 
 final class AppCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     private let window: UIWindow
+    private weak var homeCoordinator: HomeCoordinator?
 
     init(window: UIWindow) {
         self.window = window
@@ -18,9 +20,17 @@ final class AppCoordinator: Coordinator {
         showHome()
     }
 
+    func handleNotificationTap(keepsakeId: String) {
+        guard let id = try? ObjectId(string: keepsakeId),
+              let keepsake = KeepsakeDatabaseManager().fetchKeepsake(id: id) else { return }
+        navigationController.popToRootViewController(animated: false)
+        homeCoordinator?.showKeepsakeStatus(keepsake: keepsake)
+    }
+
     private func showHome() {
-        let homeCoordinator = HomeCoordinator(navigationController: navigationController)
-        childCoordinators.append(homeCoordinator)
-        homeCoordinator.start()
+        let coordinator = HomeCoordinator(navigationController: navigationController)
+        homeCoordinator = coordinator
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 }
