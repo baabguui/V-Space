@@ -16,6 +16,7 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
     // MARK: - Properties
 
     private let keepsakeId: ObjectId
+    private let startAtRitual: Bool
     private let db: KeepsakeDatabaseManaging
     var onFinish: (() -> Void)?
 
@@ -24,21 +25,27 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
     init(
         navigationController: UINavigationController,
         keepsakeId: ObjectId,
+        startAtRitual: Bool = false,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
+        self.startAtRitual = startAtRitual
         self.db = db
     }
 
     // MARK: - Coordinator
 
     func start() {
-        let vc = KeepsakeStatusViewController(
-            coordinator: self,
-            viewModel: KeepsakeStatusViewModel(keepsakeId: keepsakeId)
-        )
-        navigationController.pushViewController(vc, animated: true)
+        if startAtRitual {
+            showRitual()
+        } else {
+            let vc = KeepsakeStatusViewController(
+                coordinator: self,
+                viewModel: KeepsakeStatusViewModel(keepsakeId: keepsakeId)
+            )
+            navigationController.pushViewController(vc, animated: true)
+        }
     }
 
     // MARK: - RitualCoordinating

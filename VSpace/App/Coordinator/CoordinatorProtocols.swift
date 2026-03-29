@@ -27,10 +27,21 @@ protocol ObjectCaptureCoordinating: AnyObject {
     func cancelCapture()
 }
 
+// MARK: - ActionCoordinating (공통 액션)
+
+protocol KeepsakeActionCoordinating: AnyObject {
+    func showRitual()
+    func deleteKeepsake()
+}
+
+extension KeepsakeActionCoordinating {
+    func showRitual() {}
+    func deleteKeepsake() {}
+}
+
 // MARK: - RitualCoordinating
 
-protocol RitualCoordinating: AnyObject {
-    func showRitual()
+protocol RitualCoordinating: KeepsakeActionCoordinating {
     func showKeepsakeDetail()
     func showDisposalDateEdit()
     func finishRitual()
@@ -46,7 +57,7 @@ protocol KeepsakeDetailCoordinating: AnyObject {
 
 // MARK: - KeepsakeFormCoordinating
 
-protocol KeepsakeFormCoordinating: AnyObject {
+protocol KeepsakeFormCoordinating: KeepsakeActionCoordinating {
     func showAcquiredDate(keepsakeId: ObjectId)
     func showDisposalDate(keepsakeId: ObjectId)
     func showAbility(keepsakeId: ObjectId)
@@ -55,5 +66,15 @@ protocol KeepsakeFormCoordinating: AnyObject {
     func showFormCompletion(keepsakeId: ObjectId)
     func finishForm()
     func saveAndExit()
-    func deleteKeepsake()
+}
+
+extension KeepsakeFormCoordinating {
+    func showAcquiredDate(keepsakeId: ObjectId) {}
+    func showDisposalDate(keepsakeId: ObjectId) {}
+    func showAbility(keepsakeId: ObjectId) {}
+    func showMemoryNote(keepsakeId: ObjectId) {}
+    func showLastWords(keepsakeId: ObjectId) {}
+    func showFormCompletion(keepsakeId: ObjectId) {}
+    func finishForm() {}
+    func saveAndExit() {}
 }

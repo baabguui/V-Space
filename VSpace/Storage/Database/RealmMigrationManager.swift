@@ -13,7 +13,7 @@ import RealmSwift
 
 enum RealmMigrationManager {
 
-    private static let schemaVersion: UInt64 = 3
+    private static let schemaVersion: UInt64 = 4
 
     static func configure() {
         let config = Realm.Configuration(

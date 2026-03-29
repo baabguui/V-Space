@@ -47,7 +47,7 @@ final class DateInputViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.setInitialDate(viewModel.initialDate)
+        contentView.setInitialPartialDate(viewModel.initialPartialDate)
         contentView.setThumbnail(viewModel.thumbnailImage)
         if showsMoreButton { setupMoreButton() }
         bindViewModel()

@@ -15,8 +15,8 @@ final class FormCompletionViewModel {
     }
 
     struct Output {
-        let goHome: Observable<Void>
-        // TODO: startRitual (isAvailable=true → primaryTap)
+        let goHome:     Observable<Void>
+        let showRitual: Observable<Void>
     }
 
     let isAvailable: Bool
@@ -34,13 +34,20 @@ final class FormCompletionViewModel {
     }
 
     func transform(input: Input) -> Output {
-        // isAvailable=true: "다음에 하기"(secondary) → 홈
-        // isAvailable=false: "홈으로"(primary) → 홈
+        // isAvailable=true: 
+        // - "다음에 하기"(secondary) → 홈
+        // - "시작"(primary) → 의례
+        // isAvailable=false: 
+        // - "홈으로"(primary) → 홈
         let goHome: Observable<Void> = isAvailable
             ? input.secondaryTap
             : input.primaryTap
 
-        return Output(goHome: goHome)
+        let showRitual: Observable<Void> = isAvailable
+            ? input.primaryTap
+            : .empty()
+
+        return Output(goHome: goHome, showRitual: showRitual)
     }
 
     func scheduleNotification() {

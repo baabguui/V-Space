@@ -121,7 +121,7 @@ final class DateInputView: UIView {
 
     // MARK: - Relay
 
-    let selectedDateRelay: BehaviorRelay<Date?>
+    let selectedDateRelay: BehaviorRelay<PartialDate>
 
     // MARK: - Init
 
@@ -133,9 +133,7 @@ final class DateInputView: UIView {
         selectedMonth = cal.component(.month, from: now)
         selectedDay   = cal.component(.day,   from: now)
 
-        let todayComponents = DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)
-        let todayDate = Calendar.current.date(from: todayComponents)
-        selectedDateRelay = BehaviorRelay<Date?>(value: todayDate)
+        selectedDateRelay = BehaviorRelay<PartialDate>(value: PartialDate(year: selectedYear, month: selectedMonth, day: selectedDay))
 
         super.init(frame: .zero)
         titleLabel.text = config.title
@@ -151,20 +149,26 @@ final class DateInputView: UIView {
 
     // MARK: - Public
 
-    func setInitialDate(_ date: Date?) {
-        if let date = date {
-            let cal = Calendar.current
-            selectedYear  = cal.component(.year,  from: date)
-            selectedMonth = cal.component(.month, from: date)
-            selectedDay   = min(cal.component(.day, from: date), daysInMonth)
-            yearIsSpecial = false; monthIsSpecial = false; dayIsSpecial = false
+    func setInitialPartialDate(_ partial: PartialDate) {
+        if partial.year > 0 {
+            selectedYear  = partial.year
+            selectedMonth = partial.month > 0 ? partial.month : 1
+            selectedDay   = partial.day > 0 ? partial.day : 1
+            
+            yearIsSpecial  = false
+            monthIsSpecial = partial.month == 0
+            dayIsSpecial   = partial.day == 0
         } else {
+            // "기억 안남" / "미정" 항목이 아닌 '오늘'을 기본값으로 설정
             let cal = Calendar.current
             let now = Date()
             selectedYear  = cal.component(.year,  from: now)
             selectedMonth = cal.component(.month, from: now)
             selectedDay   = cal.component(.day,   from: now)
-            yearIsSpecial = false; monthIsSpecial = false; dayIsSpecial = false
+            
+            yearIsSpecial  = false
+            monthIsSpecial = false
+            dayIsSpecial   = false
         }
 
         pickerView.reloadAllComponents()
@@ -184,13 +188,12 @@ final class DateInputView: UIView {
     // MARK: - Private
 
     private func emitDate() {
-        if yearIsSpecial || monthIsSpecial || dayIsSpecial {
-            selectedDateRelay.accept(nil)
-            return
-        }
-        var comps = DateComponents()
-        comps.year = selectedYear; comps.month = selectedMonth; comps.day = selectedDay
-        selectedDateRelay.accept(Calendar.current.date(from: comps))
+        let partial = PartialDate(
+            year:  yearIsSpecial  ? 0 : selectedYear,
+            month: monthIsSpecial ? 0 : selectedMonth,
+            day:   dayIsSpecial   ? 0 : selectedDay
+        )
+        selectedDateRelay.accept(partial)
     }
 
     // MARK: - Setup

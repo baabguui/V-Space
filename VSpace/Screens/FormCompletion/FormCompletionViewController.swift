@@ -72,6 +72,12 @@ final class FormCompletionViewController: BaseViewController {
             })
             .disposed(by: disposeBag)
 
+        output.showRitual
+            .subscribe(onNext: { [weak self] in
+                self?.coordinator?.showRitual()
+            })
+            .disposed(by: disposeBag)
+
         if !viewModel.isAvailable {
             contentView.secondaryButton.rx.tap
                 .subscribe(onNext: { [weak self] in

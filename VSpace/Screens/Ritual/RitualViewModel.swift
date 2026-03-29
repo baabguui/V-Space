@@ -30,7 +30,7 @@ final class RitualViewModel {
     // MARK: - Properties
 
     let thumbnailImage: UIImage?
-    let lastWords: String?
+    let lastWords: String
     let keepsakeName: String
     let cardDetailText: String
 
@@ -38,6 +38,19 @@ final class RitualViewModel {
     private let db: KeepsakeDatabaseManaging
     private let mournySelector: MournyEventSelector
     private let disposeBag = DisposeBag()
+
+    private static let defaultLastWordsCandidates = [
+        "ritual.defaultLastWords.1", // "고마워"
+        "ritual.defaultLastWords.2", // "잘 지내"
+        "ritual.defaultLastWords.3", // "보고 싶을 거야"
+        "ritual.defaultLastWords.4", // "수고했어"
+        "ritual.defaultLastWords.5"  // "사랑해"
+    ]
+
+    private static func randomDefaultLastWords() -> String {
+        let key = defaultLastWordsCandidates.randomElement()!
+        return NSLocalizedString(key, comment: "")
+    }
 
     // MARK: - Init
 
@@ -52,30 +65,64 @@ final class RitualViewModel {
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.thumbnailImage  = keepsake
             .flatMap { MediaStorageManager.shared.loadThumbnail($0.thumbnailFileName) }
-        self.lastWords       = keepsake?.lastWords
+        
+        self.lastWords       = keepsake?.lastWords.flatMap { $0.isEmpty ? nil : $0 } 
+                               ?? Self.randomDefaultLastWords()
         self.keepsakeName    = keepsake?.name ?? ""
         self.cardDetailText  = Self.formatCardDetail(keepsake: keepsake)
     }
 
     private static func formatCardDetail(keepsake: Keepsake?) -> String {
         guard let keepsake else { return "" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-
+        
         var lines: [String] = []
 
-        let disposalStr  = formatter.string(from: keepsake.disposalDate)
-        if let acquired  = keepsake.acquiredDate {
-            let acquiredStr = formatter.string(from: acquired)
-            lines.append(String(format: NSLocalizedString("ritual.cardDetail.dateRange", comment: ""), acquiredStr, disposalStr))
+        // PartialDate 기반 날짜 섹션
+        let acquired = PartialDate(
+            year: keepsake.acquiredYear,
+            month: keepsake.acquiredMonth,
+            day: keepsake.acquiredDay
+        )
+        let disposal = PartialDate(
+            year: keepsake.disposalYear,
+            month: keepsake.disposalMonth,
+            day: keepsake.disposalDay
+        )
+
+        // 하위 호환성 (acquiredYear가 0인데 acquiredDate가 있는 경우)
+        let finalAcquired = (acquired.year == 0 && keepsake.acquiredDate != nil)
+            ? PartialDate(
+                year: Calendar.current.component(.year, from: keepsake.acquiredDate!),
+                month: Calendar.current.component(.month, from: keepsake.acquiredDate!),
+                day: Calendar.current.component(.day, from: keepsake.acquiredDate!)
+              )
+            : acquired
+
+        let finalDisposal = (disposal.year == 0 && keepsake.disposalDate != .distantFuture)
+            ? PartialDate(
+                year: Calendar.current.component(.year, from: keepsake.disposalDate),
+                month: Calendar.current.component(.month, from: keepsake.disposalDate),
+                day: Calendar.current.component(.day, from: keepsake.disposalDate)
+              )
+            : disposal
+
+        let dateRangeStr = String(format: NSLocalizedString("ritual.cardDetail.dateRange", comment: ""), 
+                                  finalAcquired.formatted(), 
+                                  finalDisposal.formatted(isDisposal: true))
+        lines.append(dateRangeStr)
+
+        if let duration = PartialDate.approximateDuration(from: finalAcquired, to: finalDisposal) {
+            lines.append(duration)
         }
 
-        if let ability = keepsake.ability, !ability.isEmpty {
-            lines.append(String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability)))
-        }
+        let ability = keepsake.ability.flatMap { $0.isEmpty ? nil : $0 } 
+                      ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
+        lines.append(String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability)))
 
         lines.append("")   // 빈 줄
-        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), formatter.string(from: Date())))
+        let todayFormatter = DateFormatter()
+        todayFormatter.dateFormat = "yyyy.MM.dd"
+        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), todayFormatter.string(from: Date())))
 
         return lines.joined(separator: "\n")
     }

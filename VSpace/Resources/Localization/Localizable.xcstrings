@@ -549,6 +549,22 @@
         }
       }
     },
+    "common.approximateDuration" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "approx. %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "약 %@ 동안"
+          }
+        }
+      }
+    },
     "common.dateRange.separator" : {
       "comment" : "%1$@ = start date, %2$@ = end date",
       "localizations" : {
@@ -562,6 +578,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "common.durationMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d months"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d개월"
+          }
+        }
+      }
+    },
+    "common.durationYear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d years"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d년"
+          }
+        }
+      }
+    },
+    "common.undecidedDate" : {
+      "comment" : "미정",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undecided"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "미정"
+          }
+        }
+      }
+    },
+    "common.unknownDate" : {
+      "comment" : "기억 안남",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don't remember"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기억 안남"
           }
         }
       }
@@ -1115,6 +1197,23 @@
         }
       }
     },
+    "keepsake.defaultAbility" : {
+      "comment" : "함께 하기",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "be together"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "함께 하기"
+          }
+        }
+      }
+    },
     "keepsakeDetail.button.close" : {
       "localizations" : {
         "en" : {
@@ -1275,6 +1374,91 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 여기에 잠들다"
+          }
+        }
+      }
+    },
+    "ritual.defaultLastWords.1" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고마워"
+          }
+        }
+      }
+    },
+    "ritual.defaultLastWords.2" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Be well"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잘 지내"
+          }
+        }
+      }
+    },
+    "ritual.defaultLastWords.3" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'll miss you"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보고 싶을 거야"
+          }
+        }
+      }
+    },
+    "ritual.defaultLastWords.4" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You did well"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수고했어"
+          }
+        }
+      }
+    },
+    "ritual.defaultLastWords.5" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I love you"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사랑해"
           }
         }
       }

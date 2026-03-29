@@ -48,6 +48,19 @@ final class KeepsakeDetailViewModel {
         return storage.modelURL(for: resourceFileName)
     }()
 
+    private static let defaultLastWordsCandidates = [
+        "ritual.defaultLastWords.1",
+        "ritual.defaultLastWords.2",
+        "ritual.defaultLastWords.3",
+        "ritual.defaultLastWords.4",
+        "ritual.defaultLastWords.5"
+    ]
+
+    private static func randomDefaultLastWords() -> String {
+        let key = defaultLastWordsCandidates.randomElement()!
+        return NSLocalizedString(key, comment: "")
+    }
+
     // MARK: - Init
 
     init(
@@ -65,18 +78,54 @@ final class KeepsakeDetailViewModel {
         self.thumbnailImage = keepsake
             .flatMap { storage.loadThumbnail($0.thumbnailFileName) }
         self.keepsakeName = keepsake?.name ?? ""
-        self.lastWords    = keepsake?.lastWords ?? ""
-        self.ability      = keepsake?.ability ?? ""
+        
+        self.lastWords    = keepsake?.lastWords.flatMap { $0.isEmpty ? nil : $0 } 
+                            ?? Self.randomDefaultLastWords()
+        self.ability      = keepsake?.ability.flatMap { $0.isEmpty ? nil : $0 } 
+                            ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
         self.memoryNote   = keepsake?.memoryNote ?? ""
+
+        // PartialDate 기반 날짜 섹션
+        let acquired = PartialDate(
+            year: keepsake?.acquiredYear ?? 0,
+            month: keepsake?.acquiredMonth ?? 0,
+            day: keepsake?.acquiredDay ?? 0
+        )
+        let disposal = PartialDate(
+            year: keepsake?.disposalYear ?? 0,
+            month: keepsake?.disposalMonth ?? 0,
+            day: keepsake?.disposalDay ?? 0
+        )
+
+        // 하위 호환성
+        let finalAcquired = (acquired.year == 0 && keepsake?.acquiredDate != nil)
+            ? PartialDate(
+                year: Calendar.current.component(.year, from: (keepsake?.acquiredDate)!),
+                month: Calendar.current.component(.month, from: (keepsake?.acquiredDate)!),
+                day: Calendar.current.component(.day, from: (keepsake?.acquiredDate)!)
+              )
+            : acquired
+
+        let finalDisposal = (disposal.year == 0 && keepsake?.disposalDate != .distantFuture)
+            ? PartialDate(
+                year: Calendar.current.component(.year, from: (keepsake?.disposalDate)!),
+                month: Calendar.current.component(.month, from: (keepsake?.disposalDate)!),
+                day: Calendar.current.component(.day, from: (keepsake?.disposalDate)!)
+              )
+            : disposal
+
+        if finalAcquired.year == 0 && finalDisposal.year == 0 {
+            self.dateRangeText = NSLocalizedString("common.unknownDate", comment: "기억 안남")
+        } else if finalAcquired.year == 0 {
+            self.dateRangeText = finalDisposal.formatted(isDisposal: true)
+        } else {
+            self.dateRangeText = String(format: NSLocalizedString("common.dateRange.separator", comment: ""), 
+                                        finalAcquired.formatted(), 
+                                        finalDisposal.formatted(isDisposal: true))
+        }
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
-        let disposalStr = keepsake.map { formatter.string(from: $0.disposalDate) } ?? ""
-        if let acquired = keepsake?.acquiredDate {
-            self.dateRangeText = String(format: NSLocalizedString("common.dateRange.separator", comment: ""), formatter.string(from: acquired), disposalStr)
-        } else {
-            self.dateRangeText = disposalStr
-        }
         let ritualDate = keepsake?.ritualDate ?? Date()
         self.ritualDateText = formatter.string(from: ritualDate)
 

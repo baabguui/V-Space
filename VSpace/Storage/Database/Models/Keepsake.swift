@@ -52,6 +52,15 @@ final class Keepsake: Object {
 
     // 의례
     @Persisted var mournyCount: Int = 0
+
+    // 부분 날짜 (0 = 미상/"기억 안남"/"미정")
+    @Persisted var acquiredYear: Int = 0
+    @Persisted var acquiredMonth: Int = 0
+    @Persisted var acquiredDay: Int = 0
+
+    @Persisted var disposalYear: Int = 0
+    @Persisted var disposalMonth: Int = 0
+    @Persisted var disposalDay: Int = 0
 }
 
 extension Keepsake {

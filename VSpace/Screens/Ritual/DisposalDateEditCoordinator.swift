@@ -78,10 +78,4 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
         )
         navigationController.pushViewController(vc, animated: true)
     }
-
-    // 이 흐름에서 사용되지 않는 메서드
-    func showAcquiredDate(keepsakeId: ObjectId) {}
-    func showDisposalDate(keepsakeId: ObjectId) {}
-    func showMemoryNote(keepsakeId: ObjectId) {}
-    func showLastWords(keepsakeId: ObjectId) {}
 }

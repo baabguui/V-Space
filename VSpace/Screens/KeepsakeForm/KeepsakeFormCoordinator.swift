@@ -98,6 +98,21 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
         navigationController.pushViewController(vc, animated: true)
     }
 
+    func showRitual() {
+        let coordinator = RitualCoordinator(
+            navigationController: navigationController,
+            keepsakeId: keepsakeId,
+            startAtRitual: true
+        )
+        coordinator.onFinish = { [weak self, weak coordinator] in
+            guard let coordinator else { return }
+            self?.removeChildCoordinator(coordinator)
+            self?.finishForm()
+        }
+        childCoordinators.append(coordinator)
+        coordinator.start()
+    }
+
     func finishForm() {
         onFinish?()
         navigationController.popToRootViewController(animated: true)
