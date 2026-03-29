@@ -41,7 +41,51 @@ final class DateInputViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         contentView.setInitialDate(viewModel.initialDate)
+        contentView.setThumbnail(viewModel.thumbnailImage)
+        setupMoreButton()
         bindViewModel()
+    }
+
+    // MARK: - Navigation Bar
+
+    private func setupMoreButton() {
+        let saveAction = UIAction(
+            title: NSLocalizedString("form.menu.saveAndExit", comment: ""),
+            image: UIImage(systemName: "square.and.arrow.down")
+        ) { [weak self] _ in self?.showSaveAndExitAlert() }
+
+        let deleteAction = UIAction(
+            title: NSLocalizedString("form.menu.delete", comment: ""),
+            image: UIImage(systemName: "trash"),
+            attributes: .destructive
+        ) { [weak self] _ in self?.showDeleteAlert() }
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis"),
+            menu: UIMenu(children: [saveAction, deleteAction])
+        )
+    }
+
+    private func showSaveAndExitAlert() {
+        showAlert(
+            title: NSLocalizedString("form.menu.saveAndExit.alert.title", comment: ""),
+            message: NSLocalizedString("form.menu.saveAndExit.alert.message", comment: ""),
+            confirmTitle: NSLocalizedString("form.menu.saveAndExit", comment: ""),
+            confirmStyle: .default,
+            cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
+            onConfirm: { [weak self] in self?.coordinator?.saveAndExit() }
+        )
+    }
+
+    private func showDeleteAlert() {
+        showAlert(
+            title: NSLocalizedString("form.menu.delete.alert.title", comment: ""),
+            message: NSLocalizedString("form.menu.delete.alert.message", comment: ""),
+            confirmTitle: NSLocalizedString("form.menu.delete", comment: ""),
+            confirmStyle: .destructive,
+            cancelTitle: NSLocalizedString("alert.default.cancel", comment: ""),
+            onConfirm: { [weak self] in self?.coordinator?.deleteKeepsake() }
+        )
     }
 
     // MARK: - Binding

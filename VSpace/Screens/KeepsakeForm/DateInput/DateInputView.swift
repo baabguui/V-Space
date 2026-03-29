@@ -41,7 +41,15 @@ final class DateInputView: UIView {
         v.layer.cornerRadius = 70
         v.layer.borderWidth = 4
         v.layer.borderColor = UIColor.vsStroke.cgColor
+        v.clipsToBounds = true
         return v
+    }()
+
+    private let thumbnailImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
     }()
 
     private let titleLabel: UILabel = {
@@ -125,16 +133,9 @@ final class DateInputView: UIView {
         selectedMonth = cal.component(.month, from: now)
         selectedDay   = cal.component(.day,   from: now)
 
-        switch config {
-        case .acquiredDate:
-            // 처음 만난 날 기본: 모두 "기억 안남"
-            yearIsSpecial = true; monthIsSpecial = true; dayIsSpecial = true
-            selectedDateRelay = BehaviorRelay<Date?>(value: nil)
-        case .disposalDate:
-            // 보내주는 날 기본: 월/일 "미정"
-            monthIsSpecial = true; dayIsSpecial = true
-            selectedDateRelay = BehaviorRelay<Date?>(value: nil)
-        }
+        let todayComponents = DateComponents(year: selectedYear, month: selectedMonth, day: selectedDay)
+        let todayDate = Calendar.current.date(from: todayComponents)
+        selectedDateRelay = BehaviorRelay<Date?>(value: todayDate)
 
         super.init(frame: .zero)
         titleLabel.text = config.title
@@ -158,9 +159,12 @@ final class DateInputView: UIView {
             selectedDay   = min(cal.component(.day, from: date), daysInMonth)
             yearIsSpecial = false; monthIsSpecial = false; dayIsSpecial = false
         } else {
-            // nil: 년도는 오늘 연도 유지, 월/일은 특수값
-            monthIsSpecial = true; dayIsSpecial = true
-            if yearHasSpecial { yearIsSpecial = true }
+            let cal = Calendar.current
+            let now = Date()
+            selectedYear  = cal.component(.year,  from: now)
+            selectedMonth = cal.component(.month, from: now)
+            selectedDay   = cal.component(.day,   from: now)
+            yearIsSpecial = false; monthIsSpecial = false; dayIsSpecial = false
         }
 
         pickerView.reloadAllComponents()
@@ -191,12 +195,17 @@ final class DateInputView: UIView {
 
     // MARK: - Setup
 
+    func setThumbnail(_ image: UIImage?) {
+        thumbnailImageView.image = image
+    }
+
     private func setup() {
         backgroundColor = .vsSurface
         pickerView.dataSource = self
         pickerView.delegate   = self
 
         addSubview(avatarView)
+        avatarView.addSubview(thumbnailImageView)
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(pickerView)
@@ -207,6 +216,11 @@ final class DateInputView: UIView {
             $0.top.equalTo(safeAreaLayoutGuide).offset(60)
             $0.size.equalTo(140)
         }
+
+        thumbnailImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+
         titleLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(avatarView.snp.bottom).offset(32)

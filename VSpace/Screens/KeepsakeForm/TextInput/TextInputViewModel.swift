@@ -3,7 +3,7 @@
 //  VSpace
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import RxSwift
 
@@ -23,6 +23,12 @@ final class TextInputViewModel {
     private let keepsakeId: ObjectId
     private let config: TextInputConfig
     private let db: KeepsakeDatabaseManaging
+    private let storage: MediaStorageManaging
+
+    var thumbnailImage: UIImage? {
+        guard let fileName = db.fetchKeepsake(id: keepsakeId)?.thumbnailFileName else { return nil }
+        return storage.loadThumbnail(fileName)
+    }
 
     var initialText: String {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return "" }
@@ -36,11 +42,13 @@ final class TextInputViewModel {
     init(
         keepsakeId: ObjectId,
         config: TextInputConfig,
-        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
     ) {
         self.keepsakeId = keepsakeId
         self.config = config
         self.db = db
+        self.storage = storage
     }
 
     func transform(input: Input) -> Output {

@@ -3,7 +3,7 @@
 //  VSpace
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import RxSwift
 import RxRelay
@@ -22,13 +22,24 @@ final class NameInputViewModel {
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
+    private let storage: MediaStorageManaging
     private let disposeBag = DisposeBag()
 
     var initialName: String { db.fetchKeepsake(id: keepsakeId)?.name ?? "" }
 
-    init(keepsakeId: ObjectId, db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()) {
+    var thumbnailImage: UIImage? {
+        guard let fileName = db.fetchKeepsake(id: keepsakeId)?.thumbnailFileName else { return nil }
+        return storage.loadThumbnail(fileName)
+    }
+
+    init(
+        keepsakeId: ObjectId,
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
+    ) {
         self.keepsakeId = keepsakeId
         self.db = db
+        self.storage = storage
     }
 
     func transform(input: Input) -> Output {

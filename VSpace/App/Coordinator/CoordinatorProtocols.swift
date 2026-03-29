@@ -52,4 +52,6 @@ protocol KeepsakeFormCoordinating: AnyObject {
     func showLastWords(keepsakeId: ObjectId)
     func showFormCompletion(keepsakeId: ObjectId)
     func finishForm()
+    func saveAndExit()
+    func deleteKeepsake()
 }

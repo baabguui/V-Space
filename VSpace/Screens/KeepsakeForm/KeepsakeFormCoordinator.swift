@@ -9,11 +9,21 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
 
     private let keepsakeId: ObjectId
     private let startStep: Int
+    private let db: KeepsakeDatabaseManaging
+    private let storage: MediaStorageManaging
 
-    init(navigationController: UINavigationController, keepsakeId: ObjectId, startStep: Int = 1) {
+    init(
+        navigationController: UINavigationController,
+        keepsakeId: ObjectId,
+        startStep: Int = 1,
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
+    ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.startStep = startStep
+        self.db = db
+        self.storage = storage
     }
 
     func start() {
@@ -91,5 +101,23 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
     func finishForm() {
         onFinish?()
         navigationController.popToRootViewController(animated: true)
+    }
+
+    func saveAndExit() {
+        finishForm()
+    }
+
+    func deleteKeepsake() {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else {
+            finishForm()
+            return
+        }
+        storage.deleteKeepsakeFiles(
+            resourceFileName: keepsake.resourceFileName,
+            thumbnailFileName: keepsake.thumbnailFileName,
+            recordType: keepsake.recordType
+        )
+        try? db.deleteKeepsake(keepsake)
+        finishForm()
     }
 }

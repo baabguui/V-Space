@@ -3,7 +3,7 @@
 //  VSpace
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import RxSwift
 
@@ -21,6 +21,12 @@ final class DateInputViewModel {
     private let keepsakeId: ObjectId
     private let config: DateInputConfig
     private let db: KeepsakeDatabaseManaging
+    private let storage: MediaStorageManaging
+
+    var thumbnailImage: UIImage? {
+        guard let fileName = db.fetchKeepsake(id: keepsakeId)?.thumbnailFileName else { return nil }
+        return storage.loadThumbnail(fileName)
+    }
 
     var initialDate: Date? {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return nil }
@@ -35,11 +41,13 @@ final class DateInputViewModel {
     init(
         keepsakeId: ObjectId,
         config: DateInputConfig,
-        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
     ) {
         self.keepsakeId = keepsakeId
         self.config = config
         self.db = db
+        self.storage = storage
     }
 
     func transform(input: Input) -> Output {

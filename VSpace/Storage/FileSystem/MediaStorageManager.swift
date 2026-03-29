@@ -24,6 +24,7 @@ protocol MediaStorageManaging {
     func loadThumbnail(_ fileName: String) -> UIImage?
     func loadPhoto(_ fileName: String) -> UIImage?
     func modelURL(for fileName: String) -> URL?
+    func deleteKeepsakeFiles(resourceFileName: String, thumbnailFileName: String, recordType: RecordType)
 }
 
 // MARK: - MediaStorageManager
@@ -115,6 +116,24 @@ final class MediaStorageManager: MediaStorageManaging {
     func modelURL(for fileName: String) -> URL? {
         let url = modelsDirectory.appendingPathComponent(fileName)
         return FileManager.default.fileExists(atPath: url.path) ? url : nil
+    }
+
+    // MARK: - deleteKeepsakeFiles
+
+    func deleteKeepsakeFiles(resourceFileName: String, thumbnailFileName: String, recordType: RecordType) {
+        let resourceURL: URL
+        switch recordType {
+        case .threeD:
+            resourceURL = modelsDirectory.appendingPathComponent(resourceFileName)
+        case .photo, .fragment:
+            resourceURL = imagesDirectory.appendingPathComponent(resourceFileName)
+        }
+        let thumbnailURL = thumbnailsDirectory.appendingPathComponent(thumbnailFileName)
+
+        for url in [resourceURL, thumbnailURL] {
+            guard FileManager.default.fileExists(atPath: url.path) else { continue }
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 
     // MARK: - Private

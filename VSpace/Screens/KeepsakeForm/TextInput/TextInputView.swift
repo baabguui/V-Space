@@ -64,7 +64,15 @@ final class TextInputView: UIView {
         v.layer.cornerRadius = 70
         v.layer.borderWidth = 4
         v.layer.borderColor = UIColor.vsStroke.cgColor
+        v.clipsToBounds = true
         return v
+    }()
+
+    private let thumbnailImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
     }()
 
     private let titleLabel: UILabel = {
@@ -145,10 +153,15 @@ final class TextInputView: UIView {
 
     // MARK: - Setup
 
+    func setThumbnail(_ image: UIImage?) {
+        thumbnailImageView.image = image
+    }
+
     private func setup() {
         backgroundColor = .vsSurface
 
         addSubview(avatarView)
+        avatarView.addSubview(thumbnailImageView)
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(inputField)
@@ -160,6 +173,10 @@ final class TextInputView: UIView {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(safeAreaLayoutGuide).offset(60)
             $0.size.equalTo(140)
+        }
+
+        thumbnailImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
 
         titleLabel.snp.makeConstraints {
