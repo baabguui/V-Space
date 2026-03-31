@@ -23,6 +23,7 @@ final class KeepsakeStatusViewModel {
 
     let isAvailable: Bool
     let name: String
+    let thumbnailImage: UIImage?
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
@@ -39,8 +40,9 @@ final class KeepsakeStatusViewModel {
         self.db = db
         self.storage = storage
         let keepsake = db.fetchKeepsake(id: keepsakeId)
-        self.isAvailable = keepsake?.isAvailable ?? false
-        self.name        = keepsake?.name ?? ""
+        self.isAvailable    = keepsake?.isAvailable ?? false
+        self.name           = keepsake?.name ?? ""
+        self.thumbnailImage = keepsake.flatMap { storage.loadThumbnail($0.thumbnailFileName) }
     }
 
     // MARK: - Transform

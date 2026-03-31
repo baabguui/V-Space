@@ -48,6 +48,7 @@ final class FormCompletionViewController: BaseViewController {
         }
 
         contentView.configure(message: message, primaryTitle: primaryTitle, secondaryTitle: secondaryTitle)
+        contentView.thumbnailImageView.image = viewModel.thumbnailImage
         view = contentView
     }
 

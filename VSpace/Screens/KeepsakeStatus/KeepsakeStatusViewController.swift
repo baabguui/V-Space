@@ -47,6 +47,7 @@ final class KeepsakeStatusViewController: BaseViewController {
             primaryTitle:   primaryTitle,
             secondaryTitle: NSLocalizedString("keepsake_status.change_date", comment: "")
         )
+        contentView.thumbnailImageView.image = viewModel.thumbnailImage
         view = contentView
     }
 

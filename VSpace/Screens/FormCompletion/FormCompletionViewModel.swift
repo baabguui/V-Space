@@ -3,7 +3,7 @@
 //  VSpace
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import RxSwift
 
@@ -21,16 +21,22 @@ final class FormCompletionViewModel {
 
     let isAvailable: Bool
     let name: String
+    let thumbnailImage: UIImage?
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
 
-    init(keepsakeId: ObjectId, db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()) {
+    init(
+        keepsakeId: ObjectId,
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        storage: MediaStorageManaging = MediaStorageManager.shared
+    ) {
         self.keepsakeId = keepsakeId
         self.db = db
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable = keepsake?.isAvailable ?? false
         self.name = keepsake?.name ?? ""
+        self.thumbnailImage = keepsake.flatMap { storage.loadThumbnail($0.thumbnailFileName) }
     }
 
     func transform(input: Input) -> Output {

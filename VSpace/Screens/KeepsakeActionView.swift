@@ -17,7 +17,15 @@ final class KeepsakeActionView: UIView {
         v.backgroundColor = .vsWhite
         v.layer.borderWidth = 4
         v.layer.borderColor = UIColor.vsStroke.cgColor
+        v.clipsToBounds = true
         return v
+    }()
+
+    let thumbnailImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
     }()
 
     let messageLabel: UILabel = {
@@ -97,10 +105,15 @@ final class KeepsakeActionView: UIView {
         buttonStack.addArrangedSubview(secondaryButton)
         buttonStack.addArrangedSubview(primaryButton)
 
+        circleView.addSubview(thumbnailImageView)
         addSubview(circleView)
         addSubview(messageLabel)
         addSubview(deleteButton)
         addSubview(buttonStack)
+
+        thumbnailImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
 
         circleView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
