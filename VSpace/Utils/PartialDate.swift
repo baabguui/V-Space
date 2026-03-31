@@ -7,6 +7,15 @@
 
 import Foundation
 
+enum VSDateFormatter {
+    /// yyyy.MM.dd 고정 포맷 (의례 카드 등에서 사용)
+    static let dot: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy.MM.dd"
+        return f
+    }()
+}
+
 struct PartialDate: Equatable {
     let year: Int    // 0 = 미상
     let month: Int   // 0 = 미상

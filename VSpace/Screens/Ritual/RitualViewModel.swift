@@ -44,7 +44,6 @@ final class RitualViewModel {
         "ritual.defaultLastWords.2", // "잘 지내"
         "ritual.defaultLastWords.3", // "보고 싶을 거야"
         "ritual.defaultLastWords.4", // "수고했어"
-        "ritual.defaultLastWords.5"  // "사랑해"
     ]
 
     private static func randomDefaultLastWords() -> String {
@@ -106,23 +105,15 @@ final class RitualViewModel {
               )
             : disposal
 
-        let dateRangeStr = String(format: NSLocalizedString("ritual.cardDetail.dateRange", comment: ""), 
-                                  finalAcquired.formatted(), 
-                                  finalDisposal.formatted(isDisposal: true))
-        lines.append(dateRangeStr)
-
-        if let duration = PartialDate.approximateDuration(from: finalAcquired, to: finalDisposal) {
-            lines.append(duration)
-        }
-
-        let ability = keepsake.ability.flatMap { $0.isEmpty ? nil : $0 } 
+        let duration = PartialDate.approximateDuration(from: finalAcquired, to: finalDisposal)
+                       ?? NSLocalizedString("ritual.cardDetail.defaultDuration", comment: "")
+        let ability = keepsake.ability.flatMap { $0.isEmpty ? nil : $0 }
                       ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
-        lines.append(String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability)))
+        let abilityStr = String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability))
+        lines.append("\(duration) \(abilityStr)")
 
         lines.append("")   // 빈 줄
-        let todayFormatter = DateFormatter()
-        todayFormatter.dateFormat = "yyyy.MM.dd"
-        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), todayFormatter.string(from: Date())))
+        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), VSDateFormatter.dot.string(from: Date())))
 
         return lines.joined(separator: "\n")
     }

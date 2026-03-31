@@ -475,14 +475,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Keep every side of the object\nTakes up more storage\nCan be replaced with a gallery photo later"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "대상의 모든 면을 간직할 수 있어요\n용량을 더 많이 차지해요\n이후 갤러리 사진으로 교체할 수 있어요"
+            "value" : "대상의 모든 면을 간직할 수 있어요\n용량을 더 많이 차지해요"
           }
         }
       }
@@ -523,14 +523,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Keep a representative image\nShoot directly or import from gallery\nCan be replaced with a gallery photo later"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "대표 이미지를 간직할 수 있어요\n직접 촬영하거나, 갤러리에서 가져올 수 있어요\n이후 갤러리 사진으로 교체할 수 있어요"
+            "value" : "대표 이미지를 간직할 수 있어요\n직접 촬영하거나, 갤러리에서 가져올 수 있어요"
           }
         }
       }
@@ -1380,6 +1380,7 @@
     },
     "ritual.cardDetail.dateRange" : {
       "comment" : "%1$@ = acquired date, %2$@ = disposal date",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1391,6 +1392,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ - %2$@ 동안"
+          }
+        }
+      }
+    },
+    "ritual.cardDetail.defaultDuration" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "for a long time"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오랜 시간 동안"
           }
         }
       }
