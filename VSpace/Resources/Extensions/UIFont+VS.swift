@@ -15,9 +15,9 @@ extension UIFont {
         return UIFont(name: name, size: size) ?? .systemFont(ofSize: size, weight: weight)
     }
 
-    static let vsTitle   = pretendard(.semibold, size: 23)  // Title   23 / SemiBold
-    static let vsInput   = pretendard(.regular,  size: 20)  // Input   20 / Regular
-    static let vsBody    = pretendard(.semibold, size: 17)  // Body    17 / SemiBold
-    static let vsCaption = pretendard(.semibold, size: 16)  // Caption 16 / SemiBold
+    static let vsTitle   = pretendard(.semibold, size: 20)  // Title   23 / SemiBold
+    static let vsInput   = pretendard(.regular,  size: 18)  // Input   20 / Regular
+    static let vsBody    = pretendard(.semibold, size: 16)  // Body    17 / SemiBold
+    static let vsCaption = pretendard(.semibold, size: 14)  // Caption 16 / SemiBold
     static let vsSmall   = pretendard(.regular,  size: 12)  // Small   12 / Regular
 }
