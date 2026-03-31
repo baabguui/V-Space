@@ -54,7 +54,7 @@ final class CaptureStatusView: UIView {
 
     private lazy var restartButton = VLongButton(
         title: NSLocalizedString("capture.status.restart", comment: ""),
-        style: .white
+        style: .bordered
     )
 
     private let buttonStack: UIStackView = {
@@ -114,7 +114,11 @@ final class CaptureStatusView: UIView {
             buttonStack.isHidden = true
 
         case .failed(let canRetry):
-            progressLabel.text = NSLocalizedString("capture.status.failed", comment: "")
+            let hint = NSLocalizedString(
+                canRetry ? "capture.status.failed.retry_hint" : "capture.status.failed.restart_hint",
+                comment: ""
+            )
+            progressLabel.text = NSLocalizedString("capture.status.failed", comment: "") + "\n" + hint
             activityIndicator.stopAnimating()
             activityIndicator.isHidden = true
             retryButton.isHidden = !canRetry

@@ -14,6 +14,7 @@ final class VLongButton: UIButton {
         case white
         case black
         case accent
+        case bordered
     }
     
     // MARK: - Init
@@ -43,6 +44,11 @@ final class VLongButton: UIButton {
         case .accent:
             config.baseBackgroundColor = .accent
             config.baseForegroundColor = .vsPrimary
+        case .bordered:
+            config.baseBackgroundColor = .vsWhite
+            config.baseForegroundColor = .vsPrimary
+            config.background.strokeColor = .vsPrimary
+            config.background.strokeWidth = 2
         }
         
         config.attributedTitle = AttributedString(
