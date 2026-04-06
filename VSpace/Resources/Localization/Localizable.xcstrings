@@ -33,6 +33,39 @@
         }
       }
     },
+    "alert.object.capture.unsupported.message" : {
+      "comment" : "LiDAR 미지원 기기",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D object capture is only available on devices with a LiDAR scanner."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3D 오브젝트 캡처는 LiDAR 스캐너가 탑재된 기기에서만 사용할 수 있습니다."
+          }
+        }
+      }
+    },
+    "alert.object.capture.unsupported.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsupported Device"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지원하지 않는 기기"
+          }
+        }
+      }
+    },
     "alert.unsupported.message" : {
       "comment" : "iOS 17 이상 필요",
       "localizations" : {

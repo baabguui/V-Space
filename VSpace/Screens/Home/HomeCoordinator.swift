@@ -1,4 +1,5 @@
 import UIKit
+import _RealityKit_SwiftUI
 import RealmSwift
 
 final class HomeCoordinator: Coordinator, HomeCoordinating {
@@ -31,7 +32,10 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
     }
 
     func showObjectCapture() {
-        guard #available(iOS 17.0, *) else { return }
+        guard #available(iOS 17.0, *), ObjectCaptureSession.isSupported else {
+            showObjectCaptureUnsupportedAlert()
+            return
+        }
         let coordinator = ObjectCaptureCoordinator(navigationController: navigationController)
         coordinator.onComplete = { [weak self, weak coordinator] keepsakeId in
             guard let self, let coordinator else { return }
@@ -71,6 +75,19 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
             self?.removeChildCoordinator(child)
         }
         child.start()
+    }
+
+    private func showObjectCaptureUnsupportedAlert() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("alert.object.capture.unsupported.title", comment: ""),
+            message: NSLocalizedString("alert.object.capture.unsupported.message", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("alert.default.confirm", comment: ""),
+            style: .default
+        ))
+        navigationController.present(alert, animated: true)
     }
 
     private func startKeepsakeForm(keepsakeId: ObjectId, startStep: Int = 1) {
