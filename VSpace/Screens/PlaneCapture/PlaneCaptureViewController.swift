@@ -92,18 +92,8 @@ final class PlaneCaptureViewController: BaseViewController {
             .disposed(by: disposeBag)
 
         output.navigateNext
-            .subscribe(onNext: { [weak self] keepsakeId in
-                self?.coordinator?.finishCapture(keepsakeId: keepsakeId)
-            })
-            .disposed(by: disposeBag)
-
-        output.errorOccurred
-            .subscribe(onNext: { [weak self] error in
-                self?.showAlert(
-                    title: NSLocalizedString("error.title", comment: ""),
-                    message: error.localizedDescription,
-                    cancelTitle: nil
-                )
+            .subscribe(onNext: { [weak self] in
+                self?.coordinator?.finishCapture()
             })
             .disposed(by: disposeBag)
     }

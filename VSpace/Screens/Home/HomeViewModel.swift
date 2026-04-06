@@ -49,7 +49,7 @@ final class HomeViewModel {
             guard let self = self else { return }
             switch changes {
             case .initial(let keepsakes), .update(let keepsakes, _, _, _):
-                let homeItems = keepsakes.map { HomeItem.keepsake($0) } + [.add]
+                let homeItems = keepsakes.map { HomeItem.keepsake($0.freeze()) } + [.add]
                 self.items.accept(homeItems)
             case .error(let error):
                 print("Realm observation error: \(error)")

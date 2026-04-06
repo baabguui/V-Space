@@ -16,7 +16,7 @@ protocol HomeCoordinating: AnyObject {
 
 protocol PlaneCaptureCoordinating: AnyObject {
     func showImagePicker(from viewController: UIViewController, completion: @escaping (UIImage, UIImage) -> Void)
-    func finishCapture(keepsakeId: ObjectId)
+    func finishCapture()
 }
 
 // MARK: - ObjectCaptureCoordinating
