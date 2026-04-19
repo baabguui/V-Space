@@ -22,6 +22,29 @@ final class RitualView: UIView {
 
     let nextButton = VRoundButton(style: .black, size: .small, iconName: "chevron.right")
 
+    let sunContainerView: UIView = {
+        let v = UIView()
+        v.clipsToBounds = true
+        return v
+    }()
+
+    private let sunImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "sun"))
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+
+    let sunNameLabel: UILabel = {
+        let label = UILabel()
+        label.font                  = .vsTitle
+        label.textColor             = .vsPrimary
+        label.textAlignment         = .center
+        label.numberOfLines         = 1
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor    = 0.4
+        return label
+    }()
+
     let lastWordsBubbleImageView: UIImageView = {
         let iv = UIImageView(image: UIImage(named: "lastwordsBubble"))
         iv.contentMode = .scaleAspectFit
@@ -120,6 +143,13 @@ final class RitualView: UIView {
         thumbnailImageView.layer.cornerRadius     = thumbnailImageView.bounds.width / 2
         cardThumbnailImageView.layer.cornerRadius = cardThumbnailImageView.bounds.width / 2
     }
+    // MARK: - Public
+
+    /// keepsake 이름을 sun 컨테이너에 설정합니다. 이름이 길면 폰트 크기를 자동으로 줄입니다
+    /// - Parameter name: 표시할 keepsake 이름
+    func configureSunName(_ name: String) {
+        sunNameLabel.text = name
+    }
 
     // MARK: - Private
 
@@ -127,6 +157,9 @@ final class RitualView: UIView {
         backgroundColor = .vsSurface
 
         thumbnailImageView.addGestureRecognizer(tapGesture)
+        addSubview(sunContainerView)
+        sunContainerView.addSubview(sunImageView)
+        sunContainerView.addSubview(sunNameLabel)
         addSubview(thumbnailImageView)
         addSubview(nextButton)
         addSubview(lastWordsBubbleImageView)
@@ -141,6 +174,19 @@ final class RitualView: UIView {
 
         nextButton.isHidden = true
         
+        sunContainerView.snp.makeConstraints {
+            $0.top.equalTo(safeAreaLayoutGuide).offset(16)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(32)
+            $0.height.equalTo(sunContainerView.snp.width).multipliedBy(0.35)
+        }
+        sunImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        sunNameLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(46)
+        }
+
         thumbnailImageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(120)

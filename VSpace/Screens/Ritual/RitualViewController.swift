@@ -58,6 +58,7 @@ final class RitualViewController: BaseViewController {
         contentView.cardNameLabel.text           = viewModel.keepsakeName
         contentView.cardDetailLabel.text         = viewModel.cardDetailText
         contentView.cardRestingDateLabel.text    = viewModel.cardRestingDateText
+        contentView.configureSunName(viewModel.keepsakeName)
         view = contentView
     }
 
@@ -139,7 +140,7 @@ final class RitualViewController: BaseViewController {
         let (start, landing) = makeEntry(for: spawn.event, scale: spawn.scale)
         imageView.center = start
 
-        view.addSubview(imageView)
+        view.insertSubview(imageView, belowSubview: contentView.sunContainerView)
         mournyViews.append(imageView)
         mournySpawns.append(spawn)
         landingPoints.append(landing)
@@ -183,6 +184,10 @@ final class RitualViewController: BaseViewController {
     private func animateDonePhase() {
         isDone = true
         contentView.thumbnailImageView.isUserInteractionEnabled = false
+
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.sunContainerView.alpha = 0
+        }
 
         let count = mournyViews.count
         guard count > 0 else { return }
