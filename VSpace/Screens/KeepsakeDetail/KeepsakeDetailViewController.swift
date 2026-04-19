@@ -38,9 +38,11 @@ final class KeepsakeDetailViewController: BaseViewController {
         contentView.thumbnailImageView.image  = viewModel.thumbnailImage
         contentView.nameLabel.text            = viewModel.keepsakeName
         contentView.dateRangeLabel.text       = viewModel.dateRangeText
-        contentView.lastWordsLabel.text       = viewModel.lastWords
+        contentView.setLastWords(viewModel.lastWords)
         contentView.frontRitualDateLabel.text = viewModel.ritualDateText
-        contentView.abilityMemoryLabel.text   = buildAbilityMemoryText()
+        contentView.abilityMemoryLabel.text   = viewModel.abilityDetailText
+        contentView.memoryNoteLabel.text      = viewModel.memoryNote
+        contentView.memoryNoteScrollView.isHidden = viewModel.memoryNote.isEmpty
         contentView.mournyCountLabel.text     = viewModel.mournyCountText
         contentView.backRitualDateLabel.text  = viewModel.ritualDateText
 
@@ -156,13 +158,5 @@ final class KeepsakeDetailViewController: BaseViewController {
         case .fragment:
             break
         }
-    }
-
-    // MARK: - Helpers
-
-    private func buildAbilityMemoryText() -> String {
-        [viewModel.ability, viewModel.memoryNote]
-            .filter { !$0.isEmpty }
-            .joined(separator: "\n\n")
     }
 }

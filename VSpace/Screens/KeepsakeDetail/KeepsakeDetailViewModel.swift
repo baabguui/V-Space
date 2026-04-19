@@ -25,7 +25,7 @@ final class KeepsakeDetailViewModel {
     let keepsakeName: String
     let dateRangeText: String
     let lastWords: String
-    let ability: String
+    let abilityDetailText: String
     let memoryNote: String
     let ritualDateText: String
     let mournyCountText: String
@@ -79,11 +79,9 @@ final class KeepsakeDetailViewModel {
             .flatMap { storage.loadThumbnail($0.thumbnailFileName) }
         self.keepsakeName = keepsake?.name ?? ""
         
-        self.lastWords    = keepsake?.lastWords.flatMap { $0.isEmpty ? nil : $0 } 
-                            ?? Self.randomDefaultLastWords()
-        self.ability      = keepsake?.ability.flatMap { $0.isEmpty ? nil : $0 } 
-                            ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
-        self.memoryNote   = keepsake?.memoryNote ?? ""
+        self.lastWords  = keepsake?.lastWords.flatMap { $0.isEmpty ? nil : $0 }
+                          ?? Self.randomDefaultLastWords()
+        self.memoryNote = keepsake?.memoryNote ?? ""
 
         // PartialDate 기반 날짜 섹션
         let acquired = PartialDate(
@@ -114,6 +112,14 @@ final class KeepsakeDetailViewModel {
               )
             : disposal
 
+        let ability = keepsake?.ability.flatMap { $0.isEmpty ? nil : $0 }
+                      ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
+        let duration = PartialDate.approximateDuration(from: finalAcquired, to: finalDisposal)
+                       ?? NSLocalizedString("ritual.cardDetail.defaultDuration", comment: "")
+        let abilityStr = String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""),
+                                ability, Self.eulReul(ability))
+        self.abilityDetailText = "\(duration) \(abilityStr)"
+
         if finalAcquired.year == 0 && finalDisposal.year == 0 {
             self.dateRangeText = NSLocalizedString("common.unknownDate", comment: "기억 안남")
         } else if finalAcquired.year == 0 {
@@ -134,6 +140,14 @@ final class KeepsakeDetailViewModel {
 
         let pool = ["frontMournyA", "frontMournyB", "frontMournyC", "horizontalMournyA", "horizontalMournyB"]
         self.mournyImageNames = (0..<min(count, 9)).map { _ in pool.randomElement()! }
+    }
+
+    // MARK: - Helpers
+
+    private static func eulReul(_ word: String) -> String {
+        guard let last = word.unicodeScalars.last,
+              last.value >= 0xAC00, last.value <= 0xD7A3 else { return "을/를 " }
+        return (last.value - 0xAC00) % 28 == 0 ? "를 " : "을 "
     }
 
     // MARK: - Transform

@@ -70,13 +70,41 @@ final class KeepsakeDetailView: UIView {
         return l
     }()
 
+    let leftQuoteLabel: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.italicSystemFont(ofSize: 18)
+        l.textColor = .vsPrimary
+        l.text = "\u{201C}"
+        l.setContentHuggingPriority(.required, for: .horizontal)
+        l.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return l
+    }()
+
     let lastWordsLabel: UILabel = {
         let l = UILabel()
         l.font = .pretendard(.semibold, size: 18)
-        l.textColor = .vsPrimary
         l.textAlignment = .center
+        l.textColor = .vsSecondary
         l.numberOfLines = 0
         return l
+    }()
+
+    let rightQuoteLabel: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.italicSystemFont(ofSize: 18)
+        l.textColor = .vsPrimary
+        l.text = "\u{201D}"
+        l.setContentHuggingPriority(.required, for: .horizontal)
+        l.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return l
+    }()
+
+    private let lastWordsStackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.alignment = .center
+        sv.spacing = 8
+        return sv
     }()
 
     let frontRitualDateLabel: UILabel = {
@@ -102,9 +130,24 @@ final class KeepsakeDetailView: UIView {
 
     let abilityMemoryLabel: UILabel = {
         let l = UILabel()
-        l.font = .pretendard(.semibold, size: 22)
+        l.font = .vsBody
         l.textColor = .vsPrimary
         l.textAlignment = .left
+        l.numberOfLines = 0
+        return l
+    }()
+
+    let memoryNoteScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsVerticalScrollIndicator   = false
+        sv.showsHorizontalScrollIndicator = false
+        return sv
+    }()
+
+    let memoryNoteLabel: UILabel = {
+        let l = UILabel()
+        l.font = .vsBody
+        l.textColor = .vsSecondary
         l.numberOfLines = 0
         return l
     }()
@@ -158,15 +201,21 @@ final class KeepsakeDetailView: UIView {
     private func setupSubviews() {
         addSubview(cardSceneView)
 
+        lastWordsStackView.addArrangedSubview(leftQuoteLabel)
+        lastWordsStackView.addArrangedSubview(lastWordsLabel)
+        lastWordsStackView.addArrangedSubview(rightQuoteLabel)
+
         cardSceneView.addSubview(frontCardView)
         frontCardView.addSubview(thumbnailImageView)
         frontCardView.addSubview(nameLabel)
         frontCardView.addSubview(dateRangeLabel)
-        frontCardView.addSubview(lastWordsLabel)
+        frontCardView.addSubview(lastWordsStackView)
         frontCardView.addSubview(frontRitualDateLabel)
 
         cardSceneView.addSubview(backCardView)
         backCardView.addSubview(abilityMemoryLabel)
+        backCardView.addSubview(memoryNoteScrollView)
+        memoryNoteScrollView.addSubview(memoryNoteLabel)
         backCardView.addSubview(mournyCountLabel)
         backCardView.addSubview(mournyRowStackView)
         backCardView.addSubview(backRitualDateLabel)
@@ -199,7 +248,7 @@ final class KeepsakeDetailView: UIView {
             $0.leading.trailing.equalToSuperview().inset(24)
         }
 
-        lastWordsLabel.snp.makeConstraints {
+        lastWordsStackView.snp.makeConstraints {
             $0.top.equalTo(dateRangeLabel.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(24)
         }
@@ -213,6 +262,17 @@ final class KeepsakeDetailView: UIView {
         abilityMemoryLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(32)
             $0.leading.trailing.equalToSuperview().inset(24)
+        }
+
+        memoryNoteScrollView.snp.makeConstraints {
+            $0.top.equalTo(abilityMemoryLabel.snp.bottom).offset(16)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalTo(mournyRowStackView.snp.top).offset(-44)
+        }
+
+        memoryNoteLabel.snp.makeConstraints {
+            $0.edges.equalTo(memoryNoteScrollView.contentLayoutGuide)
+            $0.width.equalTo(memoryNoteScrollView.frameLayoutGuide)
         }
 
         backRitualDateLabel.snp.makeConstraints {
@@ -230,6 +290,18 @@ final class KeepsakeDetailView: UIView {
             $0.centerX.equalToSuperview()
             $0.height.equalTo(50)
         }
+    }
+
+    // MARK: - Public
+
+    /// lastWordsLabel에 oblique(이탤릭) 스타일로 텍스트를 설정합니다
+    func setLastWords(_ text: String) {
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.pretendard(.semibold, size: 18),
+            .foregroundColor: UIColor.vsSecondary,
+            .obliqueness: 0.3
+        ]
+        lastWordsLabel.attributedText = NSAttributedString(string: text, attributes: attrs)
     }
 
     // MARK: - Layout
