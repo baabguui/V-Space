@@ -26,8 +26,21 @@ final class RitualView: UIView {
         let iv = UIImageView(image: UIImage(named: "lastwordsBubble"))
         iv.contentMode = .scaleAspectFit
         iv.alpha       = 0
+        iv.clipsToBounds = true
+        iv.isUserInteractionEnabled = true
         return iv
     }()
+
+    let lastWordsScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsVerticalScrollIndicator   = false
+        sv.showsHorizontalScrollIndicator = false
+        return sv
+    }()
+
+    /// 짧은 텍스트일 때 세로 중앙 정렬을 위한 컨테이너
+    /// height >= scrollView.frameLayoutGuide 로 스크롤뷰 높이 이상을 보장
+    private let lastWordsContentView = UIView()
 
     let lastWordsLabel: UILabel = {
         let label = UILabel()
@@ -35,7 +48,6 @@ final class RitualView: UIView {
         label.textColor     = .vsPrimary
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.alpha         = 0
         return label
     }()
 
@@ -109,25 +121,41 @@ final class RitualView: UIView {
         addSubview(thumbnailImageView)
         addSubview(nextButton)
         addSubview(lastWordsBubbleImageView)
-        addSubview(lastWordsLabel)
+        lastWordsBubbleImageView.addSubview(lastWordsScrollView)
+        lastWordsScrollView.addSubview(lastWordsContentView)
+        lastWordsContentView.addSubview(lastWordsLabel)
         addSubview(cardContainerView)
         cardContainerView.addSubview(cardThumbnailImageView)
         cardContainerView.addSubview(cardNameLabel)
         cardContainerView.addSubview(cardDetailLabel)
 
         nextButton.isHidden = true
-
+        
         thumbnailImageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(120)
         }
-        lastWordsLabel.snp.makeConstraints {
-            $0.top.horizontalEdges.equalTo(lastWordsBubbleImageView).inset(40)
-            $0.bottom.equalTo(lastWordsBubbleImageView.snp.bottom).inset(40)
-        }
         lastWordsBubbleImageView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(30)
+            $0.horizontalEdges.equalToSuperview()
             $0.top.equalTo(thumbnailImageView.snp.bottom).offset(24)
+            $0.bottom.equalTo(nextButton.snp.top).offset(-30)
+        }
+        lastWordsScrollView.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview().inset(36)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(200)
+        }
+        lastWordsContentView.snp.makeConstraints {
+            $0.edges.equalTo(lastWordsScrollView.contentLayoutGuide)
+            $0.width.equalTo(lastWordsScrollView.frameLayoutGuide)
+            // 최소 높이 = 스크롤뷰 frame 높이 → 짧은 텍스트도 세로 중앙 정렬 가능
+            $0.height.greaterThanOrEqualTo(lastWordsScrollView.frameLayoutGuide)
+        }
+        lastWordsLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()           // 짧을 때 세로 중앙
+            $0.horizontalEdges.equalToSuperview()
+            $0.top.greaterThanOrEqualToSuperview()  // 긴 텍스트일 때 컨테이너 높이를 label 기준으로 확장
+            $0.bottom.lessThanOrEqualToSuperview()
         }
         cardContainerView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(64)

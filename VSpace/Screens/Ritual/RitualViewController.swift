@@ -62,6 +62,7 @@ final class RitualViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        contentView.lastWordsScrollView.delegate = self
         bindViewModel()
     }
 
@@ -202,20 +203,23 @@ final class RitualViewController: BaseViewController {
             withDuration: 0.5,
             delay: 0,
             usingSpringWithDamping: 0.85,
-            initialSpringVelocity: 0
-        ) {
-            for (i, imageView) in self.mournyViews.enumerated() {
-                imageView.layer.removeAllAnimations()
-                // backMourny는 frontMourny 이미지로 표시
-                let name = self.mournySpawns[i].event.name
-                let displayName = name.hasPrefix("back") ? name.replacingOccurrences(of: "back", with: "front") : name
-                imageView.image     = UIImage(named: displayName)
-                imageView.transform = CGAffineTransform(scaleX: itemScale, y: itemScale)
-                if i < positions.count { imageView.center = positions[i] }
+            initialSpringVelocity: 0,
+            animations: {
+                for (i, imageView) in self.mournyViews.enumerated() {
+                    imageView.layer.removeAllAnimations()
+                    // backMourny는 frontMourny 이미지로 표시
+                    let name = self.mournySpawns[i].event.name
+                    let displayName = name.hasPrefix("back") ? name.replacingOccurrences(of: "back", with: "front") : name
+                    imageView.image     = UIImage(named: displayName)
+                    imageView.transform = CGAffineTransform(scaleX: itemScale, y: itemScale)
+                    if i < positions.count { imageView.center = positions[i] }
+                }
+                self.contentView.lastWordsBubbleImageView.alpha = 1
+            },
+            completion: { [weak self] _ in
+                self?.startLastWordsAutoScrollIfNeeded()
             }
-            self.contentView.lastWordsBubbleImageView.alpha = 1
-            self.contentView.lastWordsLabel.alpha           = 1
-        }
+        )
     }
 
     private func animateCardPhase() {
@@ -225,7 +229,6 @@ final class RitualViewController: BaseViewController {
 
         UIView.animate(withDuration: 0.3) {
             self.contentView.lastWordsBubbleImageView.alpha = 0
-            self.contentView.lastWordsLabel.alpha           = 0
             self.contentView.thumbnailImageView.alpha       = 0
         }
         UIView.animate(
@@ -345,5 +348,26 @@ final class RitualViewController: BaseViewController {
             x: center.x + cos(angle) * distance,
             y: center.y + sin(angle) * distance
         )
+    }
+
+    // MARK: - Last Words Auto Scroll
+
+    private func startLastWordsAutoScrollIfNeeded() {
+        let sv = contentView.lastWordsScrollView
+        let overflow = sv.contentSize.height - sv.bounds.height
+        guard overflow > 1 else { return }
+        let duration = max(2.0, TimeInterval(overflow / 20))
+        UIView.animate(withDuration: duration, delay: 0.6, options: .curveLinear) {
+            sv.contentOffset = CGPoint(x: 0, y: overflow)
+        }
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension RitualViewController: UIScrollViewDelegate {
+    /// 사용자가 직접 스크롤 시 자동 스크롤 애니메이션 즉시 중단
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollView.layer.removeAllAnimations()
     }
 }
