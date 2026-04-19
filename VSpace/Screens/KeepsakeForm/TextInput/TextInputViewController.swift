@@ -138,25 +138,21 @@ final class TextInputViewController: BaseViewController {
             rxText = .just("")
         }
 
-        let input = TextInputViewModel.Input(
-            text:    rxText,
-            nextTap: confirmTapRelay.asObservable(),
-            skipTap: contentView.skipButton.rx.tap.asObservable()
-        )
-        let output = viewModel.transform(input: input)
-
-        output.navigateNext
-            .subscribe(onNext: { [weak self] keepsakeId in
-                guard let self else { return }
-                switch self.config {
-                case .ability:    self.coordinator?.showMemoryNote(keepsakeId: keepsakeId)
-                case .memoryNote: self.coordinator?.showLastWords(keepsakeId: keepsakeId)
-                case .lastWords:  self.coordinator?.showFormCompletion(keepsakeId: keepsakeId)
-                }
+        // 입력 여부에 따라 버튼 타이틀·알파·인터랙션 전환
+        rxText
+            .map { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .subscribe(onNext: { [weak self] hasText in
+                self?.contentView.updateButton(hasText: hasText)
             })
             .disposed(by: disposeBag)
 
-        output.navigateSkip
+        let input = TextInputViewModel.Input(
+            text:    rxText,
+            nextTap: confirmTapRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+
+        output.navigate
             .subscribe(onNext: { [weak self] keepsakeId in
                 guard let self else { return }
                 switch self.config {

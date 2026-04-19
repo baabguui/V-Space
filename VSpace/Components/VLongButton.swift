@@ -29,6 +29,15 @@ final class VLongButton: UIButton {
         fatalError("init(coder:) is not available")
     }
 
+    // MARK: - Public
+
+    func updateTitle(_ title: String) {
+        configuration?.attributedTitle = AttributedString(
+            title,
+            attributes: AttributeContainer([.font: UIFont.vsTitle])
+        )
+    }
+
     // MARK: - Setup
 
     private func setup(title: String, style: Style) {

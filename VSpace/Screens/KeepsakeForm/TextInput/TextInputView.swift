@@ -96,14 +96,6 @@ final class TextInputView: UIView {
 
     let actionButton: VLongButton
 
-    let skipButton: UIButton = {
-        let btn = UIButton()
-        btn.setTitle(NSLocalizedString("form.button.skip", comment: ""), for: .normal)
-        btn.setTitleColor(.vsSecondary, for: .normal)
-        btn.titleLabel?.font = .vsBody
-        return btn
-    }()
-
     private let warningLabel: UILabel = {
         let l = UILabel()
         l.text = NSLocalizedString("text_input.lastwords.warning", comment: "")
@@ -142,8 +134,8 @@ final class TextInputView: UIView {
         subtitleLabel.text = config.subtitle
         subtitleLabel.isHidden = config.subtitle == nil
         warningLabel.isHidden = config != .lastWords
-        skipButton.isHidden = config == .lastWords
         setup()
+        if config != .lastWords { updateButton(hasText: false) }
     }
 
     @available(*, unavailable)
@@ -157,6 +149,16 @@ final class TextInputView: UIView {
         thumbnailImageView.image = image
     }
 
+    /// 입력 여부에 따라 액션 버튼의 타이틀·알파·인터랙션을 전환합니다 (lastWords 제외)
+    func updateButton(hasText: Bool) {
+        guard config != .lastWords else { return }
+        let title = hasText
+            ? NSLocalizedString("form.button.next", comment: "")
+            : NSLocalizedString("form.button.skip", comment: "")
+        actionButton.updateTitle(title)
+        actionButton.alpha = hasText ? 1.0 : 0.4
+    }
+
     private func setup() {
         backgroundColor = .vsSurface
 
@@ -165,7 +167,6 @@ final class TextInputView: UIView {
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(inputField)
-        addSubview(skipButton)
         addSubview(actionButton)
         addSubview(warningLabel)
 
@@ -199,11 +200,6 @@ final class TextInputView: UIView {
             warningLabel.snp.makeConstraints {
                 $0.horizontalEdges.equalToSuperview().inset(24)
                 $0.bottom.equalTo(actionButton.snp.top).offset(-16)
-            }
-        } else {
-            skipButton.snp.makeConstraints {
-                $0.centerX.equalToSuperview()
-                $0.bottom.equalTo(actionButton.snp.top).offset(-12)
             }
         }
 

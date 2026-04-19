@@ -12,12 +12,10 @@ final class TextInputViewModel {
     struct Input {
         let text:    Observable<String>
         let nextTap: Observable<Void>
-        let skipTap: Observable<Void>
     }
 
     struct Output {
-        let navigateNext: Observable<ObjectId>
-        let navigateSkip: Observable<ObjectId>
+        let navigate: Observable<ObjectId>
     }
 
     private let keepsakeId: ObjectId
@@ -52,18 +50,13 @@ final class TextInputViewModel {
     }
 
     func transform(input: Input) -> Output {
-        let navigateNext = input.nextTap
+        let navigate = input.nextTap
             .withLatestFrom(input.text)
             .compactMap { [weak self] text -> ObjectId? in
                 self?.save(text: text)
             }
 
-        let navigateSkip = input.skipTap
-            .compactMap { [weak self] _ -> ObjectId? in
-                self?.advanceStep()
-            }
-
-        return Output(navigateNext: navigateNext, navigateSkip: navigateSkip)
+        return Output(navigate: navigate)
     }
 
     private func save(text: String) -> ObjectId? {
@@ -81,18 +74,6 @@ final class TextInputViewModel {
                 k.lastWords = value.isEmpty ? nil : value
                 k.status = .unavailable
                 k.progressStep = nil
-            }
-        }
-        return keepsakeId
-    }
-
-    private func advanceStep() -> ObjectId? {
-        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return nil }
-        try? db.updateKeepsake(keepsake) { k in
-            switch self.config {
-            case .ability:    k.progressStep = 5
-            case .memoryNote: k.progressStep = 6
-            case .lastWords:  k.status = .unavailable; k.progressStep = nil
             }
         }
         return keepsakeId
