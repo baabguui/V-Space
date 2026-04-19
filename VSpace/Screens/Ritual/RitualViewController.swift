@@ -57,6 +57,7 @@ final class RitualViewController: BaseViewController {
         contentView.lastWordsLabel.text          = viewModel.lastWords
         contentView.cardNameLabel.text           = viewModel.keepsakeName
         contentView.cardDetailLabel.text         = viewModel.cardDetailText
+        contentView.cardRestingDateLabel.text    = viewModel.cardRestingDateText
         view = contentView
     }
 

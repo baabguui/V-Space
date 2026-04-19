@@ -73,7 +73,7 @@ final class RitualView: UIView {
         label.font          = .vsTitle
         label.textColor     = .vsPrimary
         label.textAlignment = .center
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         return label
     }()
 
@@ -81,6 +81,15 @@ final class RitualView: UIView {
         let label = UILabel()
         label.font          = .vsBody
         label.textColor     = .vsPrimary
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let cardRestingDateLabel: UILabel = {
+        let label = UILabel()
+        label.font          = .vsBody
+        label.textColor     = .vsSecondary
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -128,6 +137,7 @@ final class RitualView: UIView {
         cardContainerView.addSubview(cardThumbnailImageView)
         cardContainerView.addSubview(cardNameLabel)
         cardContainerView.addSubview(cardDetailLabel)
+        cardContainerView.addSubview(cardRestingDateLabel)
 
         nextButton.isHidden = true
         
@@ -160,20 +170,25 @@ final class RitualView: UIView {
         cardContainerView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(64)
             // 썸네일 상단 기준 55pt 위 → Mourny 발이 카드 위에 걸침
-            $0.top.equalTo(thumbnailImageView.snp.top).offset(-55)
+            $0.top.equalTo(thumbnailImageView.snp.top).offset(-30)
         }
         cardThumbnailImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(55)
+            $0.top.equalToSuperview().offset(30)
             $0.centerX.equalToSuperview()
             $0.size.equalTo(120)
         }
         cardNameLabel.snp.makeConstraints {
-            $0.top.equalTo(cardThumbnailImageView.snp.bottom).offset(35)
+            $0.top.equalTo(cardThumbnailImageView.snp.bottom).offset(30)
             $0.horizontalEdges.equalToSuperview().inset(20)
         }
         cardDetailLabel.snp.makeConstraints {
-            $0.top.equalTo(cardNameLabel.snp.bottom).offset(35)
-            $0.horizontalEdges.bottom.equalToSuperview().inset(20)
+            $0.top.equalTo(cardNameLabel.snp.bottom).offset(20)
+            $0.horizontalEdges.equalToSuperview().inset(20)
+        }
+        cardRestingDateLabel.snp.makeConstraints {
+            $0.top.equalTo(cardDetailLabel.snp.bottom).offset(16)
+            $0.horizontalEdges.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(30)
         }
         nextButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(20)

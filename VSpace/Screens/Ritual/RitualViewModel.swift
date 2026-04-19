@@ -33,6 +33,7 @@ final class RitualViewModel {
     let lastWords: String
     let keepsakeName: String
     let cardDetailText: String
+    let cardRestingDateText: String
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
@@ -68,7 +69,8 @@ final class RitualViewModel {
         self.lastWords       = keepsake?.lastWords.flatMap { $0.isEmpty ? nil : $0 } 
                                ?? Self.randomDefaultLastWords()
         self.keepsakeName    = keepsake?.name ?? ""
-        self.cardDetailText  = Self.formatCardDetail(keepsake: keepsake)
+        self.cardDetailText     = Self.formatCardDetail(keepsake: keepsake)
+        self.cardRestingDateText = String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), VSDateFormatter.dot.string(from: Date()))
     }
 
     private static func formatCardDetail(keepsake: Keepsake?) -> String {
@@ -111,9 +113,6 @@ final class RitualViewModel {
                       ?? NSLocalizedString("keepsake.defaultAbility", comment: "함께 하기")
         let abilityStr = String(format: NSLocalizedString("ritual.cardDetail.ability", comment: ""), ability, eulReul(ability))
         lines.append("\(duration) \(abilityStr)")
-
-        lines.append("")   // 빈 줄
-        lines.append(String(format: NSLocalizedString("ritual.cardDetail.restingDate", comment: ""), VSDateFormatter.dot.string(from: Date())))
 
         return lines.joined(separator: "\n")
     }
