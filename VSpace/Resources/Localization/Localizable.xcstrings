@@ -243,57 +243,6 @@
         }
       }
     },
-    "capture.alert.error.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to generate 3D model.\n%@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "3D 모델 생성에 실패했습니다.\n%@"
-          }
-        }
-      }
-    },
-    "capture.alert.error.retry" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retry"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "재시도"
-          }
-        }
-      }
-    },
-    "capture.alert.error.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "오류"
-          }
-        }
-      }
-    },
     "capture.button.detect" : {
       "localizations" : {
         "en" : {
@@ -473,6 +422,7 @@
       }
     },
     "capture.type.object.info1" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -488,7 +438,7 @@
         }
       }
     },
-    "capture.type.object.info2" : {
+    "capture.type.object.recommend" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -504,18 +454,18 @@
         }
       }
     },
-    "capture.type.object.info3" : {
+    "capture.type.object.infos" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep every side of the object\nTakes up more storage\nCan be replaced with a gallery photo later"
+            "state" : "translated",
+            "value" : "ㆍCaptures multiple angles of the subject\nㆍMay take longer to scan\nㆍUses more storage space"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "- 대상의 모든 면을 간직할 수 있어요\n- 용량을 더 많이 차지해요"
+            "value" : "ㆍ 대상의 다양한 면을 간직할 수 있어요\nㆍ 스캔에 시간이 더 소요될 수 있어요\nㆍ 저장용량을 더 많이 사용해요"
           }
         }
       }
@@ -536,7 +486,7 @@
         }
       }
     },
-    "capture.type.plane.info1" : {
+    "capture.type.plane.recommend" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -552,18 +502,18 @@
         }
       }
     },
-    "capture.type.plane.info2" : {
+    "capture.type.plane.infos" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Keep a representative image\nShoot directly or import from gallery\nCan be replaced with a gallery photo later"
+            "state" : "translated",
+            "value" : "ㆍKeep a representative image\nㆍShoot directly or import from gallery"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "- 대표 이미지를 간직할 수 있어요\n- 직접 촬영하거나, 갤러리에서 가져올 수 있어요"
+            "value" : "ㆍ 대표 이미지를 간직할 수 있어요\nㆍ 직접 촬영하거나, 갤러리에서 가져올 수 있어요"
           }
         }
       }

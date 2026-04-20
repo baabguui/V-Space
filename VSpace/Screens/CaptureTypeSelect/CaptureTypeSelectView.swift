@@ -20,19 +20,14 @@ final class CaptureTypeSelectView: UIView {
     // 디자인 파일(Node 93erZ)의 데이터 반영
     let objectCaptureCard = CaptureTypeCardView(
         title: NSLocalizedString("capture.type.object.title", comment: ""),
-        infoItems: [
-            NSLocalizedString("capture.type.object.info1", comment: ""),
-            NSLocalizedString("capture.type.object.info2", comment: ""),
-            NSLocalizedString("capture.type.object.info3", comment: "")
-        ]
+        recommend: NSLocalizedString("capture.type.object.recommend", comment: ""),
+        infos: NSLocalizedString("capture.type.object.infos", comment: "")
     )
-    
+
     let planeCaptureCard = CaptureTypeCardView(
         title: NSLocalizedString("capture.type.plane.title", comment: ""),
-        infoItems: [
-            NSLocalizedString("capture.type.plane.info1", comment: ""),
-            NSLocalizedString("capture.type.plane.info2", comment: "")
-        ]
+        recommend: NSLocalizedString("capture.type.plane.recommend", comment: ""),
+        infos: NSLocalizedString("capture.type.plane.infos", comment: "")
     )
     
     // MARK: - Init
