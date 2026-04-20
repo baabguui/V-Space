@@ -48,11 +48,15 @@ final class PhotoViewerViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         setupScrollView()
         setupDoubleTapGesture()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard scrollView.zoomScale == scrollView.minimumZoomScale else { return }
+        updateImageLayout()
+    }
 
     // MARK: - Setup
 
@@ -64,25 +68,36 @@ final class PhotoViewerViewController: BaseViewController {
         scrollView.addSubview(imageView)
 
         scrollView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        imageView.snp.makeConstraints { $0.edges.equalToSuperview() }
+    }
 
-        // imageView 크기를 화면에 맞춤
-        let screenSize = UIScreen.main.bounds.size
-        let imageSize = image.size
-        let widthRatio = screenSize.width / imageSize.width
-        let heightRatio = screenSize.height / imageSize.height
-        let fitScale = min(widthRatio, heightRatio)
-        let fittedSize = CGSize(
-            width: imageSize.width * fitScale,
-            height: imageSize.height * fitScale
+    /// scrollView의 bounds가 확정된 후 imageView의 frame과 contentSize를 설정합니다.
+    /// auto layout 대신 frame 기반으로 배치해 UIScrollView 내 center 오류를 방지합니다.
+    private func updateImageLayout() {
+        let boundsSize = scrollView.bounds.size
+        guard boundsSize.width > 0, boundsSize.height > 0,
+              image.size.width > 0, image.size.height > 0 else { return }
+
+        let widthRatio  = boundsSize.width  / image.size.width
+        let heightRatio = boundsSize.height / image.size.height
+        let fitScale    = min(widthRatio, heightRatio)
+        let fittedSize  = CGSize(
+            width:  image.size.width  * fitScale,
+            height: image.size.height * fitScale
         )
 
-        imageView.snp.remakeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.equalTo(fittedSize.width)
-            make.height.equalTo(fittedSize.height)
-        }
+        imageView.frame        = CGRect(origin: .zero, size: fittedSize)
         scrollView.contentSize = fittedSize
+        scrollView.isScrollEnabled = false
+        centerImageInScrollView()
+    }
+
+    /// imageView를 scrollView 중앙에 배치하는 contentInset을 계산합니다.
+    /// 콘텐츠가 scrollView보다 작을 때는 여백으로 중앙 정렬하고,
+    /// 클 때는 inset을 0으로 설정해 자유롭게 스크롤됩니다.
+    private func centerImageInScrollView() {
+        let offsetX = max((scrollView.bounds.width  - scrollView.contentSize.width)  / 2, 0)
+        let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) / 2, 0)
+        scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
     }
 
     private func setupDoubleTapGesture() {
@@ -115,8 +130,7 @@ extension PhotoViewerViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? { imageView }
 
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) / 2, 0)
-        let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) / 2, 0)
-        scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: 0, right: 0)
+        centerImageInScrollView()
+        scrollView.isScrollEnabled = scrollView.zoomScale > scrollView.minimumZoomScale
     }
 }
