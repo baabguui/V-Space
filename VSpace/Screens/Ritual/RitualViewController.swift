@@ -36,6 +36,17 @@ final class RitualViewController: BaseViewController {
     private var landingPoints: [CGPoint]    = []
     private var isDone = false
 
+    // MARK: - Grass
+
+    private struct GrassItem {
+        let worldPosition: CGPoint
+        let view: UIImageView
+    }
+
+    private var grassItems: [GrassItem] = []
+    private var grassSetupDone = false
+    private let grassBaseSize: CGFloat = 50
+
     // MARK: - Init
 
     init(coordinator: RitualCoordinating, viewModel: RitualViewModel) {
@@ -66,6 +77,13 @@ final class RitualViewController: BaseViewController {
         super.viewDidLoad()
         contentView.lastWordsScrollView.delegate = self
         bindViewModel()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard !grassSetupDone, view.bounds.width > 0 else { return }
+        grassSetupDone = true
+        setupGrass()
     }
 
     // MARK: - Binding
@@ -166,6 +184,14 @@ final class RitualViewController: BaseViewController {
     }
 
     private func animateScaleChange(to scale: CGFloat) {
+        // 새로 viewport에 들어오는 grass는 애니메이션 전에 크기·위치를 먼저 설정
+        // → alpha만 fade in되므로 full-size에서 축소되는 현상 없음
+        for item in grassItems where item.view.alpha == 0 {
+            guard isInViewport(item.worldPosition, scale: scale) else { continue }
+            item.view.center = worldToScreen(item.worldPosition, scale: scale)
+            item.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+
         UIView.animate(
             withDuration: 0.6,
             delay: 0,
@@ -176,7 +202,86 @@ final class RitualViewController: BaseViewController {
                 let isFlipped = $0.transform.a < 0
                 $0.transform = CGAffineTransform(scaleX: isFlipped ? -scale : scale, y: scale)
             }
+            self.updateGrassForScale(scale)
         }
+    }
+
+    // MARK: - Grass Background
+
+    /// scale 0.4(최소) 기준 전체 월드 영역에 grass를 사전 생성합니다.
+    /// viewport 밖인 것은 alpha 0으로 숨겨두고, scale 변경 시 페이드인합니다.
+    private func setupGrass() {
+        let w = view.bounds.width
+        let h = view.bounds.height
+        let colWidth = w / 8
+        let minScale: CGFloat = 0.4
+        let maxHalfW = w / (2 * minScale)   // 1.25W
+        let maxHalfH = h / (2 * minScale)   // 1.25H
+
+        let minCol = Int(floor(-maxHalfW / colWidth))  // -10
+        let maxCol = Int(ceil(maxHalfW / colWidth)) - 1 // 9
+
+        for col in minCol...maxCol {
+            let count = Int.random(in: 1...3)
+            for _ in 0..<count {
+                // 썸네일 반경(80pt) 이내 배치 제외, 최대 5회 재시도
+                var wx: CGFloat = 0
+                var wy: CGFloat = 0
+                for _ in 0..<5 {
+                    wx = CGFloat(col) * colWidth + CGFloat.random(in: 0..<colWidth)
+                    wy = CGFloat.random(in: -maxHalfH...maxHalfH)
+                    if hypot(wx, wy) >= 80 { break }
+                }
+                let worldPos = CGPoint(x: wx, y: wy)
+
+                let name = "grass\(Int.random(in: 1...9))"
+                let image = UIImage(named: name)
+                let iv = UIImageView(image: image)
+                iv.contentMode = .scaleAspectFit
+                iv.isUserInteractionEnabled = false
+                let imageSize = image?.size ?? CGSize(width: grassBaseSize, height: grassBaseSize)
+//                let ratio = imageSize.width / imageSize.height
+                iv.frame = CGRect(x: 0, y: 0, width: imageSize.width * 2.5, height: imageSize.height * 2.5)
+                iv.center = worldToScreen(worldPos, scale: 1.0)
+                iv.alpha = isInViewport(worldPos, scale: 1.0) ? 1 : 0
+
+                view.insertSubview(iv, at: 0)
+                grassItems.append(GrassItem(worldPosition: worldPos, view: iv))
+            }
+        }
+    }
+
+    /// 현재 scale에 맞게 모든 grass의 위치·크기·가시성을 업데이트합니다.
+    /// - Parameter scale: 적용할 월드 스케일
+    private func updateGrassForScale(_ scale: CGFloat) {
+        for item in grassItems {
+            item.view.center = worldToScreen(item.worldPosition, scale: scale)
+            item.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+            item.view.alpha = isInViewport(item.worldPosition, scale: scale) ? 1 : 0
+        }
+    }
+
+    /// 월드 좌표를 현재 화면 좌표로 변환합니다 (화면 중앙 = 원점)
+    /// - Parameters:
+    ///   - worldPos: 월드 좌표 (화면 중앙 기준)
+    ///   - scale: 현재 월드 스케일
+    /// - Returns: 화면 상의 CGPoint
+    private func worldToScreen(_ worldPos: CGPoint, scale: CGFloat) -> CGPoint {
+        CGPoint(
+            x: view.bounds.midX + worldPos.x * scale,
+            y: view.bounds.midY + worldPos.y * scale
+        )
+    }
+
+    /// 주어진 월드 좌표가 현재 scale의 viewport 안에 있는지 확인합니다
+    /// - Parameters:
+    ///   - worldPos: 월드 좌표
+    ///   - scale: 현재 월드 스케일
+    /// - Returns: viewport 내에 있으면 true
+    private func isInViewport(_ worldPos: CGPoint, scale: CGFloat) -> Bool {
+        let screen = worldToScreen(worldPos, scale: scale)
+        return screen.x >= 0 && screen.x <= view.bounds.width
+            && screen.y >= 0 && screen.y <= view.bounds.height
     }
 
     // MARK: - Done Phase
@@ -187,6 +292,7 @@ final class RitualViewController: BaseViewController {
 
         UIView.animate(withDuration: 0.3) {
             self.contentView.sunContainerView.alpha = 0
+            self.grassItems.forEach { $0.view.alpha = 0 }
         }
 
         let count = mournyViews.count
