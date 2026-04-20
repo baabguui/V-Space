@@ -438,22 +438,6 @@
         }
       }
     },
-    "capture.type.object.recommend" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Small objects that can be shot 360 degrees"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "360도 촬영 가능한 작은 물건"
-          }
-        }
-      }
-    },
     "capture.type.object.infos" : {
       "localizations" : {
         "en" : {
@@ -466,6 +450,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ㆍ 대상의 다양한 면을 간직할 수 있어요\nㆍ 스캔에 시간이 더 소요될 수 있어요\nㆍ 저장용량을 더 많이 사용해요"
+          }
+        }
+      }
+    },
+    "capture.type.object.recommend" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Small objects that can be shot 360 degrees"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "360도 촬영 가능한 작은 물건"
           }
         }
       }
@@ -486,22 +486,6 @@
         }
       }
     },
-    "capture.type.plane.recommend" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Large furniture, objects integrated with surroundings"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "큰 가구, 주변 환경과 결합된 물건"
-          }
-        }
-      }
-    },
     "capture.type.plane.infos" : {
       "localizations" : {
         "en" : {
@@ -514,6 +498,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ㆍ 대표 이미지를 간직할 수 있어요\nㆍ 직접 촬영하거나, 갤러리에서 가져올 수 있어요"
+          }
+        }
+      }
+    },
+    "capture.type.plane.recommend" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Large furniture, objects integrated with surroundings"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "큰 가구, 주변 환경과 결합된 물건"
           }
         }
       }
@@ -686,14 +686,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "When did you first meet?"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "처음 만난 날"
+            "value" : "처음 만난 날을 선택해주세요"
           }
         }
       }
@@ -718,14 +718,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "When will you let go?"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "보내주는 날"
+            "value" : "보내주는 날을 선택해주세요"
           }
         }
       }
