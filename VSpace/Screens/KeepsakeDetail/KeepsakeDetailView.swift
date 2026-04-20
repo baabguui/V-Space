@@ -99,12 +99,17 @@ final class KeepsakeDetailView: UIView {
         return l
     }()
 
-    private let lastWordsStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .horizontal
-        sv.alignment = .center
-        sv.spacing = 8
+    let lastWordsScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsVerticalScrollIndicator   = false
+        sv.showsHorizontalScrollIndicator = false
         return sv
+    }()
+
+    private let lastWordsContentView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        return v
     }()
 
     let frontRitualDateLabel: UILabel = {
@@ -201,15 +206,16 @@ final class KeepsakeDetailView: UIView {
     private func setupSubviews() {
         addSubview(cardSceneView)
 
-        lastWordsStackView.addArrangedSubview(leftQuoteLabel)
-        lastWordsStackView.addArrangedSubview(lastWordsLabel)
-        lastWordsStackView.addArrangedSubview(rightQuoteLabel)
+        lastWordsContentView.addSubview(lastWordsLabel)
+        lastWordsScrollView.addSubview(lastWordsContentView)
 
         cardSceneView.addSubview(frontCardView)
         frontCardView.addSubview(thumbnailImageView)
         frontCardView.addSubview(nameLabel)
         frontCardView.addSubview(dateRangeLabel)
-        frontCardView.addSubview(lastWordsStackView)
+        frontCardView.addSubview(lastWordsScrollView)
+        frontCardView.addSubview(leftQuoteLabel)
+        frontCardView.addSubview(rightQuoteLabel)
         frontCardView.addSubview(frontRitualDateLabel)
 
         cardSceneView.addSubview(backCardView)
@@ -248,9 +254,34 @@ final class KeepsakeDetailView: UIView {
             $0.leading.trailing.equalToSuperview().inset(24)
         }
 
-        lastWordsStackView.snp.makeConstraints {
+        leftQuoteLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(24)
+            $0.centerY.equalTo(lastWordsScrollView)
+        }
+
+        rightQuoteLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(24)
+            $0.centerY.equalTo(lastWordsScrollView)
+        }
+
+        lastWordsScrollView.snp.makeConstraints {
             $0.top.equalTo(dateRangeLabel.snp.bottom).offset(32)
-            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalTo(frontRitualDateLabel.snp.top).offset(-16)
+            $0.leading.equalTo(leftQuoteLabel.snp.trailing).offset(8)
+            $0.trailing.equalTo(rightQuoteLabel.snp.leading).offset(-8)
+        }
+
+        lastWordsContentView.snp.makeConstraints {
+            $0.edges.equalTo(lastWordsScrollView.contentLayoutGuide)
+            $0.width.equalTo(lastWordsScrollView.frameLayoutGuide)
+            $0.height.greaterThanOrEqualTo(lastWordsScrollView.frameLayoutGuide)
+        }
+
+        lastWordsLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.top.greaterThanOrEqualToSuperview()
+            $0.bottom.lessThanOrEqualToSuperview()
         }
 
         frontRitualDateLabel.snp.makeConstraints {
