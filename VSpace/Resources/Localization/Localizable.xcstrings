@@ -1299,18 +1299,18 @@
       }
     },
     "keepsakeDetail.alert.delete.message" : {
-      "comment" : "기념품을 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
+      "comment" : "데이터를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "This data will be permanently deleted. This action cannot be undone."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "기념품을 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다."
+            "value" : "데이터를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다."
           }
         }
       }
