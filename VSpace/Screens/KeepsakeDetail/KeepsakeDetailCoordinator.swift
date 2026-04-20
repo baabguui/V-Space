@@ -67,6 +67,19 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
         onFinish?()
     }
 
+    /// 기념품의 파일(리소스, 썸네일)과 Realm 데이터를 모두 삭제하고 홈으로 돌아갑니다
+    func deleteAndFinish() {
+        guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
+        MediaStorageManager.shared.deleteKeepsakeFiles(
+            resourceFileName: keepsake.resourceFileName,
+            thumbnailFileName: keepsake.thumbnailFileName,
+            recordType: keepsake.recordType
+        )
+        try? db.deleteKeepsake(keepsake)
+        navigationController.popToRootViewController(animated: true)
+        onFinish?()
+    }
+
     func showPhotoViewer(image: UIImage) {
         let vc = PhotoViewerViewController(image: image)
         navigationController.pushViewController(vc, animated: true)

@@ -51,6 +51,7 @@ protocol RitualCoordinating: KeepsakeActionCoordinating {
 
 protocol KeepsakeDetailCoordinating: AnyObject {
     func finish()
+    func deleteAndFinish()
     func showPhotoViewer(image: UIImage)
     func showModelViewer(modelURL: URL)
 }

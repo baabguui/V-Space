@@ -632,6 +632,23 @@
         }
       }
     },
+    "common.cancel" : {
+      "comment" : "취소",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
+      }
+    },
     "common.dateRange.separator" : {
       "comment" : "%1$@ = start date, %2$@ = end date",
       "localizations" : {
@@ -1281,6 +1298,40 @@
         }
       }
     },
+    "keepsakeDetail.alert.delete.message" : {
+      "comment" : "기념품을 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This data will be permanently deleted. This action cannot be undone."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기념품을 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다."
+          }
+        }
+      }
+    },
+    "keepsakeDetail.alert.delete.title" : {
+      "comment" : "삭제하기",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Keepsake"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
+          }
+        }
+      }
+    },
     "keepsakeDetail.button.close" : {
       "localizations" : {
         "en" : {
@@ -1310,6 +1361,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "총 %d명이 함께 애도했습니다"
+          }
+        }
+      }
+    },
+    "keepsakeDetail.menu.delete" : {
+      "comment" : "삭제하기",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제하기"
           }
         }
       }
@@ -1526,23 +1594,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "수고했어"
-          }
-        }
-      }
-    },
-    "ritual.defaultLastWords.5" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I love you"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "사랑해"
           }
         }
       }

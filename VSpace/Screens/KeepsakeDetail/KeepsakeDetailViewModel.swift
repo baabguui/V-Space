@@ -12,11 +12,13 @@ final class KeepsakeDetailViewModel {
     // MARK: - Types
 
     struct Input {
-        let closeTap: Observable<Void>
+        let closeTap:   Observable<Void>
+        let deleteTap:  Observable<Void>
     }
 
     struct Output {
-        let navigateDone: Observable<Void>
+        let navigateDone:      Observable<Void>
+        let showDeleteAlert:   Observable<Void>
     }
 
     // MARK: - Display Data
@@ -53,7 +55,6 @@ final class KeepsakeDetailViewModel {
         "ritual.defaultLastWords.2",
         "ritual.defaultLastWords.3",
         "ritual.defaultLastWords.4",
-        "ritual.defaultLastWords.5"
     ]
 
     private static func randomDefaultLastWords() -> String {
@@ -152,7 +153,13 @@ final class KeepsakeDetailViewModel {
 
     // MARK: - Transform
 
+    /// Input 스트림을 Output으로 변환합니다
+    /// - Parameter input: closeTap(닫기), deleteTap(삭제 메뉴)
+    /// - Returns: navigateDone(화면 종료), showDeleteAlert(삭제 확인 알럿 표시)
     func transform(input: Input) -> Output {
-        Output(navigateDone: input.closeTap)
+        Output(
+            navigateDone:    input.closeTap,
+            showDeleteAlert: input.deleteTap
+        )
     }
 }

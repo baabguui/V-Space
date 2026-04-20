@@ -18,6 +18,7 @@ final class KeepsakeDetailViewController: BaseViewController {
 
     private var isShowingBack = false
     private var isFlipping    = false
+    private let deleteTapSubject = PublishSubject<Void>()
 
     // MARK: - Init
 
@@ -73,30 +74,77 @@ final class KeepsakeDetailViewController: BaseViewController {
     private func setupNavigationBar() {
         if viewModel.showsCloseButton {
             navigationItem.hidesBackButton = true
-            let closeButton = UIBarButtonItem(title: NSLocalizedString("keepsakeDetail.button.close", comment: ""), style: .plain, target: nil, action: nil)
+            let closeButton = UIBarButtonItem(
+                title: NSLocalizedString("keepsakeDetail.button.close", comment: ""),
+                style: .plain,
+                target: nil,
+                action: nil
+            )
             closeButton.setTitleTextAttributes(
                 [.font: UIFont.pretendard(.semibold, size: 22)],
                 for: .normal
             )
-            navigationItem.rightBarButtonItem = closeButton
+            navigationItem.leftBarButtonItem = closeButton
         }
+
+        let deleteAction = UIAction(
+            title: NSLocalizedString("keepsakeDetail.menu.delete", comment: "삭제하기"),
+            image: UIImage(systemName: "trash"),
+            attributes: .destructive
+        ) { [weak self] _ in
+            self?.deleteTapSubject.onNext(())
+        }
+        let menu = UIMenu(children: [deleteAction])
+        let menuButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: menu)
+        navigationItem.rightBarButtonItem = menuButton
     }
 
     private func bindViewModel() {
         let closeTap: Observable<Void>
-        if viewModel.showsCloseButton, let btn = navigationItem.rightBarButtonItem {
+        if viewModel.showsCloseButton, let btn = navigationItem.leftBarButtonItem {
             closeTap = btn.rx.tap.asObservable()
         } else {
             closeTap = .never()
         }
 
-        let output = viewModel.transform(input: .init(closeTap: closeTap))
+        let output = viewModel.transform(input: .init(
+            closeTap:  closeTap,
+            deleteTap: deleteTapSubject.asObservable()
+        ))
+
         output.navigateDone
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 self?.coordinator?.finish()
             })
             .disposed(by: disposeBag)
+
+        output.showDeleteAlert
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.showDeleteConfirmAlert()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    /// 삭제 확인 알럿을 표시합니다. 확인 시 파일과 Realm 데이터를 모두 삭제하고 홈으로 이동합니다
+    private func showDeleteConfirmAlert() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("keepsakeDetail.alert.delete.title", comment: "삭제하기"),
+            message: NSLocalizedString("keepsakeDetail.alert.delete.message", comment: "데이터를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다."),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("common.cancel", comment: "취소"),
+            style: .cancel
+        ))
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("keepsakeDetail.menu.delete", comment: "삭제하기"),
+            style: .destructive
+        ) { [weak self] _ in
+            self?.coordinator?.deleteAndFinish()
+        })
+        present(alert, animated: true)
     }
 
     private func setupPanGesture() {
