@@ -75,6 +75,7 @@ final class RitualViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         contentView.lastWordsScrollView.delegate = self
         bindViewModel()
     }

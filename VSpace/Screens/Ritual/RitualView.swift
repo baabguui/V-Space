@@ -175,7 +175,7 @@ final class RitualView: UIView {
         nextButton.isHidden = true
         
         sunContainerView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide).offset(16)
+            $0.top.equalToSuperview().offset(50)
             $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(32)
             $0.height.equalTo(sunContainerView.snp.width).multipliedBy(0.35)
         }
