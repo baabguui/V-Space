@@ -109,7 +109,7 @@ final class DateInputViewController: BaseViewController {
                 guard let self else { return }
                 switch self.config {
                 case .acquiredDate: self.coordinator?.showDisposalDate(keepsakeId: keepsakeId)
-                case .disposalDate: self.coordinator?.showAbility(keepsakeId: keepsakeId)
+                case .disposalDate: self.coordinator?.handleDisposalDateSaved(keepsakeId: keepsakeId)
                 }
             })
             .disposed(by: disposeBag)

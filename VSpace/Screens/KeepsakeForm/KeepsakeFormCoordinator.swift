@@ -63,6 +63,10 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
         navigationController.pushViewController(vc, animated: true)
     }
 
+    func handleDisposalDateSaved(keepsakeId: ObjectId) {
+        showAbility(keepsakeId: keepsakeId)
+    }
+
     func showAbility(keepsakeId: ObjectId) {
         let vc = TextInputViewController(
             coordinator: self,

@@ -40,8 +40,9 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
         navigationController.pushViewController(vc, animated: true)
     }
 
-    // 날짜 저장 후 → FormCompletion으로 이동
-    func showAbility(keepsakeId: ObjectId) {
+    // 날짜 저장 후 → 기존 알림 삭제 → FormCompletion으로 이동
+    func handleDisposalDateSaved(keepsakeId: ObjectId) {
+        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
         showFormCompletion(keepsakeId: keepsakeId)
     }
 

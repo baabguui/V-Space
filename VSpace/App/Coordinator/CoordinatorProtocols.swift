@@ -61,6 +61,7 @@ protocol KeepsakeDetailCoordinating: AnyObject {
 protocol KeepsakeFormCoordinating: KeepsakeActionCoordinating {
     func showAcquiredDate(keepsakeId: ObjectId)
     func showDisposalDate(keepsakeId: ObjectId)
+    func handleDisposalDateSaved(keepsakeId: ObjectId)
     func showAbility(keepsakeId: ObjectId)
     func showMemoryNote(keepsakeId: ObjectId)
     func showLastWords(keepsakeId: ObjectId)
@@ -72,6 +73,7 @@ protocol KeepsakeFormCoordinating: KeepsakeActionCoordinating {
 extension KeepsakeFormCoordinating {
     func showAcquiredDate(keepsakeId: ObjectId) {}
     func showDisposalDate(keepsakeId: ObjectId) {}
+    func handleDisposalDateSaved(keepsakeId: ObjectId) {}
     func showAbility(keepsakeId: ObjectId) {}
     func showMemoryNote(keepsakeId: ObjectId) {}
     func showLastWords(keepsakeId: ObjectId) {}

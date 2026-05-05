@@ -77,5 +77,6 @@ final class KeepsakeStatusViewModel {
     private func updateDisposalDateToToday() {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
         try? db.updateKeepsake(keepsake) { $0.disposalDate = Date() }
+        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
     }
 }

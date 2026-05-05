@@ -34,7 +34,7 @@ final class NotificationScheduler {
         content.sound = .default
         content.userInfo = ["keepsakeId": keepsakeId.stringValue]
 
-        var components = Calendar.current.dateComponents([.year, .month, .day], from: .now)
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: disposalDate)
         components.hour = 10
         components.minute = 0
         components.second = 0
