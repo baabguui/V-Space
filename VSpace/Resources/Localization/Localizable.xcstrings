@@ -1087,6 +1087,40 @@
         }
       }
     },
+    "home.empty.subtitle" : {
+      "comment" : "keepsake 리스트가 비어있을 때 안내 문구",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap + to record an item"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ 버튼을 눌러 물건을 기록할 수 있습니다"
+          }
+        }
+      }
+    },
+    "home.empty.title" : {
+      "comment" : "keepsake 리스트가 비어있을 때 제목",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No items stored yet"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수장된 물건이 없습니다"
+          }
+        }
+      }
+    },
     "image.picker.permission.message" : {
       "localizations" : {
         "en" : {
