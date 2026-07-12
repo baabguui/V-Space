@@ -11,21 +11,16 @@ import RxCocoa
 import RealmSwift
 import Realm
 
-enum HomeItem {
-    case keepsake(Keepsake)
-    case add
-}
-
 final class HomeViewModel {
-    
+
     // MARK: - Properties
-    
+
     private let disposeBag = DisposeBag()
     private var notificationToken: NotificationToken?
-    
+
     // MARK: - Outputs
-    
-    let items = BehaviorRelay<[HomeItem]>(value: [.add])
+
+    let keepsakes = BehaviorRelay<[Keepsake]>(value: [])
     
     // MARK: - Init
     
@@ -49,8 +44,7 @@ final class HomeViewModel {
             guard let self = self else { return }
             switch changes {
             case .initial(let keepsakes), .update(let keepsakes, _, _, _):
-                let homeItems = keepsakes.map { HomeItem.keepsake($0.freeze()) } + [.add]
-                self.items.accept(homeItems)
+                self.keepsakes.accept(keepsakes.map { $0.freeze() })
             case .error(let error):
                 print("Realm observation error: \(error)")
             }

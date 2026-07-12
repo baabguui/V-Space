@@ -18,28 +18,37 @@ final class HomeViewController: BaseViewController {
     private weak var coordinator: HomeCoordinating?
     private let viewModel: HomeViewModel
 
+    private let spacing: CGFloat = 16
+    private let sideMargin: CGFloat = 20
+    private let sectionInset: CGFloat = 20
+
+    // 3열 기준 지름을 유지해 4행 가로 스크롤로 바뀌어도 셀 크기는 그대로 유지
+    private lazy var itemSize: CGFloat = (UIScreen.main.bounds.width - (sideMargin * 2) - (spacing * 2)) / 3
+    // 4행 고정 그리드 높이
+    private lazy var gridHeight: CGFloat = (sectionInset * 2) + (itemSize * 4) + (spacing * 3)
+
     // MARK: - UI
-    
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let spacing: CGFloat = 16
-        let sideMargin: CGFloat = 20
-        // 3열 그리드 너비 계산
-        let itemWidth = (UIScreen.main.bounds.width - (sideMargin * 2) - (spacing * 2)) / 3
-        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: itemSize, height: itemSize)
         layout.minimumInteritemSpacing = spacing
         layout.minimumLineSpacing = spacing
-        layout.sectionInset = UIEdgeInsets(top: 20, left: sideMargin, bottom: 20, right: sideMargin)
+        layout.sectionInset = UIEdgeInsets(top: sectionInset, left: sideMargin, bottom: sectionInset, right: sideMargin)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
         cv.showsVerticalScrollIndicator = false
+        cv.showsHorizontalScrollIndicator = false
         cv.register(KeepsakeCell.self, forCellWithReuseIdentifier: KeepsakeCell.identifier)
-        cv.register(AddKeepsakeCell.self, forCellWithReuseIdentifier: AddKeepsakeCell.identifier)
         return cv
     }()
 
+    private let emptyStateView = HomeEmptyStateView()
+    private let bottomActionView = HomeBottomActionView()
+
     // MARK: - Init
-    
+
     init(coordinator: HomeCoordinating, viewModel: HomeViewModel) {
         self.coordinator = coordinator
         self.viewModel = viewModel
@@ -50,7 +59,7 @@ final class HomeViewController: BaseViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is not available")
     }
-    
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -64,48 +73,59 @@ final class HomeViewController: BaseViewController {
 
     private func setupLayout() {
         view.addSubview(collectionView)
+        view.addSubview(emptyStateView)
+        view.addSubview(bottomActionView)
+
         collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(gridHeight)
+        }
+
+        emptyStateView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(collectionView)
+        }
+
+        bottomActionView.snp.makeConstraints { make in
+            make.top.equalTo(collectionView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 
     private func bindViewModel() {
         // 컬렉션뷰 아이템 바인딩
-        viewModel.items
-            .bind(to: collectionView.rx.items) { collectionView, index, item in
-                let indexPath = IndexPath(item: index, section: 0)
-                switch item {
-                case .keepsake(let keepsake):
-                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeepsakeCell.identifier, for: indexPath) as? KeepsakeCell else {
-                        return UICollectionViewCell()
-                    }
-                    cell.configure(with: keepsake)
-                    return cell
-                case .add:
-                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddKeepsakeCell.identifier, for: indexPath) as? AddKeepsakeCell else {
-                        return UICollectionViewCell()
-                    }
-                    return cell
-                }
+        viewModel.keepsakes
+            .bind(to: collectionView.rx.items(cellIdentifier: KeepsakeCell.identifier, cellType: KeepsakeCell.self)) { _, keepsake, cell in
+                cell.configure(with: keepsake)
             }
             .disposed(by: disposeBag)
-        
+
+        // 빈 상태 뷰 토글
+        viewModel.keepsakes.map { $0.isEmpty }
+            .bind(to: collectionView.rx.isHidden)
+            .disposed(by: disposeBag)
+        viewModel.keepsakes.map { !$0.isEmpty }
+            .bind(to: emptyStateView.rx.isHidden)
+            .disposed(by: disposeBag)
+
         // 아이템 클릭 핸들링
-        collectionView.rx.modelSelected(HomeItem.self)
-            .subscribe(onNext: { [weak self] item in
-                switch item {
-                case .keepsake(let keepsake):
-                    switch keepsake.status {
-                    case .inProgress:
-                        self?.coordinator?.resumeKeepsakeForm(keepsake: keepsake)
-                    case .done:
-                        self?.coordinator?.showKeepsakeDetail(keepsake: keepsake)
-                    default:
-                        self?.coordinator?.showKeepsakeStatus(keepsake: keepsake)
-                    }
-                case .add:
-                    self?.startCapture()
+        collectionView.rx.modelSelected(Keepsake.self)
+            .subscribe(onNext: { [weak self] keepsake in
+                switch keepsake.status {
+                case .inProgress:
+                    self?.coordinator?.resumeKeepsakeForm(keepsake: keepsake)
+                case .done:
+                    self?.coordinator?.showKeepsakeDetail(keepsake: keepsake)
+                default:
+                    self?.coordinator?.showKeepsakeStatus(keepsake: keepsake)
                 }
+            })
+            .disposed(by: disposeBag)
+
+        // "+" 버튼 클릭 핸들링
+        bottomActionView.addButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.startCapture()
             })
             .disposed(by: disposeBag)
     }
