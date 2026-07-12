@@ -312,47 +312,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Failed to generate model"
+            "value" : "3D model generation failed"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모델 생성에 실패했어요"
+            "value" : "3D 모델 생성에 실패했습니다"
           }
         }
       }
     },
-    "capture.status.failed.restart_hint" : {
-      "extractionState" : "stale",
+    "capture.status.failed.hint" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap 'Start Over' to try again."
+            "value" : "Please scan from more angles"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "'처음부터 다시 하기' 버튼을 눌러서 다시 시작해주세요."
-          }
-        }
-      }
-    },
-    "capture.status.failed.retry_hint" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tap 'Rescan' to continue scanning, or 'Start Over' to begin again."
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "버튼을 눌러서 스캔을 재개하거나, 처음부터 다시해주세요."
+            "value" : "더 다양한 각도를 스캔해주세요"
           }
         }
       }
@@ -597,13 +579,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rescan"
+            "value" : "Scan More"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다시 스캔하기"
+            "value" : "추가 스캔하기"
           }
         }
       }

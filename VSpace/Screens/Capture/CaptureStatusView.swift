@@ -24,27 +24,30 @@ final class CaptureStatusView: UIView {
 
     // MARK: - UI (failed)
 
-    private let progressLabel: UILabel = {
+    private let failedContentView = UIView()
+
+    private let failedImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "failed"))
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    private let failedTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .vsBody
+        label.font = .pretendard(.semibold, size: 24)
         label.textColor = .vsText
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.text = NSLocalizedString("capture.status.failed", comment: "")
         return label
     }()
 
-    private let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .vsPrimary
-        return indicator
-    }()
-
-    private let centerStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .center
-        stack.spacing = 16
-        return stack
+    private let failedSubtitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .pretendard(.semibold, size: 18)
+        label.textColor = .vsText
+        label.textAlignment = .center
+        label.text = NSLocalizedString("capture.status.failed.hint", comment: "")
+        return label
     }()
 
     private lazy var retryButton = VLongButton(
@@ -54,7 +57,7 @@ final class CaptureStatusView: UIView {
 
     private lazy var restartButton = VLongButton(
         title: NSLocalizedString("capture.status.restart", comment: ""),
-        style: .bordered
+        style: .muted
     )
 
     private let buttonStack: UIStackView = {
@@ -149,11 +152,12 @@ final class CaptureStatusView: UIView {
         setupFinishingViews()
     }
 
-    /// 실패 상태에서 쓰이는 스피너/버튼 뷰 계층을 구성합니다
+    /// 실패 상태에서 쓰이는 일러스트/타이틀/버튼 뷰 계층을 구성합니다
     private func setupFailedViews() {
-        centerStack.addArrangedSubview(progressLabel)
-        centerStack.addArrangedSubview(activityIndicator)
-        addSubview(centerStack)
+        addSubview(failedContentView)
+        failedContentView.addSubview(failedImageView)
+        failedContentView.addSubview(failedTitleLabel)
+        failedContentView.addSubview(failedSubtitleLabel)
 
         retryButton.addTarget(self, action: #selector(retryTapped), for: .touchUpInside)
         restartButton.addTarget(self, action: #selector(restartTapped), for: .touchUpInside)
@@ -162,9 +166,24 @@ final class CaptureStatusView: UIView {
         buttonStack.addArrangedSubview(restartButton)
         addSubview(buttonStack)
 
-        centerStack.snp.makeConstraints { make in
+        failedContentView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(20)
+        }
+
+        failedImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.size.equalTo(CGSize(width: 157, height: 121))
+        }
+        failedTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(failedImageView.snp.bottom).offset(49)
+            make.leading.trailing.equalToSuperview()
+        }
+        failedSubtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(failedTitleLabel.snp.bottom).offset(19)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
 
         buttonStack.snp.makeConstraints { make in
@@ -248,25 +267,18 @@ final class CaptureStatusView: UIView {
         switch state {
         case .finishing:
             backgroundColor = .vsSurface
-            centerStack.isHidden = true
+            failedContentView.isHidden = true
             buttonStack.isHidden = true
             finishingContentView.isHidden = false
             startFinishingAnimations()
 
         case .failed(let canRetry):
-            let hint = NSLocalizedString(
-                canRetry ? "capture.status.failed.retry_hint" : "capture.status.failed.restart_hint",
-                comment: ""
-            )
             backgroundColor = .vsWhite
             finishingContentView.isHidden = true
             stopFinishingAnimations()
 
-            progressLabel.text = NSLocalizedString("capture.status.failed", comment: "") + "\n" + hint
-            activityIndicator.stopAnimating()
-            activityIndicator.isHidden = true
+            failedContentView.isHidden = false
             retryButton.isHidden = !canRetry
-            centerStack.isHidden = false
             buttonStack.isHidden = false
         }
     }
