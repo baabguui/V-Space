@@ -49,4 +49,10 @@ final class CaptureStorageManager: CaptureStorageManaging {
     func cleanup() {
         try? FileManager.default.removeItem(at: captureDirectory)
     }
+
+    /// 강제 종료 등으로 정리되지 못한 이전 캡처 임시 디렉토리를 앱 시작 시 일괄 삭제
+    static func sweepStaleDirectories() {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.removeItem(at: docs.appendingPathComponent("Captures"))
+    }
 }
