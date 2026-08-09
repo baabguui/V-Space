@@ -71,7 +71,9 @@ final class CaptureViewModel {
 
     func cancelCapture() {
         session.cancel()
-        // cleanup()은 여기서 호출하지 않음 — 다음 세션 초기화 시 일괄 삭제됨
+        // cleanup()은 여기서 즉시 호출하지 않음 — cancel() 후에도 세션 내부 스레드가
+        // Checkpoints에 비동기로 접근 중일 수 있음. 세션이 완전히 멈췄다는 신호인
+        // .failed 상태가 handleSessionState에 도달했을 때 정리한다.
         appState.accept(.cancelled)
     }
 
@@ -96,7 +98,7 @@ final class CaptureViewModel {
     /// finish() 대신 cancel()을 사용해 세션의 내부 파일 접근을 막음
     /// cleanup()은 여기서 호출하지 않음 — cancel() 후 C++ 내부 스레드가 Checkpoints에
     /// 비동기로 접근 중인 상태에서 삭제하면 filesystem_error 크래시 발생.
-    /// 잔여 파일은 다음 CaptureStorageManager 초기화 시 일괄 삭제됨.
+    /// 세션이 완전히 멈춰 .failed 상태가 handleSessionState에 도달하면 그때 정리된다.
     func saveModel(thumbnail: UIImage) {
         session.cancel()
         do {
@@ -157,8 +159,11 @@ final class CaptureViewModel {
             }
         case .failed(let error):
             switch appState.value {
-            case .cancelled, .completed, .saved(_):
-                break  // 저장/취소 이후 세션에서 올라오는 에러 무시
+            case .cancelled, .saved(_):
+                // cancel() 이후 세션이 완전히 정지했다는 신호 — 이제 임시 디렉토리를 안전하게 정리 가능
+                directoryManager.cleanup()
+            case .completed:
+                break  // 아직 저장/취소 전이라 재촬영 가능성이 있으므로 정리하지 않음
             default:
                 appState.accept(.failed(error))
             }
