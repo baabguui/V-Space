@@ -14,7 +14,18 @@
 		8C38931B2F716B6800EF6622 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 8C38931A2F716B6800EF6622 /* RxRelay */; };
 		8C38931D2F716B6800EF6622 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8C38931C2F716B6800EF6622 /* RxSwift */; };
 		8C38942D2F717B7E00EF6622 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8C38942C2F717B7E00EF6622 /* .gitignore */; };
+		8CEA405B3082563E00344B6F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8C1107772F7429A6007D8DC0 /* RealmSwift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8CEA3F99308253BE00344B6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C3892C02F71657400EF6622 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8C3892C72F71657400EF6622;
+			remoteInfo = VSpace;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8C1107BA2F742A57007D8DC0 /* Embed Frameworks */ = {
@@ -33,6 +44,7 @@
 /* Begin PBXFileReference section */
 		8C3892C82F71657400EF6622 /* VSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C38942C2F717B7E00EF6622 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		8CEA3F95308253BE00344B6F /* VSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +66,11 @@
 			path = VSpace;
 			sourceTree = "<group>";
 		};
+		8CEA3F96308253BE00344B6F /* VSpaceTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VSpaceTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +86,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8CEA3F92308253BE00344B6F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEA405B3082563E00344B6F /* RealmSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -77,6 +102,7 @@
 			children = (
 				8C38942C2F717B7E00EF6622 /* .gitignore */,
 				8C3892CA2F71657400EF6622 /* VSpace */,
+				8CEA3F96308253BE00344B6F /* VSpaceTests */,
 				8C3892C92F71657400EF6622 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				8C3892C82F71657400EF6622 /* VSpace.app */,
+				8CEA3F95308253BE00344B6F /* VSpaceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,6 +147,30 @@
 			productReference = 8C3892C82F71657400EF6622 /* VSpace.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8CEA3F94308253BE00344B6F /* VSpaceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CEA3F9D308253BE00344B6F /* Build configuration list for PBXNativeTarget "VSpaceTests" */;
+			buildPhases = (
+				8CEA3F91308253BE00344B6F /* Sources */,
+				8CEA3F92308253BE00344B6F /* Frameworks */,
+				8CEA3F93308253BE00344B6F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8CEA3F9A308253BE00344B6F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8CEA3F96308253BE00344B6F /* VSpaceTests */,
+			);
+			name = VSpaceTests;
+			packageProductDependencies = (
+				8C1107772F7429A6007D8DC0 /* RealmSwift */,
+			);
+			productName = VSpaceTests;
+			productReference = 8CEA3F95308253BE00344B6F /* VSpaceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -127,11 +178,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2710;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					8C3892C72F71657400EF6622 = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					8CEA3F94308253BE00344B6F = {
+						CreatedOnToolsVersion = 27.1;
+						TestTargetID = 8C3892C72F71657400EF6622;
 					};
 				};
 			};
@@ -156,6 +211,7 @@
 			projectRoot = "";
 			targets = (
 				8C3892C72F71657400EF6622 /* VSpace */,
+				8CEA3F94308253BE00344B6F /* VSpaceTests */,
 			);
 		};
 /* End PBXProject section */
@@ -169,6 +225,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8CEA3F93308253BE00344B6F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -179,7 +242,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8CEA3F91308253BE00344B6F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8CEA3F9A308253BE00344B6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8C3892C72F71657400EF6622 /* VSpace */;
+			targetProxy = 8CEA3F99308253BE00344B6F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8C3892DC2F71657500EF6622 /* Debug */ = {
@@ -385,6 +463,58 @@
 			};
 			name = Release;
 		};
+		8CEA3F9B308253BE00344B6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N8UAK95HX5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = to.VSpaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VSpace";
+			};
+			name = Debug;
+		};
+		8CEA3F9C308253BE00344B6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N8UAK95HX5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = to.VSpaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VSpace";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -402,6 +532,15 @@
 			buildConfigurations = (
 				8C3892DC2F71657500EF6622 /* Debug */,
 				8C3892DD2F71657500EF6622 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8CEA3F9D308253BE00344B6F /* Build configuration list for PBXNativeTarget "VSpaceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEA3F9B308253BE00344B6F /* Debug */,
+				8CEA3F9C308253BE00344B6F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

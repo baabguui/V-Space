@@ -38,12 +38,11 @@ final class MediaStorageManager: MediaStorageManaging {
     private let thumbnailsDirectory: URL
     private let certsDirectory: URL
 
-    init() {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        modelsDirectory    = docs.appendingPathComponent(".Objects/Models")
-        imagesDirectory    = docs.appendingPathComponent(".Objects/Images")
-        thumbnailsDirectory = docs.appendingPathComponent(".Thumbnails")
-        certsDirectory     = docs.appendingPathComponent(".Certs")
+    init(baseDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]) {
+        modelsDirectory     = baseDirectory.appendingPathComponent(".Objects/Models")
+        imagesDirectory     = baseDirectory.appendingPathComponent(".Objects/Images")
+        thumbnailsDirectory = baseDirectory.appendingPathComponent(".Thumbnails")
+        certsDirectory      = baseDirectory.appendingPathComponent(".Certs")
         createDirectoriesIfNeeded()
     }
 

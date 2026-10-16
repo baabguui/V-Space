@@ -13,9 +13,9 @@ final class KeepsakeDatabaseManager: KeepsakeDatabaseManaging {
     
     private let realm: Realm
     
-    init() {
+    init(configuration: Realm.Configuration = Realm.Configuration.defaultConfiguration) {
         do {
-            self.realm = try Realm()
+            self.realm = try Realm(configuration: configuration)
         } catch {
             fatalError("Realm initialization failed: \(error.localizedDescription)")
         }
