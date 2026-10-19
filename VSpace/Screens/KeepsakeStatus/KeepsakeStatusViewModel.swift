@@ -70,6 +70,7 @@ final class KeepsakeStatusViewModel {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
+        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
     }
 
     // MARK: - Private
