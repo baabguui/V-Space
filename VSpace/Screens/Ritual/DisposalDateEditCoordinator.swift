@@ -64,6 +64,7 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
+        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
         finishForm()
     }
 

@@ -76,6 +76,7 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
+        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
         navigationController.popToRootViewController(animated: true)
         onFinish?()
     }
