@@ -43,6 +43,23 @@ final class KeepsakeDatabaseManagerTests: XCTestCase {
         XCTAssertEqual(sut.fetchKeepsakes().count, 0)
     }
 
+    func test_fetchKeepsakes_returnsResultsSortedByCreatedAtDescending() throws {
+        let oldest = makeKeepsake(name: "오래됨")
+        oldest.createdAt = Date().addingTimeInterval(-200)
+        let middle = makeKeepsake(name: "중간")
+        middle.createdAt = Date().addingTimeInterval(-100)
+        let newest = makeKeepsake(name: "최신")
+        newest.createdAt = Date()
+
+        try sut.saveKeepsake(oldest)
+        try sut.saveKeepsake(middle)
+        try sut.saveKeepsake(newest)
+
+        let result = Array(sut.fetchKeepsakes().map { $0.name })
+
+        XCTAssertEqual(result, ["최신", "중간", "오래됨"])
+    }
+
     private func makeKeepsake(name: String = "기본값") -> Keepsake {
         let keepsake = Keepsake()
         keepsake.name = name
@@ -53,3 +70,4 @@ final class KeepsakeDatabaseManagerTests: XCTestCase {
         return keepsake
     }
 }
+

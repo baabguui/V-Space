@@ -50,11 +50,40 @@ final class MediaStorageManagerTests: XCTestCase {
         sut.deleteKeepsakeFiles(resourceFileName: "nonexistent.png", thumbnailFileName: "nonexistent-thumb.png", recordType: .photo)
     }
 
-    private func makeTestImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 10, height: 10))
+    func test_modelURL_withoutSaving_returnsNil() {
+        XCTAssertNil(sut.modelURL(for: "obj_never-saved.usdz"))
+    }
+
+    func test_saveModel_withMissingSourceURL_throws() {
+        let missingSourceURL = tempDirectory.appendingPathComponent("does-not-exist.usdz")
+
+        XCTAssertThrowsError(try sut.saveModel(from: missingSourceURL))
+    }
+
+    func test_savePhoto_whenLongerSideExceedsMax_downsamplesToMaxDimension() throws {
+        let fileName = try sut.savePhoto(makeTestImage(size: CGSize(width: 4096, height: 2048)))
+
+        let loaded = try XCTUnwrap(sut.loadPhoto(fileName))
+
+        XCTAssertEqual(max(loaded.size.width, loaded.size.height), 2048)
+    }
+
+    func test_savePhoto_whenWithinMaxDimension_keepsOriginalSize() throws {
+        let fileName = try sut.savePhoto(makeTestImage(size: CGSize(width: 100, height: 50)))
+
+        let loaded = try XCTUnwrap(sut.loadPhoto(fileName))
+
+        XCTAssertEqual(loaded.size, CGSize(width: 100, height: 50))
+    }
+
+    private func makeTestImage(size: CGSize = CGSize(width: 10, height: 10)) -> UIImage {
+        // scale 1.0 고정: 저장 후 재로드 시 size가 실제 피커 이미지(scale 1)와 동일하게 비교되도록 함
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1.0
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
         return renderer.image { _ in
             UIColor.red.setFill()
-            UIRectFill(CGRect(x: 0, y: 0, width: 10, height: 10))
+            UIRectFill(CGRect(origin: .zero, size: size))
         }
     }
 }

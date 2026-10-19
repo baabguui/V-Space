@@ -26,9 +26,8 @@ final class CaptureStorageManager: CaptureStorageManaging {
     let checkpointDirectory: URL
     let outputURL: URL
 
-    init() {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let capturesRoot = docs.appendingPathComponent("Captures")
+    init(baseDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]) {
+        let capturesRoot = baseDirectory.appendingPathComponent("Captures")
 
         // 이전 세션 잔여 파일 일괄 삭제 (강제 종료 등 비정상 종료 대비)
         try? FileManager.default.removeItem(at: capturesRoot)
