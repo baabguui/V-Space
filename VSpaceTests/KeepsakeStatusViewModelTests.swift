@@ -30,6 +30,27 @@ final class KeepsakeStatusViewModelTests: XCTestCase {
         XCTAssertLessThan(abs(updated.disposalDate.timeIntervalSinceNow), 2)
     }
 
+    func test_primaryTap_whenNotAvailable_cancelsNotificationForKeepsakeId() throws {
+        let futureDisposalDate = Date().addingTimeInterval(1000)
+        let keepsake = try makeKeepsake(disposalDate: futureDisposalDate)
+        let mockScheduler = MockNotificationScheduler()
+        let sut = KeepsakeStatusViewModel(
+            keepsakeId: keepsake.id,
+            db: db,
+            storage: MediaStorageManager.shared,
+            notificationScheduler: mockScheduler
+        )
+        XCTAssertFalse(sut.isAvailable)
+
+        let primaryTap = PublishSubject<Void>()
+        let output = sut.transform(input: .init(primaryTap: primaryTap, secondaryTap: .empty()))
+        output.showRitual.subscribe().disposed(by: disposeBag)
+
+        primaryTap.onNext(())
+
+        XCTAssertEqual(mockScheduler.cancelledKeepsakeIds, [keepsake.id])
+    }
+
     func test_primaryTap_whenAlreadyAvailable_doesNotChangeDisposalDate() throws {
         let pastDisposalDate = Date().addingTimeInterval(-1000)
         let keepsake = try makeKeepsake(disposalDate: pastDisposalDate)
@@ -44,6 +65,27 @@ final class KeepsakeStatusViewModelTests: XCTestCase {
 
         let updated = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertEqual(updated.disposalDate.timeIntervalSinceReferenceDate, pastDisposalDate.timeIntervalSinceReferenceDate, accuracy: 0.001)
+    }
+
+    func test_primaryTap_whenAlreadyAvailable_doesNotCancelNotification() throws {
+        let pastDisposalDate = Date().addingTimeInterval(-1000)
+        let keepsake = try makeKeepsake(disposalDate: pastDisposalDate)
+        let mockScheduler = MockNotificationScheduler()
+        let sut = KeepsakeStatusViewModel(
+            keepsakeId: keepsake.id,
+            db: db,
+            storage: MediaStorageManager.shared,
+            notificationScheduler: mockScheduler
+        )
+        XCTAssertTrue(sut.isAvailable)
+
+        let primaryTap = PublishSubject<Void>()
+        let output = sut.transform(input: .init(primaryTap: primaryTap, secondaryTap: .empty()))
+        output.showRitual.subscribe().disposed(by: disposeBag)
+
+        primaryTap.onNext(())
+
+        XCTAssertTrue(mockScheduler.cancelledKeepsakeIds.isEmpty)
     }
 
     @discardableResult
