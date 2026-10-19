@@ -17,17 +17,20 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
     private let storage: MediaStorageManaging
+    private let notificationScheduler: NotificationScheduling
 
     init(
         navigationController: UINavigationController,
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        storage: MediaStorageManaging = MediaStorageManager.shared
+        storage: MediaStorageManaging = MediaStorageManager.shared,
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.db = db
         self.storage = storage
+        self.notificationScheduler = notificationScheduler
     }
 
     func start() {
@@ -42,7 +45,7 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
 
     // 날짜 저장 후 → 기존 알림 삭제 → FormCompletion으로 이동
     func handleDisposalDateSaved(keepsakeId: ObjectId) {
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
         showFormCompletion(keepsakeId: keepsakeId)
     }
 
@@ -64,7 +67,7 @@ final class DisposalDateEditCoordinator: Coordinator, KeepsakeFormCoordinating {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
         finishForm()
     }
 

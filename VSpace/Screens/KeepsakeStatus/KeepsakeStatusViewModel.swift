@@ -28,17 +28,20 @@ final class KeepsakeStatusViewModel {
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
     private let storage: MediaStorageManaging
+    private let notificationScheduler: NotificationScheduling
 
     // MARK: - Init
 
     init(
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        storage: MediaStorageManaging = MediaStorageManager.shared
+        storage: MediaStorageManaging = MediaStorageManager.shared,
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
     ) {
         self.keepsakeId = keepsakeId
         self.db = db
         self.storage = storage
+        self.notificationScheduler = notificationScheduler
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable    = keepsake?.isAvailable ?? false
         self.name           = keepsake?.name ?? ""
@@ -70,7 +73,7 @@ final class KeepsakeStatusViewModel {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
     }
 
     // MARK: - Private
@@ -78,6 +81,6 @@ final class KeepsakeStatusViewModel {
     private func updateDisposalDateToToday() {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
         try? db.updateKeepsake(keepsake) { $0.disposalDate = Date() }
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
     }
 }

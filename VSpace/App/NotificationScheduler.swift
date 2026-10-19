@@ -9,7 +9,13 @@ import UserNotifications
 import RealmSwift
 import Realm
 
-final class NotificationScheduler {
+protocol NotificationScheduling {
+    func requestAuthorization(completion: @escaping (Bool) -> Void)
+    func scheduleDisposalNotification(keepsakeId: ObjectId, name: String, disposalDate: Date)
+    func cancelDisposalNotification(keepsakeId: ObjectId)
+}
+
+final class NotificationScheduler: NotificationScheduling {
 
     static let shared = NotificationScheduler()
     private init() {}
