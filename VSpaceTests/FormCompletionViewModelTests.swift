@@ -54,6 +54,26 @@ final class FormCompletionViewModelTests: XCTestCase {
         XCTAssertEqual(showRitualCount, 0)
     }
 
+    func test_scheduleNotification_schedulesWithKeepsakeIdNameAndDisposalDate() throws {
+        let disposalDate = Date().addingTimeInterval(86_400 * 30)
+        let keepsake = try makeKeepsake(disposalDate: disposalDate)
+        let mockScheduler = MockNotificationScheduler()
+        let sut = FormCompletionViewModel(
+            keepsakeId: keepsake.id,
+            db: db,
+            storage: MediaStorageManager.shared,
+            notificationScheduler: mockScheduler
+        )
+
+        sut.scheduleNotification()
+
+        XCTAssertEqual(mockScheduler.scheduleCalls.count, 1)
+        let call = try XCTUnwrap(mockScheduler.scheduleCalls.first)
+        XCTAssertEqual(call.keepsakeId, keepsake.id)
+        XCTAssertEqual(call.name, keepsake.name)
+        XCTAssertEqual(call.disposalDate.timeIntervalSinceReferenceDate, disposalDate.timeIntervalSinceReferenceDate, accuracy: 0.001)
+    }
+
     @discardableResult
     private func makeKeepsake(disposalDate: Date) throws -> Keepsake {
         let keepsake = Keepsake()

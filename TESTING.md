@@ -27,7 +27,7 @@
 
 | 항목 | 위치 | 왜 중요한가 |
 |---|---|---|
-| 삭제 시 파일+DB+알림 3자 동기화 | `KeepsakeStatusViewModel.deleteKeepsake`, `KeepsakeFormCoordinator.deleteKeepsake`, `DisposalDateEditCoordinator.deleteKeepsake`, `KeepsakeDetailCoordinator.deleteAndFinish` | 삭제 경로 4곳 전체에서 알림 취소가 빠져있던 걸 발견해 수정함(4번째 경로는 레지스트리에 등록조차 안 돼 있었음). 네 경로가 같은 계약을 지키는지 회귀 방지 |
+| 삭제 시 파일+DB+알림 3자 동기화 (유닛테스트로 전환됨) | `KeepsakeStatusViewModel.deleteKeepsake`, `KeepsakeFormCoordinator.deleteKeepsake`, `DisposalDateEditCoordinator.deleteKeepsake`, `KeepsakeDetailCoordinator.deleteAndFinish` | 삭제 경로 4곳 전체에서 알림 취소가 빠져있던 걸 발견해 수정함(4번째 경로는 레지스트리에 등록조차 안 돼 있었음). `NotificationScheduling` 프로토콜 분리 이후 DB/File은 실제 구현을 격리(in-memory Realm, 존재하지 않는 파일 경로)해서 쓰고 Notification만 mock으로 대체한 유닛테스트(`KeepsakeDeletionNotificationCancelTests.swift`)로 검증 가능해져, 실제 `UNUserNotificationCenter`에 의존하는 통합테스트는 더 이상 필요하지 않음. 네 경로가 같은 계약을 지키는지는 이 유닛테스트가 회귀 방지 |
 | ObjectCapture 취소/저장 후 임시 디렉토리 정리 | `CaptureViewModel.handleSessionState` + `CaptureStorageManager.cleanup` | 전례 있는 버그 영역(`e42806a`), 상태 기반 분기라 회귀 취약 |
 | 재선택(reselect) 시 이전 Keepsake 정리 | `PlaneCaptureCoordinator.saveKeepsake` | 파일+DB 동시 정리가 깨지면 고아 파일/레코드 발생 |
 | disposalDate 변경 시 알림 재스케줄 | `DisposalDateEditCoordinator.handleDisposalDateSaved` → `FormCompletionViewModel.scheduleNotification` | cancel과 schedule이 서로 다른 화면/클래스에 분산돼 있어 한쪽만 누락되기 쉬움 |
