@@ -17,6 +17,8 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 
 `TESTING.md`의 "하네스 참고사항" 섹션과 `VSpaceTests/MediaStorageManagerTests.swift`, `VSpaceTests/KeepsakeDatabaseManagerTests.swift`를 스타일 레퍼런스로 삼으세요. `VSpaceTests` 타겟(XCTest)에 파일을 추가하면 Xcode의 fileSystemSynchronizedGroups가 자동으로 인식합니다.
 
+테스트 실행(`xcodebuild test`) 시 시뮬레이터 destination은 반드시 `TESTING.md`의 "시뮬레이터 선택" 스크립트를 그대로 실행해서 나온 UDID를 쓰세요 — `simctl list devices available`에서 임의로 고르지 마세요.
+
 ## 범위 밖 문제 발견 시
 
 테스트 작성/실행 중 지시받은 diff와 무관한 문제(예: 관련 없는 크래시, 빌드·시뮬레이터 환경 이슈)를 만나면 스스로 진단하려 하지 마세요. 원인 추적용 스크래치 테스트 파일을 만들거나 `xcodebuild test`를 반복 실행하며 삽질하지 마세요 — 시뮬레이터가 반복적으로 뜨고 죽으며 환경을 불안정하게 만듭니다. 1회 확인으로 범위 밖 문제임이 분명하면 바로 멈추고, 만든 스크래치 파일이 있다면 정리한 뒤 `summary`에 무엇을 발견했는지 적어 보고하세요. 메인 세션이 그걸 보고 판단합니다.

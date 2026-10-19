@@ -45,3 +45,33 @@
 - `KeepsakeDatabaseManager`는 `Realm.Configuration` 주입 가능 → 테스트에서 `Realm.Configuration(inMemoryIdentifier: UUID().uuidString)`로 격리
 - `MediaStorageManager`는 `baseDirectory: URL` 주입 가능 → 테스트에서 임시 디렉토리로 격리
 - 레퍼런스 예시: `VSpaceTests/MediaStorageManagerTests.swift`, `VSpaceTests/KeepsakeDatabaseManagerTests.swift`
+
+### 시뮬레이터 선택 (`xcodebuild test` 전용)
+
+아래 스크립트를 그대로 실행해서 나온 UDID를 `-destination 'platform=iOS Simulator,id=<UDID>'`에 쓰세요. 작업 시작 시 1회만 실행합니다.
+
+```bash
+MIN_OS=$(xcodebuild -showBuildSettings -project VSpace.xcodeproj -scheme VSpace -configuration Debug 2>/dev/null \
+  | grep -m1 '^ *IPHONEOS_DEPLOYMENT_TARGET =' | awk -F'= ' '{print $2}')
+UUID_RE='[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}'
+
+if ! xcrun simctl list runtimes | grep -q "iOS $MIN_OS "; then
+  echo "ERROR: iOS $MIN_OS 런타임이 설치돼 있지 않습니다. 멈추고 메인 세션/사용자에게 보고하세요."
+  exit 1
+fi
+
+DEST_UDID=$(xcrun simctl list devices booted | sed -n "/-- iOS $MIN_OS /,/^-- /p" | grep -oE "$UUID_RE" | head -1)
+
+if [ -z "$DEST_UDID" ]; then
+  DEST_UDID=$(xcrun simctl list devices | sed -n "/-- iOS $MIN_OS /,/^-- /p" | grep -oE "$UUID_RE" | head -1)
+  if [ -z "$DEST_UDID" ]; then
+    DEVICETYPE_ID=$(xcrun simctl list devicetypes | grep -i "iPhone" | head -1 | grep -oE 'com\.apple\.CoreSimulator\.SimDeviceType\.[A-Za-z0-9-]+')
+    DEST_UDID=$(xcrun simctl create "VSpace-MinOS-$MIN_OS" "$DEVICETYPE_ID" "com.apple.CoreSimulator.SimRuntime.iOS-${MIN_OS//./-}")
+  fi
+  xcrun simctl boot "$DEST_UDID"
+fi
+
+echo "$DEST_UDID"   # 이 값을 -destination id로 사용
+```
+
+- `ERROR:` 라인이 출력되면(exit 1) **그 자리에서 멈추고 그대로 보고하세요** — 다른 버전으로 임의 대체하거나 반복 재시도하지 않습니다. 이 분기 외에는 스크립트 결과를 그대로 쓰면 됩니다.

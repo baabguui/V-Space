@@ -14,6 +14,7 @@ import _RealityKit_SwiftUI
 import RxRelay
 
 @available(iOS 17.0, *)
+@MainActor
 final class CaptureViewModel {
 
     // MARK: - App State

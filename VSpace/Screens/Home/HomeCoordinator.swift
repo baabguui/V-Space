@@ -31,6 +31,7 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
         coordinator.start()
     }
 
+    @MainActor
     func showObjectCapture() {
         guard #available(iOS 17.0, *), ObjectCaptureSession.isSupported else {
             showObjectCaptureUnsupportedAlert()

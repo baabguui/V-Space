@@ -13,10 +13,10 @@ tools: Read, Bash, Grep, Glob
 
 ## 실행
 
-프로젝트 루트에서 다음과 같이 실행합니다 (시뮬레이터 destination은 `xcrun simctl list devices available`로 사용 가능한 걸 확인해서 고르세요):
+프로젝트 루트에서 다음과 같이 실행합니다. 시뮬레이터 destination은 `TESTING.md`의 "시뮬레이터 선택" 스크립트를 그대로 실행해서 나온 UDID를 쓰세요 — `simctl list devices available`에서 임의로 고르지 마세요.
 
 ```bash
-xcodebuild test -project VSpace.xcodeproj -scheme VSpace -destination 'platform=iOS Simulator,id=<사용 가능한 디바이스 ID>'
+xcodebuild test -project VSpace.xcodeproj -scheme VSpace -destination 'platform=iOS Simulator,id=<위 스크립트가 출력한 UDID>'
 ```
 
 빌드 자체가 실패하면(컴파일 에러 등) 그것도 테스트 실패로 간주하고 원인을 그대로 보고합니다.
