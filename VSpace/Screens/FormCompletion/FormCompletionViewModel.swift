@@ -25,14 +25,17 @@ final class FormCompletionViewModel {
 
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
+    private let notificationScheduler: NotificationScheduling
 
     init(
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        storage: MediaStorageManaging = MediaStorageManager.shared
+        storage: MediaStorageManaging = MediaStorageManager.shared,
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
     ) {
         self.keepsakeId = keepsakeId
         self.db = db
+        self.notificationScheduler = notificationScheduler
         let keepsake = db.fetchKeepsake(id: keepsakeId)
         self.isAvailable = keepsake?.isAvailable ?? false
         self.name = keepsake?.name ?? ""
@@ -58,7 +61,7 @@ final class FormCompletionViewModel {
 
     func scheduleNotification() {
         guard let keepsake = db.fetchKeepsake(id: keepsakeId) else { return }
-        NotificationScheduler.shared.scheduleDisposalNotification(
+        notificationScheduler.scheduleDisposalNotification(
             keepsakeId: keepsakeId,
             name: name,
             disposalDate: keepsake.disposalDate

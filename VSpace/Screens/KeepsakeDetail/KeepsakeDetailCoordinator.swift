@@ -22,6 +22,7 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
     private let keepsakeId: ObjectId
     private let db: KeepsakeDatabaseManaging
     private let mode: Mode
+    private let notificationScheduler: NotificationScheduling
     var onFinish: (() -> Void)?
 
     // MARK: - Init
@@ -30,12 +31,14 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
         navigationController: UINavigationController,
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        mode: Mode
+        mode: Mode,
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.db = db
         self.mode = mode
+        self.notificationScheduler = notificationScheduler
     }
 
     // MARK: - Coordinator
@@ -76,7 +79,7 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
         navigationController.popToRootViewController(animated: true)
         onFinish?()
     }

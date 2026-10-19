@@ -11,19 +11,22 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
     private let startStep: Int
     private let db: KeepsakeDatabaseManaging
     private let storage: MediaStorageManaging
+    private let notificationScheduler: NotificationScheduling
 
     init(
         navigationController: UINavigationController,
         keepsakeId: ObjectId,
         startStep: Int = 1,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        storage: MediaStorageManaging = MediaStorageManager.shared
+        storage: MediaStorageManaging = MediaStorageManager.shared,
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.startStep = startStep
         self.db = db
         self.storage = storage
+        self.notificationScheduler = notificationScheduler
     }
 
     func start() {
@@ -137,7 +140,7 @@ final class KeepsakeFormCoordinator: Coordinator, KeepsakeFormCoordinating {
             recordType: keepsake.recordType
         )
         try? db.deleteKeepsake(keepsake)
-        NotificationScheduler.shared.cancelDisposalNotification(keepsakeId: keepsakeId)
+        notificationScheduler.cancelDisposalNotification(keepsakeId: keepsakeId)
         finishForm()
     }
 }
