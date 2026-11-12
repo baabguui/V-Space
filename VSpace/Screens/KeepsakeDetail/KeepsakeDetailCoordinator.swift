@@ -23,6 +23,7 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
     private let db: KeepsakeDatabaseManaging
     private let mode: Mode
     private let notificationScheduler: NotificationScheduling
+    private let analytics: AnalyticsTracking
     var onFinish: (() -> Void)?
 
     // MARK: - Init
@@ -32,13 +33,15 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
         keepsakeId: ObjectId,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
         mode: Mode,
-        notificationScheduler: NotificationScheduling = NotificationScheduler.shared
+        notificationScheduler: NotificationScheduling = NotificationScheduler.shared,
+        analytics: AnalyticsTracking = AnalyticsTracker.shared
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.db = db
         self.mode = mode
         self.notificationScheduler = notificationScheduler
+        self.analytics = analytics
     }
 
     // MARK: - Coordinator
@@ -63,6 +66,7 @@ final class KeepsakeDetailCoordinator: Coordinator, KeepsakeDetailCoordinating {
                 $0.status = .done
                 if $0.ritualDate == nil { $0.ritualDate = Date() }
             }
+            analytics.log(.ritualCompleted)
             navigationController.popToRootViewController(animated: true)
         case .readOnly:
             navigationController.popViewController(animated: true)

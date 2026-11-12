@@ -24,6 +24,10 @@
 - 3D 모델·사진 미리보기
 - 저장한 물건 목록 조회
 
+## 개발 환경 설정
+
+Firebase Analytics 사용을 위해 `GoogleService-Info-Dev.plist`, `GoogleService-Info-Prod.plist`를 `VSpace/App/Firebase/`에 직접 배치해야 합니다(git에는 올라가지 않음). 새 클론/워크트리를 만들 때마다 수동으로 복사해주세요. 파일이 없으면 빌드 시 Run Script("Copy Firebase Config")에서 에러가 발생합니다.
+
 ## 기술적 특징
 
 - **ObjectCaptureSession 유지 상태에서의 중간 3D 모델 생성**: 스캔 세션을 종료하지 않고 파일 접근만 멈춰 상태를 유지한 채 미리보기용 3D 모델(USDZ)을 생성하고, 세션 내부 비동기 파일 접근과의 충돌로 인한 크래시를 정리 시점 조정으로 방지

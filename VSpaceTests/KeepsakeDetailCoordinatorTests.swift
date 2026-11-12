@@ -6,10 +6,12 @@ import UIKit
 final class KeepsakeDetailCoordinatorTests: XCTestCase {
 
     private var db: KeepsakeDatabaseManager!
+    private var mockAnalytics: MockAnalyticsTracker!
 
     override func setUpWithError() throws {
         let config = Realm.Configuration(inMemoryIdentifier: UUID().uuidString)
         db = KeepsakeDatabaseManager(configuration: config)
+        mockAnalytics = MockAnalyticsTracker()
     }
 
     // MARK: - finish() : .completion (unavailable → done 전환)
@@ -20,7 +22,8 @@ final class KeepsakeDetailCoordinatorTests: XCTestCase {
             navigationController: UINavigationController(),
             keepsakeId: keepsake.id,
             db: db,
-            mode: .completion
+            mode: .completion,
+            analytics: mockAnalytics
         )
 
         sut.finish()
@@ -29,6 +32,7 @@ final class KeepsakeDetailCoordinatorTests: XCTestCase {
         XCTAssertEqual(updated.status, .done)
         let ritualDate = try XCTUnwrap(updated.ritualDate)
         XCTAssertLessThan(abs(ritualDate.timeIntervalSinceNow), 2)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [.ritualCompleted])
     }
 
     func test_finish_completionMode_withExistingRitualDate_doesNotOverwriteIt() throws {
@@ -74,7 +78,8 @@ final class KeepsakeDetailCoordinatorTests: XCTestCase {
             navigationController: UINavigationController(),
             keepsakeId: keepsake.id,
             db: db,
-            mode: .readOnly
+            mode: .readOnly,
+            analytics: mockAnalytics
         )
 
         sut.finish()
@@ -82,6 +87,7 @@ final class KeepsakeDetailCoordinatorTests: XCTestCase {
         let updated = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertEqual(updated.status, .unavailable)
         XCTAssertNil(updated.ritualDate)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [])
     }
 
     // MARK: - Fixtures

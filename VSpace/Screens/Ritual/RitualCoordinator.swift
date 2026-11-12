@@ -18,6 +18,7 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
     private let keepsakeId: ObjectId
     private let startAtRitual: Bool
     private let db: KeepsakeDatabaseManaging
+    private let analytics: AnalyticsTracking
     var onFinish: (() -> Void)?
 
     // MARK: - Init
@@ -26,12 +27,14 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
         navigationController: UINavigationController,
         keepsakeId: ObjectId,
         startAtRitual: Bool = false,
-        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        analytics: AnalyticsTracking = AnalyticsTracker.shared
     ) {
         self.navigationController = navigationController
         self.keepsakeId = keepsakeId
         self.startAtRitual = startAtRitual
         self.db = db
+        self.analytics = analytics
     }
 
     // MARK: - Coordinator
@@ -51,6 +54,7 @@ final class RitualCoordinator: Coordinator, RitualCoordinating {
     // MARK: - RitualCoordinating
 
     func showRitual() {
+        analytics.log(.ritualStarted(source: startAtRitual ? "creation" : "status"))
         let vc = RitualViewController(
             coordinator: self,
             viewModel: RitualViewModel(keepsakeId: keepsakeId)

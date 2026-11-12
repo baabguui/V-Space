@@ -81,6 +81,7 @@ final class ModelViewerViewController: BaseViewController {
 
     private let modelURL: URL
     private let mode: ViewerMode
+    private let analytics: AnalyticsTracking
     private var anchorEntity: AnchorEntity?
     private var currentPinchScale: Float = 1.0
 
@@ -88,15 +89,22 @@ final class ModelViewerViewController: BaseViewController {
 
     // MARK: - Init
 
-    init(modelURL: URL, onSave: @escaping (UIImage) -> Void, onResume: @escaping () -> Void) {
+    init(
+        modelURL: URL,
+        onSave: @escaping (UIImage) -> Void,
+        onResume: @escaping () -> Void,
+        analytics: AnalyticsTracking = AnalyticsTracker.shared
+    ) {
         self.modelURL = modelURL
         self.mode = .capture(onSave: onSave, onResume: onResume)
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
     }
 
-    init(modelURL: URL, viewerOnly: Bool) {
+    init(modelURL: URL, viewerOnly: Bool, analytics: AnalyticsTracking = AnalyticsTracker.shared) {
         self.modelURL = modelURL
         self.mode = .viewerOnly
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -206,12 +214,14 @@ final class ModelViewerViewController: BaseViewController {
 
         saveButton.rx.tap
             .bind(with: self) { owner, _ in
+                owner.analytics.log(.scanSaveTapped)
                 owner.captureAndSave(onSave: onSave)
             }
             .disposed(by: disposeBag)
 
         resumeButton.rx.tap
             .bind(with: self) { owner, _ in
+                owner.analytics.log(.scanRescanTapped)
                 onResume()
                 owner.navigationController?.popViewController(animated: true)
             }
