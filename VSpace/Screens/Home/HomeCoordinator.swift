@@ -5,9 +5,11 @@ import RealmSwift
 final class HomeCoordinator: Coordinator, HomeCoordinating {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
+    private let analytics: AnalyticsTracking
 
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, analytics: AnalyticsTracking = AnalyticsTracker.shared) {
         self.navigationController = navigationController
+        self.analytics = analytics
     }
 
     func start() {
@@ -65,6 +67,9 @@ final class HomeCoordinator: Coordinator, HomeCoordinating {
     }
 
     func showKeepsakeDetail(keepsake: Keepsake) {
+        if keepsake.status == .done {
+            analytics.log(.completedKeepsakeRevisited)
+        }
         let child = KeepsakeDetailCoordinator(
             navigationController: navigationController,
             keepsakeId: keepsake.id,

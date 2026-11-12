@@ -10,17 +10,20 @@ final class PlaneCaptureCoordinator: Coordinator, PlaneCaptureCoordinating {
 
     private let db: KeepsakeDatabaseManaging
     private let storage: MediaStorageManaging
+    private let analytics: AnalyticsTracking
     private let disposeBag = DisposeBag()
     private var pendingKeepsakeId: ObjectId?
 
     init(
         navigationController: UINavigationController,
         db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
-        storage: MediaStorageManaging = MediaStorageManager.shared
+        storage: MediaStorageManaging = MediaStorageManager.shared,
+        analytics: AnalyticsTracking = AnalyticsTracker.shared
     ) {
         self.navigationController = navigationController
         self.db = db
         self.storage = storage
+        self.analytics = analytics
     }
 
     func start() {
@@ -108,6 +111,7 @@ final class PlaneCaptureCoordinator: Coordinator, PlaneCaptureCoordinating {
 
     func finishCapture() {
         guard let keepsakeId = pendingKeepsakeId else { return }
+        analytics.log(.photoCaptureCompleted)
         onComplete?(keepsakeId)
     }
 }

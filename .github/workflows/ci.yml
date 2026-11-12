@@ -25,6 +25,12 @@ jobs:
           xcodebuild -version
           xcodebuild -showsdks | grep iphonesimulator
 
+      - name: Restore Firebase plists
+        run: |
+          mkdir -p VSpace/App/Firebase
+          echo "${{ secrets.FIREBASE_PLIST_DEV_B64 }}" | base64 --decode > VSpace/App/Firebase/GoogleService-Info-Dev.plist
+          echo "${{ secrets.FIREBASE_PLIST_PROD_B64 }}" | base64 --decode > VSpace/App/Firebase/GoogleService-Info-Prod.plist
+
       - name: Build
         run: |
           xcodebuild \

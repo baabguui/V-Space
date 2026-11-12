@@ -64,3 +64,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Firebase
+#
+# GoogleService-Info.plist는 Firebase 콘솔에서 받아 로컬에 직접 배치합니다(README 참고).
+# CI는 GitHub Secrets에서 base64로 복원합니다.
+VSpace/App/Firebase/GoogleService-Info-Dev.plist
+VSpace/App/Firebase/GoogleService-Info-Prod.plist

@@ -19,13 +19,15 @@ final class CaptureViewController: BaseViewController {
 
     private weak var coordinator: ObjectCaptureCoordinating?
     private let viewModel = CaptureViewModel()
+    private let analytics: AnalyticsTracking
     private var captureHostingController: UIHostingController<CaptureView>?
     private lazy var statusView = CaptureStatusView()
 
     // MARK: - Init
 
-    init(coordinator: ObjectCaptureCoordinating) {
+    init(coordinator: ObjectCaptureCoordinating, analytics: AnalyticsTracking = AnalyticsTracker.shared) {
         self.coordinator = coordinator
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -142,8 +144,14 @@ final class CaptureViewController: BaseViewController {
             statusView.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
-            statusView.onRetry = { [weak self] in self?.viewModel.resumeCapturing() }
-            statusView.onRestart = { [weak self] in self?.viewModel.cancelCapture() }
+            statusView.onRetry = { [weak self] in
+                self?.analytics.log(.scanRetryAfterFailure)
+                self?.viewModel.resumeCapturing()
+            }
+            statusView.onRestart = { [weak self] in
+                self?.analytics.log(.scanRestartedAfterFailure)
+                self?.viewModel.cancelCapture()
+            }
         }
         view.bringSubviewToFront(statusView)
         statusView.isHidden = false
@@ -164,6 +172,7 @@ final class CaptureViewController: BaseViewController {
             confirmStyle: .destructive,
             cancelTitle: NSLocalizedString("capture.alert.cancel.dismiss", comment: ""),
             onConfirm: { [weak self] in
+                self?.analytics.log(.scanCancelled)
                 self?.viewModel.cancelCapture()
             }
         )

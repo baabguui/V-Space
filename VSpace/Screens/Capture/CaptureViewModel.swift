@@ -44,17 +44,21 @@ final class CaptureViewModel {
     private let directoryManager: CaptureStorageManaging
     private let mediaStorage: MediaStorageManaging
     private let db: KeepsakeDatabaseManaging
+    private let analytics: AnalyticsTracking
+    private var hasLoggedScanStart = false
 
     // MARK: - Init
 
     init(
         directoryManager: CaptureStorageManaging = CaptureStorageManager(),
         mediaStorage: MediaStorageManaging = MediaStorageManager.shared,
-        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager()
+        db: KeepsakeDatabaseManaging = KeepsakeDatabaseManager(),
+        analytics: AnalyticsTracking = AnalyticsTracker.shared
     ) {
         self.directoryManager = directoryManager
         self.mediaStorage = mediaStorage
         self.db = db
+        self.analytics = analytics
         try? directoryManager.setup()
         session = ObjectCaptureSession()
         startSession(session)
@@ -149,6 +153,10 @@ final class CaptureViewModel {
         case .detecting:
             appState.accept(.detecting)
         case .capturing:
+            if !hasLoggedScanStart {
+                hasLoggedScanStart = true
+                analytics.log(.scanStarted)
+            }
             appState.accept(.capturing)
         case .finishing:
             switch appState.value {
@@ -184,6 +192,7 @@ final class CaptureViewModel {
             for try await output in photogrammetrySession.outputs {
                 switch output {
                 case .requestComplete(_, .modelFile(let url)):
+                    analytics.log(.scanCompleted)
                     appState.accept(.completed(url))
                 case .requestError(_, let error):
                     appState.accept(.failed(error))

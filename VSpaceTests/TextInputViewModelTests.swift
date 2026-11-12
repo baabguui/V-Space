@@ -7,60 +7,66 @@ final class TextInputViewModelTests: XCTestCase {
 
     private var db: KeepsakeDatabaseManager!
     private var disposeBag: DisposeBag!
+    private var mockAnalytics: MockAnalyticsTracker!
 
     override func setUpWithError() throws {
         let config = Realm.Configuration(inMemoryIdentifier: UUID().uuidString)
         db = KeepsakeDatabaseManager(configuration: config)
         disposeBag = DisposeBag()
+        mockAnalytics = MockAnalyticsTracker()
     }
 
     func test_ability_whenWhitespaceOnly_normalizesToNil() throws {
         let keepsake = try makeKeepsake()
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .ability, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .ability, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "   ")
 
         let saved = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertNil(saved.ability)
         XCTAssertEqual(saved.progressStep, 5)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [.formInputAction(step: "ability", action: "skip")])
     }
 
     func test_ability_withText_savesTextAndBumpsProgressStepTo5() throws {
         let keepsake = try makeKeepsake()
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .ability, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .ability, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "날 수 있음")
 
         let saved = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertEqual(saved.ability, "날 수 있음")
         XCTAssertEqual(saved.progressStep, 5)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [.formInputAction(step: "ability", action: "next")])
     }
 
     func test_memoryNote_whenWhitespaceOnly_normalizesToNil() throws {
         let keepsake = try makeKeepsake()
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .memoryNote, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .memoryNote, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "  \n  ")
 
         let saved = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertNil(saved.memoryNote)
         XCTAssertEqual(saved.progressStep, 6)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [.formInputAction(step: "memory_note", action: "skip")])
     }
 
     func test_memoryNote_withText_savesTextAndBumpsProgressStepTo6() throws {
         let keepsake = try makeKeepsake()
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .memoryNote, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .memoryNote, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "소중한 기억")
 
         let saved = try XCTUnwrap(db.fetchKeepsake(id: keepsake.id))
         XCTAssertEqual(saved.memoryNote, "소중한 기억")
         XCTAssertEqual(saved.progressStep, 6)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [.formInputAction(step: "memory_note", action: "next")])
     }
 
     func test_lastWords_whenWhitespaceOnly_normalizesToNilButStillTransitionsStatus() throws {
         let keepsake = try makeKeepsake()
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .lastWords, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .lastWords, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "   ")
 
@@ -68,12 +74,16 @@ final class TextInputViewModelTests: XCTestCase {
         XCTAssertNil(saved.lastWords)
         XCTAssertNil(saved.progressStep)
         XCTAssertEqual(saved.status, .unavailable)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [
+            .formInputAction(step: "last_words", action: "skip"),
+            .keepsakeCreated(recordType: "photo"),
+        ])
     }
 
     func test_lastWords_withText_transitionsProgressStepToNilAndStatusToUnavailable() throws {
         let keepsake = try makeKeepsake()
         XCTAssertEqual(keepsake.status, .inProgress)
-        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .lastWords, db: db, storage: MediaStorageManager.shared)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .lastWords, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
 
         try save(sut: sut, text: "안녕")
 
@@ -81,6 +91,22 @@ final class TextInputViewModelTests: XCTestCase {
         XCTAssertEqual(saved.lastWords, "안녕")
         XCTAssertNil(saved.progressStep)
         XCTAssertEqual(saved.status, .unavailable)
+        XCTAssertEqual(mockAnalytics.loggedEvents, [
+            .formInputAction(step: "last_words", action: "next"),
+            .keepsakeCreated(recordType: "photo"),
+        ])
+    }
+
+    func test_lastWords_withThreeDRecordType_logsKeepsakeCreatedWithThreeDRecordType() throws {
+        let keepsake = try makeKeepsake(recordType: .threeD)
+        let sut = TextInputViewModel(keepsakeId: keepsake.id, config: .lastWords, db: db, storage: MediaStorageManager.shared, analytics: mockAnalytics)
+
+        try save(sut: sut, text: "안녕")
+
+        XCTAssertEqual(mockAnalytics.loggedEvents, [
+            .formInputAction(step: "last_words", action: "next"),
+            .keepsakeCreated(recordType: "three_d"),
+        ])
     }
 
     private func save(sut: TextInputViewModel, text: String) throws {
@@ -94,10 +120,10 @@ final class TextInputViewModelTests: XCTestCase {
     }
 
     @discardableResult
-    private func makeKeepsake() throws -> Keepsake {
+    private func makeKeepsake(recordType: RecordType = .photo) throws -> Keepsake {
         let keepsake = Keepsake()
         keepsake.name = "기본값"
-        keepsake.recordType = .photo
+        keepsake.recordType = recordType
         keepsake.resourceFileName = "img_test.png"
         keepsake.thumbnailFileName = "thumb_test.png"
         keepsake.disposalDate = Date()
